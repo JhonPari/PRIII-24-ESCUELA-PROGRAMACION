@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="escuela_programacion"
+        android:label="prlll_24_escuela_programacion"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
