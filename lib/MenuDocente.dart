@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -96,4 +95,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
