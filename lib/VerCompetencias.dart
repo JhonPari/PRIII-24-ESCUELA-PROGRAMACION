@@ -8,71 +8,74 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: EstudiantesCompetenciaPage(),
+      home: HomeScreen(),
+      theme: ThemeData(
+        primaryColor: Color(0xFF8E244D), // Color del AppBar
+        buttonTheme: ButtonThemeData(
+          buttonColor: Color(0xFF8E244D), // Color de los botones
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
     );
   }
 }
 
-class EstudiantesCompetenciaPage extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LISTA DE ESTUDIANTES EN X COMPETENCIA'),
+        title: Row(
+          children: [
+            Image.asset('assets/images/logo_univalle.png', height: 50),
+            SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Karen Poma',
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'Estudiante Univalle',
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              // Lógica para cerrar sesión
+            },
+            child: Text('Cerrar Sesión'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+            ),
+          ),
+        ],
         backgroundColor: Color(0xFF8E244D),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                FilterButton(text: 'Aceptado'),
-                FilterButton(text: 'Pendiente'),
-                FilterButton(text: 'Reprobado'),
-              ],
+            CompetenciaCard(
+              titulo: 'Hakaton',
+              fechaInicio: '20/09/2024',
+              fechaFin: '20/10/2024',
+              estado: 'En Curso',
             ),
-            SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Nombres, Apellidos o Correos',
-                      prefixIcon: Icon(Icons.search),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    // Lógica de búsqueda
-                  },
-                  child: Text('Buscar'),
-                ),
-              ],
+            CompetenciaCard(
+              titulo: 'GameJam',
+              fechaInicio: '20/09/2024',
+              fechaFin: '20/10/2024',
+              estado: 'Finalizado',
             ),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 3, // Cambia esto a la cantidad de estudiantes
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('Diego Adrian Ricaldez'),
-                    subtitle: Text('jan123@'),
-                    trailing: ElevatedButton(
-                      onPressed: () {
-                        // Lógica de evaluación
-                      },
-                      child: Text('Evaluar'),
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 20),
-            PaginationWidget(),
           ],
         ),
       ),
@@ -80,35 +83,61 @@ class EstudiantesCompetenciaPage extends StatelessWidget {
   }
 }
 
-class FilterButton extends StatelessWidget {
-  final String text;
+class CompetenciaCard extends StatelessWidget {
+  final String titulo;
+  final String fechaInicio;
+  final String fechaFin;
+  final String estado;
 
-  FilterButton({required this.text});
+  CompetenciaCard({
+    required this.titulo,
+    required this.fechaInicio,
+    required this.fechaFin,
+    required this.estado,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {},
-      child: Text(text),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        side: BorderSide(color: Color(0xFF8E244D)),
+    return Container(
+      width: 300,
+      height: 200, // Ajusta el tamaño de los cuadros
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            spreadRadius: 5,
+          ),
+        ],
       ),
-    );
-  }
-}
-
-class PaginationWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
-        Text('1'),
-        IconButton(onPressed: () {}, icon: Icon(Icons.arrow_forward)),
-      ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            titulo,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8),
+          Text('Fecha de Inicio: $fechaInicio'),
+          Text('Fecha de Finalización: $fechaFin'),
+          Text('Estado: $estado'),
+          SizedBox(height: 20),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                // Lógica del botón Calificar
+              },
+              child: Text('Calificar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF8E244D),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
