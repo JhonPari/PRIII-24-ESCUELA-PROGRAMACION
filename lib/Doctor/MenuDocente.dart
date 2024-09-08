@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               // Lógica para cerrar sesión
             },
-            child: Text('Cerrar Sesión'),
+            child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,
             ),
