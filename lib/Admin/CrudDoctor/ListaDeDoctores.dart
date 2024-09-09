@@ -75,7 +75,7 @@ class _ListaEstudiantesPageState extends State<ListaEstudiantesPage> {
           children: [
             SizedBox(height: 30),
             Text(
-              'LISTA DE ESTUDIANTES',
+              'LISTA DE DOCENTES',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -116,23 +116,7 @@ class _ListaEstudiantesPageState extends State<ListaEstudiantesPage> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('← Previous', style: TextStyle(color: Colors.grey)),
-                SizedBox(width: 10),
-                CircleAvatar(
-                  backgroundColor: Color(0xFF8E244D),
-                  child: Text('1', style: TextStyle(color: Colors.white)),
-                ),
-                SizedBox(width: 10),
-                Text('2', style: TextStyle(color: Color(0xFF8E244D))),
-                Text(' 3 ... 67 68 ', style: TextStyle(color: Colors.grey)),
-                SizedBox(width: 10),
-                Text('Next →', style: TextStyle(color: Colors.grey)),
-              ],
-            ),
+            
           ],
         ),
       ),
@@ -151,10 +135,12 @@ class _ListaEstudiantesPageState extends State<ListaEstudiantesPage> {
               // Acción de modificar
             },
             icon: Icon(Icons.sync, color: Colors.white),
-            label: Text('Modificar'),
+            label: Text('Modificar',style: TextStyle(color: Colors.white)),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.grey, // Color del botón modificar
+              backgroundColor: Colors.grey,
+              
               minimumSize: Size(100, 30),
+              
             ),
           ),
           SizedBox(width: 10),
@@ -163,9 +149,10 @@ class _ListaEstudiantesPageState extends State<ListaEstudiantesPage> {
               // Acción de eliminar
             },
             icon: Icon(Icons.cancel, color: Colors.white),
-            label: Text('Eliminar'),
+            label: Text('Eliminar',style: TextStyle(color: Colors.white)),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF8E244D), // Color del botón eliminar
+              backgroundColor: Color(0xFF8E244D),
+               // Color del botón eliminar
               minimumSize: Size(100, 30),
             ),
           ),

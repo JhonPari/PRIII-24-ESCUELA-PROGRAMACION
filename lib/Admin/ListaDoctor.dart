@@ -102,23 +102,7 @@ class _VerificarDocentesPageState extends State<VerificarDocentesPage> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('← Previous', style: TextStyle(color: Colors.grey)),
-                SizedBox(width: 10),
-                CircleAvatar(
-                  backgroundColor: Color(0xFF8E244D),
-                  child: Text('1', style: TextStyle(color: Colors.white)),
-                ),
-                SizedBox(width: 10),
-                Text('2', style: TextStyle(color: Color(0xFF8E244D))),
-                Text(' 3 ... 67 68 ', style: TextStyle(color: Colors.grey)),
-                SizedBox(width: 10),
-                Text('Next →', style: TextStyle(color: Colors.grey)),
-              ],
-            ),
+            
           ],
         ),
       ),

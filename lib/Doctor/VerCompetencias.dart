@@ -49,11 +49,11 @@ class HomeScreen extends StatelessWidget {
         actions: [
           ElevatedButton(
             onPressed: () {
-              // Lógica para cerrar sesión
             },
-            child: Text('Cerrar Sesión'),
+            child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,
+              side: BorderSide(color: Colors.black), // Borde negro
             ),
           ),
         ],
@@ -130,7 +130,7 @@ class CompetenciaCard extends StatelessWidget {
               onPressed: () {
                 // Lógica del botón Calificar
               },
-              child: Text('Calificar'),
+              child: Text('Calificar',style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF8E244D),
               ),
