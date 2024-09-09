@@ -32,24 +32,30 @@ class HomeScreen extends StatelessWidget {
           DropdownButton(
             icon: Icon(Icons.people, color: Color(0xFF8E244D)),
             items: [
-              DropdownMenuItem(child: Text('Estudiantes')),
+            DropdownMenuItem(
+            child: Text(
+            'Estudiantes',
+             style: TextStyle(color: Colors.white), 
+                 ),
+               ),
             ],
             onChanged: (value) {},
-          ),
+            ),
           DropdownButton(
             icon: Icon(Icons.assessment, color: Color(0xFF8E244D)),
             items: [
-              DropdownMenuItem(child: Text('Competencias')),
+              DropdownMenuItem(child: Text('Competencias',style: TextStyle(color: Colors.white), )),
+              
             ],
             onChanged: (value) {},
           ),
           ElevatedButton(
             onPressed: () {
-              // Lógica para cerrar sesión
             },
             child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,
+              side: BorderSide(color: Colors.black), // Borde negro
             ),
           ),
         ],
@@ -67,6 +73,12 @@ class HomeScreen extends StatelessWidget {
                   // Acción al presionar Competencias
                 },
                 child: Text('Competencias'),
+                style: ElevatedButton.styleFrom(
+                  //shape: RoundedRectangleBorder(
+                  //borderRadius: BorderRadius.zero, // Bordes cuadrados
+                  //),
+                  side: BorderSide(color: Colors.black), // Borde negro
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -76,6 +88,9 @@ class HomeScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {},
                 child: Text('Estudiantes'),
+                style: ElevatedButton.styleFrom(
+                  side: BorderSide(color: Colors.black), // Borde negro
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -87,6 +102,9 @@ class HomeScreen extends StatelessWidget {
                   // Acción al presionar Ver Reportes
                 },
                 child: Text('Ver Reportes'),
+                style: ElevatedButton.styleFrom(
+                  side: BorderSide(color: Colors.black), // Borde negro
+                ),
               ),
             ),
           ],
