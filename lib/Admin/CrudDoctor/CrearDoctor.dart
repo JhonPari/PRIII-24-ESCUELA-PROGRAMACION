@@ -1,17 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: RegistrarDocentePage(),
-    );
-  }
-}
+import 'package:prlll_24_escuela_programacion/Models/usuario.dart';
 
 class RegistrarDocentePage extends StatefulWidget {
   @override
@@ -19,6 +7,13 @@ class RegistrarDocentePage extends StatefulWidget {
 }
 
 class _RegistrarDocentePageState extends State<RegistrarDocentePage> {
+  final _nombreController = TextEditingController();
+  final _correoController = TextEditingController();
+  final _contraseniaController = TextEditingController();
+
+  // URL de tu API
+  final String apiUrl = 'https://localhost:7096/swagger/v1/swagger.json';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +21,7 @@ class _RegistrarDocentePageState extends State<RegistrarDocentePage> {
         title: Row(
           children: [
             Image.asset('assets/images/logo_univalle.png', height: 50),
-            SizedBox(width: 10), // Espacio entre logo y nombre
+            SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -36,38 +31,7 @@ class _RegistrarDocentePageState extends State<RegistrarDocentePage> {
             ),
           ],
         ),
-        backgroundColor: Color(0xFF8E244D), // Color personalizado
-        actions: [
-          TextButton(
-            onPressed: () {},
-            child: Text('Reportes', style: TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text('Calificaciones', style: TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text('Escuelas', style: TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text('Estudiantes', style: TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text('Docentes', style: TextStyle(color: Colors.white)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Lógica para cerrar sesión
-            },
-            child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-            ),
-          ),
-        ],
+        backgroundColor: Color(0xFF8E244D),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -84,46 +48,49 @@ class _RegistrarDocentePageState extends State<RegistrarDocentePage> {
                 ),
               ),
               SizedBox(height: 30),
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Color(0xFFE0BFC7), // Color de fondo rosado
-                  borderRadius: BorderRadius.circular(8),
+              buildTextField('Nombre', _nombreController),
+              SizedBox(height: 10),
+              buildTextField('Correo', _correoController),
+              SizedBox(height: 10),
+              buildTextField('Contraseña', _contraseniaController,
+                  isPassword: true),
+              SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  Usuario nuevoUsuario = Usuario(
+                    id: 0, // Será generado por la API
+                    nombre: _nombreController.text,
+                    contrasenia: _contraseniaController.text,
+                    correo: _correoController.text,
+                    rol: 'docente',
+                    idUsuario: 1, // Puedes ajustar este valor
+                    fechaRegistro: DateTime.now(),
+                    estado: 'activo',
+                    solicitud: 'pendiente',
+                  );
+
+                  await nuevoUsuario.registrarUsuario(apiUrl);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Docente registrado exitosamente')),
+                  );
+                },
+                icon: Icon(Icons.check, color: Colors.white),
+                label: Text('Aceptar', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF8E244D),
+                  minimumSize: Size(double.infinity, 40),
                 ),
-                child: Column(
-                  children: [
-                    buildTextField('Nombre', 'Value'),
-                    SizedBox(height: 10),
-                    buildTextField('Apellidos', 'Value'),
-                    SizedBox(height: 10),
-                    buildTextField('Correo', 'Value'),
-                    SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        // Acción al presionar Aceptar
-                      },
-                      icon: Icon(Icons.check, color: Colors.white),
-                      label: Text(
-                        'Aceptar',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF8E244D),
-                        minimumSize: Size(double.infinity, 40),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Acción al presionar Volver
-                      },
-                      child: Text('Volver', style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        minimumSize: Size(double.infinity, 40),
-                      ),
-                    ),
-                  ],
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  // Acción al presionar Volver
+                },
+                child: Text('Volver', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey,
+                  minimumSize: Size(double.infinity, 40),
                 ),
               ),
             ],
@@ -133,16 +100,18 @@ class _RegistrarDocentePageState extends State<RegistrarDocentePage> {
     );
   }
 
-  Widget buildTextField(String labelText, String hintText) {
+  Widget buildTextField(String labelText, TextEditingController controller,
+      {bool isPassword = false}) {
     return TextField(
+      controller: controller,
+      obscureText: isPassword,
       decoration: InputDecoration(
         labelText: labelText,
-        hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
         filled: true,
-        fillColor: Color(0xFFF5E0E5), // Fondo rosado claro en los campos de texto
+        fillColor: Color(0xFFF5E0E5),
       ),
     );
   }
