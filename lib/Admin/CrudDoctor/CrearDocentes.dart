@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
+import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: RegistrarDocePage(),
-    );
-  }
-}
 class RegistrarDocePage extends StatefulWidget {
   const RegistrarDocePage({super.key});
 
@@ -67,23 +55,23 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
         contrasenia: "prueba",
         correo: _correoController.text,
         rol: 'D',
-        idUsuario: 0,
+        idUsuario: 2,
         solicitud: 'A',
       );
 
       // Llamar al método post para enviar el Usuario a la API
-      Usuario docente = await _usuarioService.post(nuevoUsuario);
+      Usuario estudiante = await _usuarioService.post(nuevoUsuario);
 
       // Si es exitoso, mostrar un mensaje
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            "Usuario creado con éxito: ${docente.id}"
+            "Usuario creado con éxito: ${estudiante.idUsuario}"
           ),
         ),
       );
 
-      Navigator.of(context).pop();
+      //Navigator.of(context).pop();
 
     } catch (e) {
       // Mostrar mensaje de error en caso de fallo
