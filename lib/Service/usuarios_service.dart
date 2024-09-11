@@ -5,8 +5,19 @@ import 'package:http/http.dart' as http;
 class UsuariosService {
   final String baseUri = "https://localhost:7096/Usuarios";
 
-  Future<List<Usuario>> getAll() async {
-    final url = Uri.parse(baseUri);
+  Future<List<Usuario>> getEstudiantes() async {
+    final url = Uri.parse("$baseUri/Estudiantes");
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Usuario.fromJson(json)).toList();
+    } else {
+      throw Exception("Error al cargar todos los Usuarios");
+    }
+  }
+  Future<List<Usuario>> getDocentes() async {
+    final url = Uri.parse("$baseUri/Docentes");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -45,7 +56,7 @@ class UsuariosService {
     }
   }
 
-  Future<Usuario> put(int id, Usuario usr) async {
+  Future<void> put(int id, Usuario usr) async {
     final url = Uri.parse("$baseUri/$id");
     var response = await http.put(
       url,
@@ -54,23 +65,19 @@ class UsuariosService {
     );
 
     if (response.statusCode == 200) {
-      return Usuario.fromJson(jsonDecode(response.body));
+      return;
     } else {
       throw Exception("Error al actualizar un Usuario");
     }
   }
 
-  Future<Usuario> deleteLogic(int id, Usuario usr) async {
+  Future<void> deleteLogic(int id) async {
     final url = Uri.parse("$baseUri/$id");
     // En la API deberías actualizar su estado a 'E'
-    var response = await http.put(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(usr.toJson()), // Convertir Usuario a JSON
-    );
+    var response = await http.delete(url);
 
     if (response.statusCode == 200) {
-      return Usuario.fromJson(jsonDecode(response.body));
+      return;
     } else {
       throw Exception("Error al eliminar lógicamente un Usuario");
     }
