@@ -16,8 +16,21 @@ class UsuariosService {
       throw Exception("Error al cargar todos los Usuarios");
     }
   }
+
   Future<List<Usuario>> getDocentes() async {
     final url = Uri.parse("$baseUri/Docentes");
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Usuario.fromJson(json)).toList();
+    } else {
+      throw Exception("Error al cargar todos los Usuarios");
+    }
+  }
+
+  Future<List<Usuario>> getListaPendienteDocente() async {
+    final url = Uri.parse("$baseUri/listaPendienteDocentes");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {

@@ -32,26 +32,28 @@ class HomeScreen extends StatelessWidget {
           DropdownButton(
             icon: Icon(Icons.people, color: Color(0xFF8E244D)),
             items: [
-            DropdownMenuItem(
-            child: Text(
-            'Estudiantes',
-             style: TextStyle(color: Colors.white), 
-                 ),
-               ),
+              DropdownMenuItem(
+                child: Text(
+                  'Estudiantes',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ],
             onChanged: (value) {},
-            ),
+          ),
           DropdownButton(
             icon: Icon(Icons.assessment, color: Color(0xFF8E244D)),
             items: [
-              DropdownMenuItem(child: Text('Competencias',style: TextStyle(color: Colors.white), )),
-              
+              DropdownMenuItem(
+                  child: Text(
+                'Competencias',
+                style: TextStyle(color: Colors.white),
+              )),
             ],
             onChanged: (value) {},
           ),
           ElevatedButton(
-            onPressed: () {
-            },
+            onPressed: () {},
             child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,

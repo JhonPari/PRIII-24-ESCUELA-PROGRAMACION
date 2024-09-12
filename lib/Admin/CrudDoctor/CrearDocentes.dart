@@ -56,7 +56,7 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
         correo: _correoController.text,
         rol: 'D',
         idUsuario: 2,
-        solicitud: 'A',
+        solicitud: 'P',
       );
 
       // Llamar al método post para enviar el Usuario a la API
