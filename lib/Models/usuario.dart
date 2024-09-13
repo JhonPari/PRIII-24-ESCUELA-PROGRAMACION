@@ -42,6 +42,8 @@ class Usuario {
     );
   }
 
+
+
   // Método para convertir un Usuario a JSON (serialización)
   Map<String, dynamic> toJson() {
     return {

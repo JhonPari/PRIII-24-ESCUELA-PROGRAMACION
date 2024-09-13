@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Admin/CrudDoctor/CrearDocentes.dart';
-import 'package:prlll_24_escuela_programacion/Admin/CrudDoctor/EditarDocentes.dart';
+
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 
 
-void main() => runApp(const VistaDoce());
+void main() => runApp(const VerificarDoce());
 
-class VistaDoce extends StatefulWidget {
-  const VistaDoce({super.key});
+class VerificarDoce extends StatefulWidget {
+  const VerificarDoce({super.key});
 
   @override
-  State<VistaDoce> createState() => _VistaDoceState();
+  State<VerificarDoce> createState() => _VerificarDoceState();
 }
 
-class _VistaDoceState extends State<VistaDoce> {
+class _VerificarDoceState extends State<VerificarDoce> {
   UsuariosService usuariosService = UsuariosService();
   late Future<List<Usuario>> _listaUsuarios;
 
@@ -34,7 +33,7 @@ class _VistaDoceState extends State<VistaDoce> {
           children: [
             const SizedBox(height: 30),
             const Text(
-              'LISTA DE DOCENTES',
+              'LISTA DE ESTUDIANTES PENDIENTES',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -42,22 +41,8 @@ class _VistaDoceState extends State<VistaDoce> {
               ),
             ),
             const SizedBox(height: 20),
-            Align(
+            const Align(
               alignment: Alignment.centerRight,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegistrarDocePage()), // NuevaPantalla es la clase de la nueva ventana
-                  );
-                },
-                icon: const Icon(Icons.person_add, color: Colors.white),
-                label: const Text('Añadir'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.grey,
-                ),
-              ),
             ),
             const SizedBox(height: 15),
             TablaEst(),
@@ -95,7 +80,6 @@ class _VistaDoceState extends State<VistaDoce> {
                     columns: const [
                       DataColumn(label: Text('Nombres')),
                       DataColumn(label: Text('Correo')),
-                      DataColumn(label: Text('Puntos')),
                       DataColumn(label: Text('Acciones')),
                     ],
                     rows: usuarios.map((usuario) {
@@ -103,23 +87,21 @@ class _VistaDoceState extends State<VistaDoce> {
                         cells: [
                           DataCell(Text(usuario.nombre)),
                           DataCell(Text(usuario.correo)),
-                          const DataCell(Text("0")), //TODO recibir puntos
                           DataCell(
                             Row(
                               children: [
+                                const SizedBox(width: 10),
                                 ElevatedButton.icon(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => EditarDocePage(idUsuario: usuario.id!)), // NuevaPantalla es la clase de la nueva ventana
-                                    );
+                                    mostrarConfirmacionVerificacion(
+                                        context, usuario.id!);
                                   },
-                                  icon: const Icon(Icons.sync,
+                                  icon: const Icon(Icons.check,
                                       color: Colors.white),
                                   label: const Text('Modificar',
-                                      style: TextStyle(color: Colors.white)),
+                                      style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey,
+                                    backgroundColor: const Color(0xFF4CAF50),
                                     minimumSize: const Size(100, 30),
                                   ),
                                 ),
@@ -153,15 +135,15 @@ class _VistaDoceState extends State<VistaDoce> {
       ),
     );
   }
-
+  
   void mostrarDialogoConfirmacion(BuildContext context, int id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar eliminación'),
+          title: const Text('Confirmar Rechazo de Solicitud'),
           content:
-              const Text('¿Estás seguro de que deseas eliminar este usuario?'),
+              const Text('¿Estás seguro de que deseas Rechazar este usuario?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -181,7 +163,7 @@ class _VistaDoceState extends State<VistaDoce> {
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Usuario eliminado exitosamente.'),
+                      content: Text('Usuario Rechazado exitosamente.'),
                     ),
                   );
 
@@ -211,4 +193,67 @@ class _VistaDoceState extends State<VistaDoce> {
       },
     );
   }
+//aceptar solicitud
+  void mostrarConfirmacionVerificacion(BuildContext context, int id) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmar aceptación'),
+        content: const Text('¿Estás seguro de que deseas aceptar esta solicitud?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
+            },
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                Navigator.of(context).pop();
+
+                Usuario usuario = await usuariosService.get(id);
+                usuario.solicitud = 'A'; // Actualiza la solicitud del usuario
+
+                await usuariosService.putAceptarSolicitud(id, usuario);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Solicitud aceptada exitosamente.'),
+                  ),
+                );
+
+                setState(() {
+                  // Actualiza la lista de usuarios pendientes (puedes ajustar según tu necesidad)
+                  _listaUsuarios = usuariosService.getListaPendienteDocente();
+                });
+
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Error al aceptar la solicitud del usuario."),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF8E244D), // Color del botón de confirmación
+            ),
+            child: const Text(
+              'Aceptar',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+  
+  
 }
