@@ -54,7 +54,7 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
         nombre: _nombreController.text,
         contrasenia: "prueba",
         correo: _correoController.text,
-        rol: 'E',
+        rol: 'D',
         idUsuario: 2,
         solicitud: 'P',
       );
