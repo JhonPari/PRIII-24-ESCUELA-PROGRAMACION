@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Admin/CrudDoctor/CrearDocentes.dart';
-import 'package:prlll_24_escuela_programacion/Admin/CrudDoctor/EditarDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Admin/CrudEstudiante/EditarEstudiante.dart';
+import 'package:prlll_24_escuela_programacion/Admin/CrudEstudiante/RegistrarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 
-void main() => runApp(const VistaDoce());
 
-class VistaDoce extends StatefulWidget {
-  const VistaDoce({super.key});
+void main() => runApp(const VistaEst());
+
+class VistaEst extends StatefulWidget {
+  const VistaEst({super.key});
 
   @override
-  State<VistaDoce> createState() => _VistaDoceState();
+  State<VistaEst> createState() => _VistaEstState();
 }
 
-class _VistaDoceState extends State<VistaDoce> {
+class _VistaEstState extends State<VistaEst> {
   UsuariosService usuariosService = UsuariosService();
   late Future<List<Usuario>> _listaUsuarios;
 
   @override
   void initState() {
     super.initState();
-    _listaUsuarios = usuariosService.getDocentes();
+    _listaUsuarios = usuariosService.getEstudiantes();
   }
 
   @override
@@ -33,7 +34,7 @@ class _VistaDoceState extends State<VistaDoce> {
           children: [
             const SizedBox(height: 30),
             const Text(
-              'LISTA DE DOCENTES',
+              'LISTA DE ESTUDIANTES',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -47,8 +48,7 @@ class _VistaDoceState extends State<VistaDoce> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => RegistrarDocePage()), 
+                    MaterialPageRoute(builder: (context) => RegistrarEstPage()), // NuevaPantalla es la clase de la nueva ventana
                   );
                 },
                 icon: const Icon(Icons.person_add, color: Colors.white),
@@ -60,68 +60,58 @@ class _VistaDoceState extends State<VistaDoce> {
               ),
             ),
             const SizedBox(height: 15),
-            Expanded(child: docentesGrid()), // Cambiamos el widget de la tabla
+            TablaEst(),
           ],
         ),
       ),
     ));
   }
 
-  Widget docentesGrid() {
-    return FutureBuilder<List<Usuario>>(
-      future: _listaUsuarios,
-      builder: (BuildContext context, AsyncSnapshot<List<Usuario>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(
-              child: Text('No hay usuarios', style: TextStyle(fontSize: 18)));
-        } else {
-          List<Usuario> usuarios = snapshot.data!;
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // Número de columnas 
-              childAspectRatio: 3 / 2, // Relación de aspecto para que los cuadros se vean como en la imagen
-              crossAxisSpacing: 16.0, // Espacio horizontal entre los cuadros
-              mainAxisSpacing: 16.0, // Espacio vertical entre los cuadros
-            ),
-            itemCount: usuarios.length,
-            itemBuilder: (context, index) {
-              Usuario usuario = usuarios[index];
-              return Card(
-                color: const Color(0xFFE0BFC7), // Color de fondo del cuadro
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 2, 
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        usuario.nombre,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Descripcion siuu',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton.icon(
+  Expanded TablaEst() {
+    return Expanded(
+      child: FutureBuilder<List<Usuario>>(
+        future: _listaUsuarios,
+        builder: (BuildContext context, AsyncSnapshot<List<Usuario>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+                child: Text('No hay usuarios', style: TextStyle(fontSize: 18)));
+          } else {
+            List<Usuario> usuarios = snapshot.data!;
+            return Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFE0BFC7), // Fondo rosado para la tabla
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  scrollDirection:
+                      Axis.horizontal, // Para scroll horizontal si es necesario
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Nombres')),
+                      DataColumn(label: Text('Correo')),
+                      DataColumn(label: Text('Puntos')),
+                      DataColumn(label: Text('Acciones')),
+                    ],
+                    rows: usuarios.map((usuario) {
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(usuario.nombre)),
+                          DataCell(Text(usuario.correo)),
+                          const DataCell(Text("0")), //TODO recibir puntos
+                          DataCell(
+                            Row(
+                              children: [
+                                ElevatedButton.icon(
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => EditarDocePage(idUsuario: usuario.id!)), // NuevaPantalla es la clase de la nueva ventana
+                                      MaterialPageRoute(builder: (context) => EditarEstPage(idUsuario: usuario.id!)), // NuevaPantalla es la clase de la nueva ventana
                                     );
                                   },
                                   icon: const Icon(Icons.sync,
@@ -148,16 +138,19 @@ class _VistaDoceState extends State<VistaDoce> {
                                     minimumSize: const Size(100, 30),
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
                         ],
-                      ),
-                    ],
+                      );
+                    }).toList(),
                   ),
                 ),
-              );
-            },
-          );
-        }
-      },
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -167,12 +160,12 @@ class _VistaDoceState extends State<VistaDoce> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
-          content: const Text(
-              '¿Estás seguro de que deseas eliminar este usuario?'),
+          content:
+              const Text('¿Estás seguro de que deseas eliminar este usuario?'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
               },
               child: const Text(
                 'Cancelar',
@@ -195,6 +188,7 @@ class _VistaDoceState extends State<VistaDoce> {
                   setState(() {
                     _listaUsuarios = usuariosService.getEstudiantes();
                   });
+
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -204,7 +198,8 @@ class _VistaDoceState extends State<VistaDoce> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8E244D),
+                backgroundColor:
+                    const Color(0xFF8E244D), // Color del botón de confirmación
               ),
               child: const Text(
                 'Eliminar',
