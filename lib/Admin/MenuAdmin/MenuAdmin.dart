@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Admin/CrudDoctor/ListaDeDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Admin/CrudEstudiante/Vista_Estudiante.dart';
-import 'package:prlll_24_escuela_programacion/Admin/MenuAdmin/AdminNavBar';
+import 'package:prlll_24_escuela_programacion/Admin/MenuAdmin/AdminNavBar.dart';
 
 
 void main() {
-  runApp(const MenuEst());
+  runApp(const MenuAdmin());
 }
 
-class MenuEst extends StatelessWidget {
-  const MenuEst({super.key});
+class MenuAdmin extends StatelessWidget {
+  const MenuAdmin({super.key});
 
   @override
   Widget build(BuildContext context) {

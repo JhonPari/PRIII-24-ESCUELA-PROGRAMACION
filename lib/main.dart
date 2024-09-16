@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Admin/CrudDoctor/CrearDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Admin/CrudDocente/CrearDocentes.dart';
 
 void main() {
   runApp(const MainApp());

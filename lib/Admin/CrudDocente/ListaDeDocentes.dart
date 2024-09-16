@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Admin/CrudDoctor/CrearDocentes.dart';
-import 'package:prlll_24_escuela_programacion/Admin/CrudDoctor/EditarDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Admin/CrudDocente/CrearDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Admin/CrudDocente/EditarDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 
