@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart'; // Asegúrate de importar tu página de menú
+import 'package:prlll_24_escuela_programacion/Pages/Estudiante/menu_est.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
-AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
+AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
   // Definir un estilo de texto común
-  TextStyle commonTextStyle =
-      const TextStyle(fontSize: 16, color: Colors.black);
+  TextStyle commonTextStyle = const TextStyle(fontSize: 16, color: Colors.black);
 
   return AppBar(
     backgroundColor: const Color(0xFF8B2D56),
@@ -16,7 +15,7 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const MenuAdmin()), // Asegúrate de que esta es la ruta correcta a tu página de menú
+              MaterialPageRoute(builder: (context) => const MenuEst()), // Navegar a la página MenuEst
             );
           },
           child: const CircleAvatar(
@@ -46,33 +45,13 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
           itemBuilder: (BuildContext context) {
             return [
               PopupMenuItem<String>(
-                value: 'ver_puntos',
-                child: Text('Ver Puntos', style: commonTextStyle),
-              ),
-              PopupMenuItem<String>(
-                value: 'ver_fecha',
-                child: Text('Ver Fecha', style: commonTextStyle),
+                value: 'competencias',
+                child: Text('Competencias', style: commonTextStyle),
               ),
             ];
           },
           child: Text(
-            'Reportes',
-            style: commonTextStyle,
-          ),
-        ),
-        const SizedBox(width: 10),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            'Calificaciones',
-            style: commonTextStyle,
-          ),
-        ),
-        const SizedBox(width: 10),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            'Escuelas',
+            'Competencias',
             style: commonTextStyle,
           ),
         ),
@@ -102,32 +81,6 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
             style: commonTextStyle,
           ),
         ),
-        const SizedBox(width: 10),
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            // Manejar la acción seleccionada
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem<String>(
-                value: 'lista_Docentes',
-                child: Text('Lista Docentes', style: commonTextStyle),
-              ),
-              PopupMenuItem<String>(
-                value: 'agregar_Docentes',
-                child: Text('Agregar Docentes', style: commonTextStyle),
-              ),
-              PopupMenuItem<String>(
-                value: 'solicitud',
-                child: Text('Ver Solicitudes', style: commonTextStyle),
-              ),
-            ];
-          },
-          child: Text(
-            'Docentes',
-            style: commonTextStyle,
-          ),
-        ),
         const SizedBox(width: 25),
         ElevatedButton(
           onPressed: () async {
@@ -141,7 +94,7 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5), 
+              borderRadius: BorderRadius.circular(5),
             ),
           ),
           child: const Text(

@@ -6,8 +6,6 @@ import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
 
-
-
 void main() => runApp(const VistaEscuela());
 
 class VistaEscuela extends StatefulWidget {
@@ -20,37 +18,37 @@ class VistaEscuela extends StatefulWidget {
 class _VistaEscuelaState extends State<VistaEscuela> {
   final storage = Session();
   String? name;
+  EscuelaService escuelaService = EscuelaService();
+  late Future<List<Escuela>> _listaEscuelas; // Late variable
 
   @override
   void initState() {
     super.initState();
     _loadSession();
+    _listaEscuelas = escuelaService.getAll(); // Inicialización de _listaEscuelas
   }
 
   Future<void> _loadSession() async {
     // Obtiene el mapa con los datos de la sesión
     Map<String, String?> data = await storage.getSession();
-    
+
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
-      //if del rol
-    }
-    else {
+    } else {
       setState(() {
-        name = data['name'] ?? 'Sin Nombre'; 
+        name = data['name'] ?? 'Sin Nombre';
       });
     }
   }
-  EscuelaService escuelaService = EscuelaService();
-  late Future<List<Escuela>> _listaEscuelas;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: adminNavBar(name ?? '...', storage, context),
+        appBar: adminNavBar(name ?? '...', storage, context), // adminNavBar agregado aquí
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -70,16 +68,15 @@ class _VistaEscuelaState extends State<VistaEscuela> {
               Expanded(
                 child: FutureBuilder<List<Escuela>>(
                   future: _listaEscuelas,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Escuela>> snapshot) {
+                  builder: (BuildContext context, AsyncSnapshot<List<Escuela>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(
-                          child: Text('No hay Escuelas',
-                              style: TextStyle(fontSize: 18)));
+                        child: Text('No hay Escuelas', style: TextStyle(fontSize: 18)),
+                      );
                     } else {
                       List<Escuela> escuelas = snapshot.data!;
                       return ListView.separated(
@@ -129,8 +126,7 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditEscuelaPage(idescuela: escuela.id!),
+                                                  builder: (context) => EditEscuelaPage(idescuela: escuela.id!),
                                                 ),
                                               );
                                             },

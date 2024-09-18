@@ -80,9 +80,9 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
       // TODO generar contraseña
       NewUsuario nuevoUsuario = NewUsuario(
         nombre: _nombreController.text,
-        contrasenia: "admin",
+        contrasenia: "docente",
         correo: _correoController.text,
-        rol: 'A',
+        rol: 'D',
         idUsuario: 2,
         solicitud: 'A',
       );

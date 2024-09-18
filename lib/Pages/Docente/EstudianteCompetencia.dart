@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/DocenteNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart'; // Asegúrate de importar el archivo adecuado
 
 void main() {
   runApp(MyApp());
@@ -22,45 +24,29 @@ class _CompetenciaPageState extends State<CompetenciaPage> {
   String selectedFilter = 'Todos'; // Valor inicial para el Dropdown
   List<String> filters = ['Todos', 'Aceptado', 'Pendiente', 'Reprobado'];
   final TextEditingController searchController = TextEditingController();
+  final storage = Session(); // Asegúrate de tener una instancia de Session
+  String? name;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    Map<String, String?> data = await storage.getSession();
+    
+    if (data['name'] != null) {
+      setState(() {
+        name = data['name']!;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset('assets/images/logo_univalle.png', height: 50),
-            SizedBox(width: 10), // Espacio entre logo y el título
-            Text("Lista de Estudiantes en X Competencia"),
-          ],
-        ),
-        backgroundColor: Color(0xFF8E244D), // Color personalizado
-        actions: [
-          DropdownButton(
-            icon: Icon(Icons.people, color: Colors.white),
-            items: [
-              DropdownMenuItem(child: Text('Estudiantes')),
-            ],
-            onChanged: (value) {},
-          ),
-          DropdownButton(
-            icon: Icon(Icons.assessment, color: Colors.white),
-            items: [
-              DropdownMenuItem(child: Text('Competencias')),
-            ],
-            onChanged: (value) {},
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Lógica para cerrar sesión
-            },
-            child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-            ),
-          ),
-        ],
-      ),
+      appBar: docenteNavBar(name ?? '...', storage, context), // Utiliza el docenteNavBar
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

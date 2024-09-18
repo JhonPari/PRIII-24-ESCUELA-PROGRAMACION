@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart'; 
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart'; 
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
@@ -196,7 +197,7 @@ class _MenuAdminState extends State<MenuAdmin> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const VistaDoce(),
+                            builder: (context) => const VistaEscuela(),
                           ),
                         );
                       },

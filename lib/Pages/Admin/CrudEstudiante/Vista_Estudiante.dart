@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/EditarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/AdminNavBar.dart'; // Importa el adminNavBar
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
-
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 void main() => runApp(const VistaEst());
 
@@ -17,54 +18,66 @@ class VistaEst extends StatefulWidget {
 class _VistaEstState extends State<VistaEst> {
   UsuariosService usuariosService = UsuariosService();
   late Future<List<Usuario>> _listaUsuarios;
+  final Session storage = Session();
+  String? name;
 
   @override
   void initState() {
     super.initState();
     _listaUsuarios = usuariosService.getEstudiantes();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    Map<String, String?> data = await storage.getSession();
+    setState(() {
+      name = data['name'] ?? 'Sin Nombre';
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            const Text(
-              'LISTA DE ESTUDIANTES',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF8E244D),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegistrarEstPage()), // NuevaPantalla es la clase de la nueva ventana
-                  );
-                },
-                icon: const Icon(Icons.person_add, color: Colors.white),
-                label: const Text('Añadir'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.grey,
+      home: Scaffold(
+        appBar: adminNavBar(name ?? '...', storage, context), // Usa el adminNavBar aquí
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              const Text(
+                'LISTA DE ESTUDIANTES',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8E244D),
                 ),
               ),
-            ),
-            const SizedBox(height: 15),
-            TablaEst(),
-          ],
+              const SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegistrarEstPage()),
+                    );
+                  },
+                  icon: const Icon(Icons.person_add, color: Colors.white),
+                  label: const Text('Añadir'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.grey,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Expanded(child: TablaEst()),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 
   Expanded TablaEst() {
@@ -89,8 +102,7 @@ class _VistaEstState extends State<VistaEst> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: SingleChildScrollView(
-                  scrollDirection:
-                      Axis.horizontal, // Para scroll horizontal si es necesario
+                  scrollDirection: Axis.horizontal, // Para scroll horizontal si es necesario
                   child: DataTable(
                     columns: const [
                       DataColumn(label: Text('Nombres')),
@@ -103,7 +115,7 @@ class _VistaEstState extends State<VistaEst> {
                         cells: [
                           DataCell(Text(usuario.nombre)),
                           DataCell(Text(usuario.correo)),
-                          const DataCell(Text("0")), //TODO recibir puntos
+                          const DataCell(Text("0")), // TODO recibir puntos
                           DataCell(
                             Row(
                               children: [
@@ -111,13 +123,11 @@ class _VistaEstState extends State<VistaEst> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => EditarEstPage(idUsuario: usuario.id!)), // NuevaPantalla es la clase de la nueva ventana
+                                      MaterialPageRoute(builder: (context) => EditarEstPage(idUsuario: usuario.id!)),
                                     );
                                   },
-                                  icon: const Icon(Icons.sync,
-                                      color: Colors.white),
-                                  label: const Text('Modificar',
-                                      style: TextStyle(color: Colors.white)),
+                                  icon: const Icon(Icons.sync, color: Colors.white),
+                                  label: const Text('Modificar', style: TextStyle(color: Colors.white)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.grey,
                                     minimumSize: const Size(100, 30),
@@ -126,13 +136,10 @@ class _VistaEstState extends State<VistaEst> {
                                 const SizedBox(width: 10),
                                 ElevatedButton.icon(
                                   onPressed: () {
-                                    mostrarDialogoConfirmacion(
-                                        context, usuario.id!);
+                                    mostrarDialogoConfirmacion(context, usuario.id!);
                                   },
-                                  icon: const Icon(Icons.cancel,
-                                      color: Colors.white),
-                                  label: const Text('Eliminar',
-                                      style: TextStyle(color: Colors.white)),
+                                  icon: const Icon(Icons.cancel, color: Colors.white),
+                                  label: const Text('Eliminar', style: TextStyle(color: Colors.white)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF8E244D),
                                     minimumSize: const Size(100, 30),
@@ -160,8 +167,7 @@ class _VistaEstState extends State<VistaEst> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
-          content:
-              const Text('¿Estás seguro de que deseas eliminar este usuario?'),
+          content: const Text('¿Estás seguro de que deseas eliminar este usuario?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -176,19 +182,15 @@ class _VistaEstState extends State<VistaEst> {
               onPressed: () async {
                 try {
                   Navigator.of(context).pop();
-
                   await usuariosService.deleteLogic(id);
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Usuario eliminado exitosamente.'),
                     ),
                   );
-
                   setState(() {
                     _listaUsuarios = usuariosService.getEstudiantes();
                   });
-
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -198,8 +200,7 @@ class _VistaEstState extends State<VistaEst> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    const Color(0xFF8E244D), // Color del botón de confirmación
+                backgroundColor: const Color(0xFF8E244D), // Color del botón de confirmación
               ),
               child: const Text(
                 'Eliminar',

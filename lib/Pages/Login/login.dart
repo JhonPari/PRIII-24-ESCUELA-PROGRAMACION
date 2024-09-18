@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/MenuDocente.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Estudiante/menu_est.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 
@@ -70,10 +71,10 @@ class _LoginState extends State<LoginPage> {
          MaterialPageRoute(builder: (context) => const MenuDoce()),
        );
     } else if (role == 'E') {
-     /*Navigator.pushReplacement(
+     Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const MenuEst()),
-      );*/
+      );
     }
   }
 

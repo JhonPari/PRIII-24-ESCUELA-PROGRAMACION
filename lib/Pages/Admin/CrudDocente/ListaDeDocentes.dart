@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/CrearDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/EditarDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 
 class VistaDoce extends StatefulWidget {
@@ -12,6 +14,8 @@ class VistaDoce extends StatefulWidget {
 }
 
 class _VistaDoceState extends State<VistaDoce> {
+  final storage = Session();
+  String? name;
   UsuariosService usuariosService = UsuariosService();
   late Future<List<Usuario>> _listaUsuarios;
 
@@ -19,11 +23,25 @@ class _VistaDoceState extends State<VistaDoce> {
   void initState() {
     super.initState();
     _listaUsuarios = usuariosService.getDocentes();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    Map<String, String?> data = await storage.getSession();
+
+    if (data['id'] == null || data['name'] == null || data['role'] == null) {
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      setState(() {
+        name = data['name'] ?? 'Sin Nombre';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: adminNavBar(name ?? '...', storage, context),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -45,7 +63,7 @@ class _VistaDoceState extends State<VistaDoce> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const RegistrarDocePage(), // Se agregó 'const'
+                      builder: (context) => const RegistrarDocePage(),
                     ),
                   );
                 },
@@ -58,7 +76,7 @@ class _VistaDoceState extends State<VistaDoce> {
               ),
             ),
             const SizedBox(height: 15),
-            Expanded(child: docentesGrid()), // Cambiamos el widget de la tabla
+            Expanded(child: docentesGrid()),
           ],
         ),
       ),
@@ -84,16 +102,16 @@ class _VistaDoceState extends State<VistaDoce> {
           List<Usuario> usuarios = snapshot.data!;
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // Número de columnas 
-              childAspectRatio: 3 / 2, // Relación de aspecto para que los cuadros se vean como en la imagen
-              crossAxisSpacing: 16.0, // Espacio horizontal entre los cuadros
-              mainAxisSpacing: 16.0, // Espacio vertical entre los cuadros
+              crossAxisCount: 3,
+              childAspectRatio: 3 / 2,
+              crossAxisSpacing: 16.0,
+              mainAxisSpacing: 16.0,
             ),
             itemCount: usuarios.length,
             itemBuilder: (context, index) {
               Usuario usuario = usuarios[index];
               return Card(
-                color: const Color(0xFFE0BFC7), // Color de fondo del cuadro
+                color: const Color(0xFFE0BFC7),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -124,7 +142,8 @@ class _VistaDoceState extends State<VistaDoce> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EditarDocePage(idUsuario: usuario.id!),
+                                  builder: (context) =>
+                                      EditarDocePage(idUsuario: usuario.id!),
                                 ),
                               );
                             },

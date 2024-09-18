@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/DocenteNavBar.dart'; // Asegúrate de importar el archivo adecuado
+import 'package:prlll_24_escuela_programacion/Service/session.dart'; // Asegúrate de importar la clase Session
 
 void main() {
-  runApp(MyApp());
+  runApp(VerCompetencias());
 }
 
-class MyApp extends StatelessWidget {
+class VerCompetencias extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,43 +24,35 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final storage = Session(); // Asegúrate de tener una instancia de Session
+  String? name;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    Map<String, String?> data = await storage.getSession();
+    
+    if (data['name'] != null) {
+      setState(() {
+        name = data['name']!;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset('assets/images/logo_univalle.png', height: 50),
-            SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Karen Poma',
-                  style: TextStyle(fontSize: 18),
-                ),
-                Text(
-                  'Estudiante Univalle',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-            },
-            child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-              side: BorderSide(color: Colors.black), // Borde negro
-            ),
-          ),
-        ],
-        backgroundColor: Color(0xFF8E244D),
-      ),
+      appBar: docenteNavBar(name ?? '...', storage, context), // Utiliza el docenteNavBar
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -130,7 +124,7 @@ class CompetenciaCard extends StatelessWidget {
               onPressed: () {
                 // Lógica del botón Calificar
               },
-              child: Text('Calificar',style: TextStyle(color: Colors.white)),
+              child: Text('Calificar', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF8E244D),
               ),
