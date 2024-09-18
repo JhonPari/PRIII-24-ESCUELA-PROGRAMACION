@@ -122,6 +122,7 @@ class UsuariosService {
       throw Exception("Error al actualizar la solicitud del Usuario");
     }
   }
+  
 
   // Método para eliminar físicamente un usuario (si lo necesitas más adelante)
   // Future<Usuario> delete(int id) async {
@@ -134,4 +135,18 @@ class UsuariosService {
   //     throw Exception("Error al eliminar un Usuario");
   //   }
   // }
+  Future<Map<String, dynamic>?> login(String correo, String passw) async {
+    final url = Uri.parse("$baseUri/Login");
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'Correo': correo, 'Contrasenia': passw}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return null;
+    }
+  }
 }
