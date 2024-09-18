@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
 import 'package:http/http.dart' as http;
+import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
 
 class EscuelaService {
   final String baseUri = "https://localhost:7096/api/Escuela";

@@ -7,6 +7,7 @@ import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
 
 
+
 void main() => runApp(const VistaEscuela());
 
 class VistaEscuela extends StatefulWidget {
