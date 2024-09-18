@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
-AppBar adminNavBar(String nombre) {
+AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
   // Definir un estilo de texto común
   TextStyle commonTextStyle =
       const TextStyle(fontSize: 16, color: Colors.black);
@@ -119,7 +121,14 @@ AppBar adminNavBar(String nombre) {
         ),
         const SizedBox(width: 25),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: ()async {
+            await sesion.removeSession();
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
             shape: RoundedRectangleBorder(

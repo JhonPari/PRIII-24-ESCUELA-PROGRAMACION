@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/Modificar_Escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/AdminNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
 
 
@@ -15,27 +17,46 @@ class VistaEscuela extends StatefulWidget {
 }
 
 class _VistaEscuelaState extends State<VistaEscuela> {
-  EscuelaService escuelaService = EscuelaService();
-  late Future<List<Escuela>> _listaEscuelas;
+  final storage = Session();
+  String? name;
 
   @override
   void initState() {
     super.initState();
-    _listaEscuelas = escuelaService.getAll();
+    _loadSession();
   }
 
+  Future<void> _loadSession() async {
+    // Obtiene el mapa con los datos de la sesión
+    Map<String, String?> data = await storage.getSession();
+    
+    if (data['id'] == null || data['name'] == null || data['role'] == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+      //if del rol
+    }
+    else {
+      setState(() {
+        name = data['name'] ?? 'Sin Nombre'; 
+      });
+    }
+  }
+  EscuelaService escuelaService = EscuelaService();
+  late Future<List<Escuela>> _listaEscuelas;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: adminNavBar("Diego R"),
+        appBar: adminNavBar(name ?? '...', storage, context),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Center(
-                child: const Text(
+              const Center(
+                child: Text(
                   'LISTA ESCUELA',
                   style: TextStyle(
                     fontSize: 20,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/CrearDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,7 +11,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: RegistrarDocePage()
+      home: LoginPage()
     );
   }
 }

@@ -1,20 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart'; // Asegúrate de que esta ruta sea correcta
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart'; 
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/AdminNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 void main() {
   runApp(const MenuAdmin());
 }
 
-class MenuAdmin extends StatelessWidget {
+class MenuAdmin extends StatefulWidget {
   const MenuAdmin({super.key});
 
+  @override
+  _MenuAdminState createState() => _MenuAdminState();
+}
+
+class _MenuAdminState extends State<MenuAdmin> {
+  final storage = Session();
+  String? name;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    // Obtiene el mapa con los datos de la sesión
+    Map<String, String?> data = await storage.getSession();
+    
+    if (data['id'] == null || data['name'] == null || data['role'] == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+      //if del rol
+    }
+    else {
+      setState(() {
+        name = data['name'] ?? 'Sin Nombre'; 
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: adminNavBar("Diego R"),
+        appBar: adminNavBar(name ?? '...', storage, context),
         body: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

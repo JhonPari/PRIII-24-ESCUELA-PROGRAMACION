@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/AdminNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
 
 void main() {
@@ -28,14 +30,39 @@ class RegistrarEscuelaPage extends StatefulWidget {
 class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _descripcionController = TextEditingController();
-
   // Servicio de Usuario
   final EscuelaService _escuelaService = EscuelaService();
+  final storage = Session();
+  String? name;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    // Obtiene el mapa con los datos de la sesión
+    Map<String, String?> data = await storage.getSession();
+    
+    if (data['id'] == null || data['name'] == null || data['role'] == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+      //if del rol
+    }
+    else {
+      setState(() {
+        name = data['name'] ?? 'Sin Nombre'; 
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: adminNavBar("Diego R"),
+      appBar: adminNavBar(name ?? '...', storage, context),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

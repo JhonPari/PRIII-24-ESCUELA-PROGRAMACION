@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 
@@ -15,6 +17,32 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
   final TextEditingController _correoController = TextEditingController();
   final UsuariosService _usuarioService = UsuariosService();
   final _formKey = GlobalKey<FormState>();
+  final storage = Session();
+  String? name;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    // Obtiene el mapa con los datos de la sesión
+    Map<String, String?> data = await storage.getSession();
+    
+    if (data['id'] == null || data['name'] == null || data['role'] == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+      //if del rol
+    }
+    else {
+      setState(() {
+        name = data['name'] ?? 'Sin Nombre'; 
+      });
+    }
+  }
 
   String? validateFullName(String? value) {
     if (value == null || value.isEmpty) {
@@ -52,11 +80,11 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
       // TODO generar contraseña
       NewUsuario nuevoUsuario = NewUsuario(
         nombre: _nombreController.text,
-        contrasenia: "prueba",
+        contrasenia: "admin",
         correo: _correoController.text,
-        rol: 'D',
+        rol: 'A',
         idUsuario: 2,
-        solicitud: 'P',
+        solicitud: 'A',
       );
 
       // Llamar al método post para enviar el Usuario a la API
