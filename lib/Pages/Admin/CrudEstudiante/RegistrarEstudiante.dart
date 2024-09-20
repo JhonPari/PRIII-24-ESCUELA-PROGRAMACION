@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
-
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class RegistrarEstPage extends StatefulWidget {
   const RegistrarEstPage({super.key});
@@ -15,19 +16,34 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
   final TextEditingController _correoController = TextEditingController();
   final UsuariosService _usuarioService = UsuariosService();
   final _formKey = GlobalKey<FormState>();
+  final Session storage = Session();
+  String? name;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    Map<String, String?> data = await storage.getSession();
+    if (data['id'] == null || data['name'] == null || data['role'] == null) {
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      setState(() {
+        name = data['name'] ?? 'Sin Nombre';
+      });
+    }
+  }
 
   String? validateFullName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor, ingresa tu nombre completo';
     }
-    
-    // Expresión regular para validar el nombre completo en español
     final nameRegex = RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
-    
     if (!nameRegex.hasMatch(value)) {
       return 'Por favor, ingresa un nombre completo válido (e.g., Juan Pérez)';
     }
-    
     return null;
   }
 
@@ -35,21 +51,15 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
     if (value == null || value.isEmpty) {
       return 'Por favor, ingresa una dirección de correo electrónico';
     }
-    
-    // Expresión regular para validar el formato del correo electrónico
     final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
-    
     if (!emailRegex.hasMatch(value)) {
       return 'Por favor, ingresa una dirección de correo electrónico válida';
     }
-    
     return null;
   }
 
   Future<void> crearUsuario(BuildContext context) async {
     try {
-      // Crear el objeto Usuario
-      // TODO generar contraseña
       NewUsuario nuevoUsuario = NewUsuario(
         nombre: _nombreController.text,
         contrasenia: "prueba",
@@ -59,22 +69,16 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
         solicitud: 'A',
       );
 
-      // Llamar al método post para enviar el Usuario a la API
       Usuario estudiante = await _usuarioService.post(nuevoUsuario);
 
-      // Si es exitoso, mostrar un mensaje
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            "Usuario creado con éxito: ${estudiante.idUsuario}"
-          ),
+          content: Text("Usuario creado con éxito: ${estudiante.idUsuario}"),
         ),
       );
 
       Navigator.of(context).pop();
-
     } catch (e) {
-      // Mostrar mensaje de error en caso de fallo
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Error al crear el usuario"),
@@ -83,10 +87,10 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: adminNavBar(name ?? '...', storage, context), // Usa el navbar de Admin
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -120,8 +124,7 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         filled: true,
-                        fillColor: const Color(
-                            0xFFF5E0E5),
+                        fillColor: const Color(0xFFF5E0E5),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -134,8 +137,7 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         filled: true,
-                        fillColor: const Color(
-                            0xFFF5E0E5),
+                        fillColor: const Color(0xFFF5E0E5),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -164,8 +166,7 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
                         backgroundColor: Colors.grey,
                         minimumSize: const Size(double.infinity, 40),
                       ),
-                      child: const Text('Volver',
-                          style: TextStyle(color: Colors.white)),
+                      child: const Text('Volver', style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),

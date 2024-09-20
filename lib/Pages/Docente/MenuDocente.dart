@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Docente/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/EstudianteCompetencia.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class MenuDoce extends StatefulWidget {
@@ -39,7 +39,7 @@ class _MenuDoceState extends State<MenuDoce> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: docenteNavBar(name ?? '...', storage, context),
+      appBar: NavBarMenus(name ?? '...', storage, context),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 70.0),
@@ -79,7 +79,7 @@ class _MenuDoceState extends State<MenuDoce> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CompetenciaPage(),
+                      builder: (context) => CompetenciaPage (),
                     ),
                   );
                 },

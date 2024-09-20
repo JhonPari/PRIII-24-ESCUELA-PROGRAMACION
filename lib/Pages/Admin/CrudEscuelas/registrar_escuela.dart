@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/AdminNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
 
 void main() {
-  runApp(RegistrarEscuela());
+  runApp(const RegistrarEscuela());
 }
 
 class RegistrarEscuela extends StatelessWidget {
@@ -15,7 +15,7 @@ class RegistrarEscuela extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: RegistrarEscuelaPage(),
+      home: const RegistrarEscuelaPage(),
     );
   }
 }
@@ -30,9 +30,8 @@ class RegistrarEscuelaPage extends StatefulWidget {
 class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _descripcionController = TextEditingController();
-  // Servicio de Usuario
   final EscuelaService _escuelaService = EscuelaService();
-  final storage = Session();
+  final Session storage = Session();
   String? name;
 
   @override
@@ -42,17 +41,13 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
   }
 
   Future<void> _loadSession() async {
-    // Obtiene el mapa con los datos de la sesión
     Map<String, String?> data = await storage.getSession();
-    
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
-      //if del rol
-    }
-    else {
+    } else {
       setState(() {
         name = data['name'] ?? 'Sin Nombre'; 
       });
@@ -84,7 +79,6 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                     color: Color(0xFF8E244D),
                   ),
                 ),
-                
                 const SizedBox(height: 20),
                 buildTextField('Nombre', _nombreController),
                 const SizedBox(height: 10),
@@ -93,23 +87,18 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                 ElevatedButton.icon(
                   onPressed: () async {
                     try {
-                      // Crear el objeto Usuario
                       NewEscuela nuevaEscuela = NewEscuela(
                           nombre: "${_nombreController.text}",
                           descripcion: "${_descripcionController.text}");
 
-                      // Llamar al método post para enviar el Usuario a la API
-                      Escuela escuela =
-                          await _escuelaService.post(nuevaEscuela);
+                      Escuela escuela = await _escuelaService.post(nuevaEscuela);
 
-                      // Si es exitoso, mostrar un mensaje
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                            content: Text(
-                                "Escuela creada con éxito: ${escuela.id}")),
+                          content: Text("Escuela creada con éxito: ${escuela.id}"),
+                        ),
                       );
                     } catch (e) {
-                      // Mostrar mensaje de error en caso de fallo
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Error al crear la Escuela")),
                       );
@@ -128,14 +117,13 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    // Acción al presionar Volver
+                    Navigator.of(context).pop(); // Agrega la navegación de vuelta
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,
                     minimumSize: const Size(double.infinity, 40),
                   ),
-                  child: const Text('Volver',
-                      style: TextStyle(color: Colors.white)),
+                  child: const Text('Volver', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -154,8 +142,7 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
           borderRadius: BorderRadius.circular(8),
         ),
         filled: true,
-        fillColor: const Color(
-            0xFFF5E0E5), // Fondo rosado claro en los campos de texto
+        fillColor: const Color(0xFFF5E0E5), // Fondo rosado claro en los campos de texto
       ),
     );
   }

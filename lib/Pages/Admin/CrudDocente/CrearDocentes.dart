@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
-import 'package:prlll_24_escuela_programacion/Service/session.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 
 class RegistrarDocePage extends StatefulWidget {
@@ -17,7 +17,7 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
   final TextEditingController _correoController = TextEditingController();
   final UsuariosService _usuarioService = UsuariosService();
   final _formKey = GlobalKey<FormState>();
-  final storage = Session();
+  final Session storage = Session();
   String? name;
 
   @override
@@ -27,19 +27,12 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
   }
 
   Future<void> _loadSession() async {
-    // Obtiene el mapa con los datos de la sesión
     Map<String, String?> data = await storage.getSession();
-    
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
-      //if del rol
-    }
-    else {
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
       setState(() {
-        name = data['name'] ?? 'Sin Nombre'; 
+        name = data['name'] ?? 'Sin Nombre';
       });
     }
   }
@@ -48,14 +41,10 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
     if (value == null || value.isEmpty) {
       return 'Por favor, ingresa tu nombre completo';
     }
-    
-    // Expresión regular para validar el nombre completo en español
     final nameRegex = RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
-    
     if (!nameRegex.hasMatch(value)) {
       return 'Por favor, ingresa un nombre completo válido (e.g., Juan Pérez)';
     }
-    
     return null;
   }
 
@@ -63,21 +52,15 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
     if (value == null || value.isEmpty) {
       return 'Por favor, ingresa una dirección de correo electrónico';
     }
-    
-    // Expresión regular para validar el formato del correo electrónico
     final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
-    
     if (!emailRegex.hasMatch(value)) {
       return 'Por favor, ingresa una dirección de correo electrónico válida';
     }
-    
     return null;
   }
 
   Future<void> crearUsuario(BuildContext context) async {
     try {
-      // Crear el objeto Usuario
-      // TODO generar contraseña
       NewUsuario nuevoUsuario = NewUsuario(
         nombre: _nombreController.text,
         contrasenia: "docente",
@@ -86,23 +69,13 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
         idUsuario: 2,
         solicitud: 'A',
       );
-
-      // Llamar al método post para enviar el Usuario a la API
       Usuario estudiante = await _usuarioService.post(nuevoUsuario);
-
-      // Si es exitoso, mostrar un mensaje
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            "Usuario creado con éxito: ${estudiante.idUsuario}"
-          ),
+          content: Text("Usuario creado con éxito: ${estudiante.idUsuario}"),
         ),
       );
-
-      //Navigator.of(context).pop();
-
     } catch (e) {
-      // Mostrar mensaje de error en caso de fallo
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Error al crear el usuario"),
@@ -111,10 +84,10 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: adminNavBar(name ?? '...', storage, context), // Usa el mismo navbar que en EditarDocePage
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -148,8 +121,7 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         filled: true,
-                        fillColor: const Color(
-                            0xFFF5E0E5),
+                        fillColor: const Color(0xFFF5E0E5),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -162,8 +134,7 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         filled: true,
-                        fillColor: const Color(
-                            0xFFF5E0E5),
+                        fillColor: const Color(0xFFF5E0E5),
                       ),
                     ),
                     const SizedBox(height: 20),

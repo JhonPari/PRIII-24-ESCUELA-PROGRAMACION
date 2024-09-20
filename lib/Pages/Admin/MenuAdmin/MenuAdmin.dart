@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart'; 
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 void main() {
@@ -48,7 +48,7 @@ class _MenuAdminState extends State<MenuAdmin> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: adminNavBar(name ?? '...', storage, context),
+        appBar: NavBarMenus(name ?? '...', storage, context),
         body: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

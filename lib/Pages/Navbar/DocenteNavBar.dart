@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Estudiante/menu_est.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/EstudianteCompetencia.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/MenuDocente.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
@@ -15,7 +17,7 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const MenuEst()), // Navegar a la página MenuEst
+              MaterialPageRoute(builder: (context) => const MenuDoce()), // Navegar a la página MenuEst
             );
           },
           child: const CircleAvatar(
@@ -40,7 +42,15 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
         const Spacer(),
         PopupMenuButton<String>(
           onSelected: (value) {
-            // Manejar la acción seleccionada
+            switch (value) {
+              case 'competencias':
+                // Redirigir a la página de competencias
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => VerCompetencias()), // Asegúrate de crear esta página
+                );
+                break;
+            }
           },
           itemBuilder: (BuildContext context) {
             return [
@@ -58,7 +68,26 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
         const SizedBox(width: 10),
         PopupMenuButton<String>(
           onSelected: (value) {
-            // Manejar la acción seleccionada
+            switch (value) {
+              case 'lista_Estudiantes':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CompetenciaPage()), // Asegúrate de crear esta página
+                );
+                break;
+              /*case 'agregar_estudiante':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AgregarEstudiantePage()), // Asegúrate de crear esta página
+                );
+                break;
+              case 'solicitud':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const VerSolicitudesPage()), // Asegúrate de crear esta página
+                );
+                break;*/
+            }
           },
           itemBuilder: (BuildContext context) {
             return [

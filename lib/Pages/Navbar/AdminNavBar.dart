@@ -1,0 +1,156 @@
+import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/CrearDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/registrar_escuela.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
+// Asegúrate de importar las demás páginas necesarias
+
+AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
+  TextStyle commonTextStyle = const TextStyle(fontSize: 16, color: Colors.black);
+
+  return AppBar(
+    backgroundColor: const Color(0xFF8B2D56),
+    title: Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MenuAdmin()),
+            );
+          },
+          child: const CircleAvatar(
+            backgroundImage: AssetImage('assets/images/logo_univalle.png'),
+            radius: 20,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              nombre,
+              style: commonTextStyle.copyWith(color: Colors.white38),
+            ),
+            const Text(
+              'Estudiante',
+              style: TextStyle(color: Colors.white54, fontSize: 16),
+            ),
+          ],
+        ),
+        const Spacer(),
+        // Botón "Reportes"
+        PopupMenuButton<String>( 
+          onSelected: (value) {
+            // Opciones de reportes
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<String>(value: 'ver_puntos', child: Text('Ver Puntos', style: commonTextStyle)),
+              PopupMenuItem<String>(value: 'ver_fecha', child: Text('Ver Fecha', style: commonTextStyle)),
+            ];
+          },
+          child: Text('Reportes', style: commonTextStyle),
+        ),
+        const SizedBox(width: 10),
+        // Botón "Escuelas"
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'lista_escuelas') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VistaEscuela()), // Redirige a la página de lista de escuelas
+              );
+            } else if (value == 'agregar_escuela') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const RegistrarEscuela()), // Redirige a la página de agregar escuela
+              );
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<String>(value: 'lista_escuelas', child: Text('Lista Escuelas', style: commonTextStyle)),
+              PopupMenuItem<String>(value: 'agregar_escuela', child: Text('Agregar Escuelas', style: commonTextStyle)),
+            ];
+          },
+          child: Text('Escuelas', style: commonTextStyle),
+        ),
+        const SizedBox(width: 10),
+        // Botón "Estudiantes"
+        PopupMenuButton<String>( 
+          onSelected: (value) {
+            if (value == 'lista_estudiantes') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VistaEst()),
+              );
+            } else if (value == 'agregar_estudiante') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const RegistrarEstPage()),
+              );
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<String>(value: 'lista_estudiantes', child: Text('Lista Estudiantes', style: commonTextStyle)),
+              PopupMenuItem<String>(value: 'agregar_estudiante', child: Text('Agregar Estudiante', style: commonTextStyle)),
+            ];
+          },
+          child: Text('Estudiantes', style: commonTextStyle),
+        ),
+        const SizedBox(width: 10),
+        // Botón "Docentes"
+        PopupMenuButton<String>( 
+          onSelected: (value) {
+            if (value == 'lista_docentes') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VistaDoce()),
+              );
+            } else if (value == 'agregar_docente') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const RegistrarDocePage()),
+              );
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<String>(value: 'lista_docentes', child: Text('Lista Docentes', style: commonTextStyle)),
+              PopupMenuItem<String>(value: 'agregar_docente', child: Text('Agregar Docente', style: commonTextStyle)),
+            ];
+          },
+          child: Text('Docentes', style: commonTextStyle),
+        ),
+        const SizedBox(width: 25),
+        // Botón "Cerrar Sesión"
+        ElevatedButton(
+          onPressed: () async {
+            await sesion.removeSession();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+          child: const Text(
+            'Cerrar Sesión',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+      ],
+    ),
+  );
+}

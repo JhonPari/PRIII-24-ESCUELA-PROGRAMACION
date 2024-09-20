@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Estudiante/est_navbar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/pages/Login/login.dart';
 

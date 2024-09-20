@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Docente/DocenteNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart'; // Asegúrate de importar el archivo adecuado
 
 void main() {

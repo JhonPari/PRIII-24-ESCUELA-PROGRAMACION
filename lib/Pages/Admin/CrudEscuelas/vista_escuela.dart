@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/Modificar_Escuela.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/AdminNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/registrar_escuela.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -19,17 +20,16 @@ class _VistaEscuelaState extends State<VistaEscuela> {
   final storage = Session();
   String? name;
   EscuelaService escuelaService = EscuelaService();
-  late Future<List<Escuela>> _listaEscuelas; // Late variable
+  late Future<List<Escuela>> _listaEscuelas;
 
   @override
   void initState() {
     super.initState();
     _loadSession();
-    _listaEscuelas = escuelaService.getAll(); // Inicialización de _listaEscuelas
+    _listaEscuelas = escuelaService.getAll();
   }
 
   Future<void> _loadSession() async {
-    // Obtiene el mapa con los datos de la sesión
     Map<String, String?> data = await storage.getSession();
 
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
@@ -48,7 +48,7 @@ class _VistaEscuelaState extends State<VistaEscuela> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: adminNavBar(name ?? '...', storage, context), // adminNavBar agregado aquí
+        appBar: adminNavBar(name ?? '...', storage, context),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -64,7 +64,28 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16.0), // Espacio entre el título y la lista
+              const SizedBox(height: 16.0),
+              // Botón Añadir
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegistrarEscuelaPage(), // Redirige a la página de registro
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.add, color: Colors.white),
+                  label: const Text('Añadir Escuela'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xFF8E244D),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16.0),
               Expanded(
                 child: FutureBuilder<List<Escuela>>(
                   future: _listaEscuelas,
@@ -87,13 +108,13 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                           return Align(
                             alignment: Alignment.center,
                             child: SizedBox(
-                              width: 400, // Ancho fijo para el Card
+                              width: 400,
                               child: Card(
-                                color: const Color(0xFFB1778E), // Color de fondo del Card
+                                color: const Color(0xFFB1778E),
                                 elevation: 4.0,
                                 margin: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Container(
-                                  height: 140, // Ajustar la altura para hacer el card más pequeño
+                                  height: 140,
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,11 +122,11 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                                       Text(escuela.nombre,
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.black)), // Color del texto
+                                              color: Colors.black)),
                                       const SizedBox(height: 8.0),
                                       Text(escuela.descripcion,
                                           style: const TextStyle(
-                                              color: Color.fromARGB(255, 72, 6, 6))), // Color del texto
+                                              color: Color.fromARGB(255, 72, 6, 6))),
                                       const Spacer(),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.end,
@@ -164,7 +185,6 @@ class _VistaEscuelaState extends State<VistaEscuela> {
         _listaEscuelas = escuelaService.getAll();
       });
     } catch (e) {
-      // Manejar el error
       print('Error al eliminar la escuela: $e');
     }
   }

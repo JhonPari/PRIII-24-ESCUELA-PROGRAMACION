@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Docente/DocenteNavBar.dart'; // Asegúrate de importar el archivo adecuado
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart'; // Asegúrate de importar el archivo adecuado
 import 'package:prlll_24_escuela_programacion/Service/session.dart'; // Asegúrate de importar la clase Session
 
 void main() {

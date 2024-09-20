@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
-
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class EditarDocePage extends StatefulWidget {
   final int idUsuario; // Recibe el id del usuario
@@ -17,12 +18,15 @@ class _EditarDoceState extends State<EditarDocePage> {
   final TextEditingController _correoController = TextEditingController();
   final UsuariosService _usuarioService = UsuariosService();
   final _formKey = GlobalKey<FormState>();
-  late Usuario? _usuario; // Cambiado para permitir valores nulos
+  late Usuario? _usuario;
+  final Session storage = Session();
+  String? name;
 
   @override
   void initState() {
     super.initState();
     _cargarUsuario();
+    _loadSession();
   }
 
   void _cargarUsuario() async {
@@ -34,9 +38,20 @@ class _EditarDoceState extends State<EditarDocePage> {
         _correoController.text = _usuario!.correo;
       }
       else {
-        //TODO cerrar esta ventana
+        // TODO cerrar esta ventana
       }
     });
+  }
+
+  Future<void> _loadSession() async {
+    Map<String, String?> data = await storage.getSession();
+    if (data['id'] == null || data['name'] == null || data['role'] == null) {
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      setState(() {
+        name = data['name'] ?? 'Sin Nombre';
+      });
+    }
   }
 
   String? validateFullName(String? value) {
@@ -84,91 +99,90 @@ class _EditarDoceState extends State<EditarDocePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                const SizedBox(height: 30),
-                const Text(
-                  'MODIFICAR DOCENTE',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF8E244D),
-                  ),
+    return Scaffold(
+      appBar: adminNavBar(name ?? '...', storage, context), // Aquí se añade el navbar
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              const Text(
+                'MODIFICAR DOCENTE',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8E244D),
                 ),
-                const SizedBox(height: 30),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE0BFC7),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _nombreController,
-                        validator: validateFullName,
-                        decoration: InputDecoration(
-                          labelText: 'Nombres',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          filled: true,
-                          fillColor: const Color(0xFFF5E0E5),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _correoController,
-                        validator: validateEmail,
-                        decoration: InputDecoration(
-                          labelText: 'Correo',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          filled: true,
-                          fillColor: const Color(0xFFF5E0E5),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            actualizarUsuario(context);
-                          }
-                        },
-                        icon: const Icon(Icons.check, color: Colors.white),
-                        label: const Text(
-                          'Aceptar',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8E244D),
-                          minimumSize: const Size(double.infinity, 40),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey,
-                          minimumSize: const Size(double.infinity, 40),
-                        ),
-                        child: const Text('Volver',
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                    ],
-                  ),
+              ),
+              const SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE0BFC7),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ],
-            ),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _nombreController,
+                      validator: validateFullName,
+                      decoration: InputDecoration(
+                        labelText: 'Nombres',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFF5E0E5),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: _correoController,
+                      validator: validateEmail,
+                      decoration: InputDecoration(
+                        labelText: 'Correo',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFF5E0E5),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          actualizarUsuario(context);
+                        }
+                      },
+                      icon: const Icon(Icons.check, color: Colors.white),
+                      label: const Text(
+                        'Aceptar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF8E244D),
+                        minimumSize: const Size(double.infinity, 40),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey,
+                        minimumSize: const Size(double.infinity, 40),
+                      ),
+                      child: const Text('Volver',
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
