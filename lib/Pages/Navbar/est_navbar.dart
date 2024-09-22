@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/pages/Login/login.dart';
 
 
-AppBar estNavBar(String nombre, Session sesion, BuildContext context) {
+AppBar estNavBar(String nombre, Session sesion, BuildContext context,int id) {
   return AppBar(
     backgroundColor: const Color(0xFF8B2D56),
     title: Row(
@@ -28,9 +29,14 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context) {
         ),
         const Spacer(),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => VerLogrosPage(idEst: id)),
+                  );
+          },
           child: const Text(
-            'Logros',
+            'Ver Logros',
             style: TextStyle(color: Colors.black),
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/pages/Login/login.dart';
@@ -18,6 +19,7 @@ class MenuEst extends StatefulWidget {
 class _MenuEstState extends State<MenuEst> {
   final storage = Session();
   String? name;
+  int id = 0;
 
   @override
   void initState() {
@@ -39,6 +41,7 @@ class _MenuEstState extends State<MenuEst> {
     else {
       setState(() {
         name = data['name'] ?? 'Sin Nombre'; 
+        id = int.parse(data['id']!);
       });
     }
   }
@@ -47,7 +50,7 @@ class _MenuEstState extends State<MenuEst> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: estNavBar(name ?? '...', storage, context),
+        appBar: estNavBar(name ?? '...', storage, context,id),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +71,13 @@ class _MenuEstState extends State<MenuEst> {
               ),
               const SizedBox(height: 50),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Redirigir a la página de Tareas
+                  /*Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TareasPage()),
+                  );*/
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B2D56),
                   minimumSize: const Size(300, 80),
@@ -85,7 +94,13 @@ class _MenuEstState extends State<MenuEst> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Redirigir a la página de Logros
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => VerLogrosPage(idEst: id)),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B2D56),
                   minimumSize: const Size(300, 80),
