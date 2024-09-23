@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Estudiante/menu_est.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/pages/Login/login.dart';
 
 
-AppBar estNavBar(String nombre, Session sesion, BuildContext context,int id) {
+AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
   return AppBar(
     backgroundColor: const Color(0xFF8B2D56),
     title: Row(
       children: [
-        const CircleAvatar(
-          backgroundImage: AssetImage('assets/images/logo_univalle.png'),
-          radius: 20,
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MenuEst ()), // Redirige al menú de estudiante
+            );
+          },
+          child: const CircleAvatar(
+            backgroundImage: AssetImage('assets/images/logo_univalle.png'),
+            radius: 20,
+          ),
         ),
         const SizedBox(width: 10),
         Column(
@@ -31,9 +40,9 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context,int id) {
         TextButton(
           onPressed: () {
             Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => VerLogrosPage(idEst: id)),
-                  );
+              context,
+              MaterialPageRoute(builder: (context) => VerLogrosPage(idEst: id)),
+            );
           },
           child: const Text(
             'Ver Logros',
