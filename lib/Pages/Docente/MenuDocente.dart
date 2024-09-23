@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/EstudianteCompetencia.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -91,7 +92,7 @@ class _MenuDoceState extends State<MenuDoce> {
                   ),
                 ),
                 child: const Text(
-                  'Estudiantes',
+                  'Estudiantes X Competencia',
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -105,7 +106,7 @@ class _MenuDoceState extends State<MenuDoce> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CompetenciaPage (),
+                      builder: (context) => VerCompetencias (),
                     ),
                   );
                   

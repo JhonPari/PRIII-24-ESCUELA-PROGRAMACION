@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart'; // Asegúrate de importar el archivo adecuado
-import 'package:prlll_24_escuela_programacion/Service/session.dart'; // Asegúrate de importar la clase Session
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart'; // Importa el docenteNavBar
+import 'package:prlll_24_escuela_programacion/Service/session.dart'; // Importa el servicio de sesión
+import 'package:prlll_24_escuela_programacion/pages/docente/EstudianteCompetencia.dart'; // Importa la página CompetenciaPage
 
 void main() {
   runApp(VerCompetencias());
@@ -30,18 +31,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final storage = Session(); // Asegúrate de tener una instancia de Session
+  final storage = Session(); // Instancia de Session
   String? name;
 
   @override
   void initState() {
     super.initState();
-    _loadSession();
+    _loadSession(); // Cargar la sesión del usuario
   }
 
   Future<void> _loadSession() async {
     Map<String, String?> data = await storage.getSession();
-    
     if (data['name'] != null) {
       setState(() {
         name = data['name']!;
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: docenteNavBar(name ?? '...', storage, context), // Utiliza el docenteNavBar
+      appBar: docenteNavBar(name ?? '...', storage, context), // Usa el docenteNavBar
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -122,7 +122,10 @@ class CompetenciaCard extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                // Lógica del botón Calificar
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CompetenciaPage()),
+                );
               },
               child: Text('Calificar', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(

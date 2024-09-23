@@ -47,7 +47,7 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
                 // Redirigir a la página de competencias
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VerCompetencias()), // Asegúrate de crear esta página
+                  MaterialPageRoute(builder: (context) =>VerCompetencias()), // Asegúrate de crear esta página
                 );
                 break;
             }
