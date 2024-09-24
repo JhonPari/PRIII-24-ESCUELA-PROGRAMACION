@@ -1,3 +1,4 @@
+// Asegúrate de importar las demás páginas necesarias
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/CrearDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
@@ -6,6 +7,8 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_esc
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 // Asegúrate de importar las demás páginas necesarias
@@ -45,9 +48,22 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
         ),
         const Spacer(),
         // Botón "Reportes"
-        PopupMenuButton<String>( 
+        PopupMenuButton<String>(
           onSelected: (value) {
-            // Opciones de reportes
+            // Redirige según la opción seleccionada
+            if (value == 'ver_puntos') {
+              // Cambia 'VistaPuntos' por el nombre de la página que deseas
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VistaReporte()),
+              );
+            } else if (value == 'ver_fecha') {
+              // Cambia 'VistaFecha' por el nombre de la página que deseas
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
+              );
+            }
           },
           itemBuilder: (BuildContext context) {
             return [
@@ -83,7 +99,7 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
         ),
         const SizedBox(width: 10),
         // Botón "Estudiantes"
-        PopupMenuButton<String>( 
+        PopupMenuButton<String>(
           onSelected: (value) {
             if (value == 'lista_estudiantes') {
               Navigator.push(
@@ -107,7 +123,7 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
         ),
         const SizedBox(width: 10),
         // Botón "Docentes"
-        PopupMenuButton<String>( 
+        PopupMenuButton<String>(
           onSelected: (value) {
             if (value == 'lista_docentes') {
               Navigator.push(

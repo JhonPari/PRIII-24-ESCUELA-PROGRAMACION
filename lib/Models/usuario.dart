@@ -9,7 +9,7 @@ class Usuario {
   DateTime? fechaActualizacion; // Puede ser nulo
   String estado;
   String solicitud;
-
+ 
   // Constructor
   Usuario({
     required this.id,
@@ -22,6 +22,7 @@ class Usuario {
     this.fechaActualizacion,
     required this.estado,
     required this.solicitud,
+
   });
 
   // Método para crear un Usuario a partir de un JSON (deserialización)
@@ -39,10 +40,9 @@ class Usuario {
           : null,
       estado: json['estado'],
       solicitud: json['solicitud'],
+
     );
   }
-
-
 
   // Método para convertir un Usuario a JSON (serialización)
   Map<String, dynamic> toJson() {

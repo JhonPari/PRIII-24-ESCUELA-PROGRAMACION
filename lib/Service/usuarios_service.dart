@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +17,6 @@ class UsuariosService {
       throw Exception("Error al cargar todos los Usuarios");
     }
   }
-
   Future<List<Usuario>> getDocentes() async {
     final url = Uri.parse("$baseUri/Docentes");
     var response = await http.get(url);
@@ -149,4 +149,16 @@ class UsuariosService {
       return null;
     }
   }
+  Future<List<ReporteEstudiante>> getReportEstudiantes() async {
+  final url = Uri.parse("$baseUri/EstudiantesReporte");
+  var response = await http.get(url);
+  if (response.statusCode == 200) {
+    List<dynamic> jsonData = jsonDecode(response.body);
+    return jsonData.map((json) => ReporteEstudiante.fromJson(json)).toList();
+  } else {
+    throw Exception("Error al cargar todos los Reportes de Estudiantes");
+  }
+}
+
+
 }

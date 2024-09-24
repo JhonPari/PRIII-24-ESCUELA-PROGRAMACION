@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart'; 
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -90,14 +91,14 @@ class _MenuAdminState extends State<MenuAdmin> {
                     ElevatedButton(
                       onPressed: () {
                         // Navegación para Ver Reportes
-                        /*
+                        
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => VerReportesPage(),
+                            builder: (context) => const VistaReporte(),
                           ),
                         );
-                        */
+                        
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF8B2D56),
