@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Estudiante/EstCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -73,10 +74,10 @@ class _MenuEstState extends State<MenuEst> {
               ElevatedButton(
                 onPressed: () {
                   // Redirigir a la página de Tareas
-                  /*Navigator.push(
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const TareasPage()),
-                  );*/
+                    MaterialPageRoute(builder: (context) => const EstCompetenciaPage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B2D56),

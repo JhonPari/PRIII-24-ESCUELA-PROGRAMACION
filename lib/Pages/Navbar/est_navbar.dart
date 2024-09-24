@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Estudiante/EstCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/menu_est.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -50,7 +52,12 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
           ),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EstCompetenciaPage()),
+            );
+          },
           child: const Text(
             'Competencias Inscritas',
             style: TextStyle(color: Colors.black),
