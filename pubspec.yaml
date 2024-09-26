@@ -12,6 +12,10 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   http: ^1.2.2
   image_picker: ^1.1.2
+  excel: ^2.0.6
+  path_provider: ^2.0.11
+  pdf: ^3.6.2
+  printing: ^5.9.0
 
 dev_dependencies:
   flutter_test:

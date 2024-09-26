@@ -159,6 +159,16 @@ class UsuariosService {
     throw Exception("Error al cargar todos los Reportes de Estudiantes");
   }
 }
-
+Future<List<ReporteEstudiante>> getReportFechaEstudiantes() async {
+  final url = Uri.parse("$baseUri/EstudiantesReporteFechas");
+  var response = await http.get(url);
+  
+  if (response.statusCode == 200) {
+    List<dynamic> jsonData = jsonDecode(response.body);
+    return jsonData.map((json) => ReporteEstudiante.fromJson(json)).toList();
+  } else {
+    throw Exception("Error al cargar todos los Reportes de Estudiantes");
+  }
+}
 
 }
