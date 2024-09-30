@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
 import 'package:prlll_24_escuela_programacion/Models/CompetenciaEst.dart';
 import 'package:prlll_24_escuela_programacion/Models/LogroEst.dart';
 
@@ -31,4 +32,5 @@ class CompetenciasService {
       throw Exception("Error al cargar las competencias del estudiante");
     }
   }
+
 }

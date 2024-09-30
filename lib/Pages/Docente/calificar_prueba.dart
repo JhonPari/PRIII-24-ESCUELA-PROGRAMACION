@@ -1,37 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/docente/EstudianteCompetencia.dart';
-import 'package:prlll_24_escuela_programacion/Service/CalificarEstudianteService.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
+import 'package:prlll_24_escuela_programacion/Service/CalificarEstudianteService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
+
+import 'package:prlll_24_escuela_programacion/models/EstudianteCalificacion.dart';
+import 'package:prlll_24_escuela_programacion/Pages/docente/EstudianteCompetencia.dart'; // Asegúrate de importar CompetenciaPage
 
 class CalificarPrueba extends StatefulWidget {
   final int id;
+  final int idCompetencia; // Añade este campo
+  
 
-  CalificarPrueba({required this.id});
+  CalificarPrueba(
+      {super.key,
+      required this.id,
+      required this.idCompetencia}); // Modifica el constructor
 
   @override
   CalificarPruebaState createState() => CalificarPruebaState();
 }
 
 class CalificarPruebaState extends State<CalificarPrueba> {
+  // Variables para almacenar los datos obtenidos
   String? competenciaTitulo;
   String? estudianteNombre;
-  final storage = Session();
+    final storage = Session();
   String? name;
 
   @override
   void initState() {
     super.initState();
+    _loadData(); // Llama al método para obtener los datos
     _loadSession();
-    _loadData();
   }
-
-  Future<void> _loadSession() async {
+    Future<void> _loadSession() async {
     Map<String, String?> data = await storage.getSession();
     
-    if (data['name'] != null) {
+    if (data['id'] == null || data['name'] == null || data['role'] == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    } else {
       setState(() {
-        name = data['name']!;
+        name = data['name'] ?? 'Sin Nombre'; 
       });
     }
   }
@@ -51,9 +65,17 @@ class CalificarPruebaState extends State<CalificarPrueba> {
   Future<void> _updateCalificacion(int aprobado) async {
     try {
       await updateCalificacion(widget.id, aprobado);
+
+      // Imprimir el idCompetencia antes de navegar
+      print('idCompetencia: ${widget.idCompetencia}');
+
+      // Navegar a CompetenciaPage con idCompetencia
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => CompetenciaPage()),
+        MaterialPageRoute(
+          builder: (context) =>
+              CompetenciaPage(idCompetencia: widget.idCompetencia),
+        ),
       );
     } catch (e) {
       print('Error updating calificacion: $e');
@@ -64,7 +86,7 @@ class CalificarPruebaState extends State<CalificarPrueba> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: docenteNavBar(name ?? '...', storage, context), // Reemplaza el AppBar por el docenteNavBar
+        appBar: docenteNavBar(name ?? '...', storage, context),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Center(
@@ -95,13 +117,13 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                       children: [
                         Text(
                           competenciaTitulo ?? 'Cargando...',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 36, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 10),
                         Text(
                           estudianteNombre ?? 'Cargando...',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 24,
                               color: Color.fromARGB(255, 227, 227, 227)),
                         ),
@@ -114,7 +136,8 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                _updateCalificacion(1);
+                                _updateCalificacion(
+                                    1); // Llama al método para actualizar a 2 (Aceptar)
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF16772B),
@@ -131,7 +154,8 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                             const SizedBox(width: 40),
                             ElevatedButton(
                               onPressed: () {
-                                _updateCalificacion(2);
+                                _updateCalificacion(
+                                    2); // Llama al método para actualizar a 3 (Reprobar)
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF8B2D56),

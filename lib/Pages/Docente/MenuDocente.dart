@@ -80,7 +80,7 @@ class _MenuDoceState extends State<MenuDoce> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CompetenciaPage (),
+                      builder: (context) => verCompetenciaDocePage (),
                     ),
                   );
                 },
@@ -106,7 +106,7 @@ class _MenuDoceState extends State<MenuDoce> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => VerCompetencias (),
+                      builder: (context) => verCompetenciaDocePage (),
                     ),
                   );
                   

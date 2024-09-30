@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart'; // Importa el docenteNavBar
-import 'package:prlll_24_escuela_programacion/Service/session.dart'; // Importa el servicio de sesión
-import 'package:prlll_24_escuela_programacion/pages/docente/EstudianteCompetencia.dart'; // Importa la página CompetenciaPage
+import 'package:prlll_24_escuela_programacion/Service/CompetenciasService.dart';
+import 'package:prlll_24_escuela_programacion/Service/competenciaDoceService.dart';
+import 'package:prlll_24_escuela_programacion/models/Competencia.dart';
+import 'package:prlll_24_escuela_programacion/pages/docente/EstudianteCompetencia.dart';
 
 void main() {
-  runApp(VerCompetencias());
+  runApp(verCompetenciaDocePage());
 }
 
-class VerCompetencias extends StatelessWidget {
+class verCompetenciaDocePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      home: verCompetenciaDoce(),
       theme: ThemeData(
-        primaryColor: Color(0xFF8E244D), // Color del AppBar
+        primaryColor: Color(0xFF8E244D),
         buttonTheme: ButtonThemeData(
-          buttonColor: Color(0xFF8E244D), // Color de los botones
+          buttonColor: Color(0xFF8E244D),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -25,66 +26,88 @@ class VerCompetencias extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final storage = Session(); // Instancia de Session
-  String? name;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSession(); // Cargar la sesión del usuario
-  }
-
-  Future<void> _loadSession() async {
-    Map<String, String?> data = await storage.getSession();
-    if (data['name'] != null) {
-      setState(() {
-        name = data['name']!;
-      });
-    }
-  }
+class verCompetenciaDoce extends StatelessWidget {
+  final CompetenciaDoceService  competenciaService = CompetenciaDoceService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: docenteNavBar(name ?? '...', storage, context), // Usa el docenteNavBar
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      appBar: AppBar(
+        title: Row(
           children: [
-            CompetenciaCard(
-              titulo: 'Hakaton',
-              fechaInicio: '20/09/2024',
-              fechaFin: '20/10/2024',
-              estado: 'En Curso',
-            ),
-            CompetenciaCard(
-              titulo: 'GameJam',
-              fechaInicio: '20/09/2024',
-              fechaFin: '20/10/2024',
-              estado: 'Finalizado',
+            Image.asset('assets/images/logo_univalle.png', height: 50),
+            SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Karen Poma', style: TextStyle(fontSize: 18)),
+                Text('Estudiante Univalle', style: TextStyle(fontSize: 14)),
+              ],
             ),
           ],
         ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+            ),
+          ),
+        ],
+        backgroundColor: Color(0xFF8E244D),
+      ),
+      body: FutureBuilder<List<Competencia>>(
+        future: competenciaService.getAll(), // Future no nulo
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No hay competencias disponibles.'));
+          }
+
+          List<Competencia> competencias = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: competencias.map((competencia) {
+                return CompetenciaCard(
+                  id: competencia.id,
+                  titulo: competencia.titulo ?? 'Sin título',
+                  descripcion:
+                      competencia.descripcion ?? 'No hay una descripcion',
+                  fechaInicio: competencia.fechaInicio != null
+                      ? '${competencia.fechaInicio!.day}/${competencia.fechaInicio!.month}/${competencia.fechaInicio!.year}'
+                      : 'N/A',
+                  fechaFin: competencia.fechaFin != null
+                      ? '${competencia.fechaFin!.day}/${competencia.fechaFin!.month}/${competencia.fechaFin!.year}'
+                      : 'N/A',
+                  estado: 'En Curso', // Ajusta según tu lógica
+                );
+              }).toList(),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
 class CompetenciaCard extends StatelessWidget {
+  final int id;
   final String titulo;
+  final String descripcion;
   final String fechaInicio;
   final String fechaFin;
   final String estado;
 
   CompetenciaCard({
+    required this.id,
     required this.titulo,
+    required this.descripcion,
     required this.fechaInicio,
     required this.fechaFin,
     required this.estado,
@@ -93,8 +116,8 @@ class CompetenciaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
-      height: 200, // Ajusta el tamaño de los cuadros
+      width: 350,
+      height: 250,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -110,11 +133,10 @@ class CompetenciaCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            titulo,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
+          Text(titulo,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
+          Text('Descripcion: $descripcion'),
           Text('Fecha de Inicio: $fechaInicio'),
           Text('Fecha de Finalización: $fechaFin'),
           Text('Estado: $estado'),
@@ -122,9 +144,11 @@ class CompetenciaCard extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () {
+                print('El id es: $id');
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CompetenciaPage()),
+                  MaterialPageRoute(
+                      builder: (context) => CompetenciaPage(idCompetencia: id)),
                 );
               },
               child: Text('Calificar', style: TextStyle(color: Colors.white)),
