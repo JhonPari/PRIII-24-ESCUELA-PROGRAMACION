@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prlll_24_escuela_programacion/Models/SubirImagen.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
+import 'package:prlll_24_escuela_programacion/Service/SubirImagenesService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class EntregarPrueba extends StatefulWidget {
@@ -15,11 +19,14 @@ class EntregarPrueba extends StatefulWidget {
 
 class _EntregarPrueba extends State<EntregarPrueba> {
   Uint8List? _webImage;
+  late String extensionn;
   bool _isLoading = false;
 
   final storage = Session();
   String? name;
   int id = 0;
+
+  SubirImagenesService service = SubirImagenesService();
 
   @override
   void initState() {
@@ -30,17 +37,16 @@ class _EntregarPrueba extends State<EntregarPrueba> {
   Future<void> _loadSession() async {
     // Obtiene el mapa con los datos de la sesión
     Map<String, String?> data = await storage.getSession();
-    
+
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
       //if del rol
-    }
-    else {
+    } else {
       setState(() {
-        name = data['name'] ?? 'Sin Nombre'; 
+        name = data['name'] ?? 'Sin Nombre';
         id = int.parse(data['id']!);
       });
     }
@@ -52,23 +58,25 @@ class _EntregarPrueba extends State<EntregarPrueba> {
     });
 
     try {
-      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
         final bytes = await pickedFile.readAsBytes();
 
         setState(() {
           _webImage = bytes;
-          _isLoading = false; 
+          _isLoading = false;
+          extensionn = pickedFile.name;
         });
       } else {
         setState(() {
-          _isLoading = false; 
+          _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
-        _isLoading = false; 
+        _isLoading = false;
       });
     }
   }
@@ -77,7 +85,7 @@ class _EntregarPrueba extends State<EntregarPrueba> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: estNavBar(name ?? '...', storage, context,id),
+        appBar: estNavBar(name ?? '...', storage, context, id),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -91,8 +99,8 @@ class _EntregarPrueba extends State<EntregarPrueba> {
                   width: 350,
                   height: 200,
                   child: _webImage != null
-                        ? Image.memory(_webImage!)
-                        : const Icon(
+                      ? Image.memory(_webImage!)
+                      : const Icon(
                           Icons.image,
                           size: 100,
                           color: Color.fromARGB(255, 117, 117, 117),
@@ -139,14 +147,14 @@ class _EntregarPrueba extends State<EntregarPrueba> {
     );
   }
 
-  
   void _confirmSubmission() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Confirmación"),
-          content: const Text("¿Estás seguro de que quieres confirmar la entrega?"),
+          content:
+              const Text("¿Estás seguro de que quieres confirmar la entrega?"),
           actions: [
             TextButton(
               onPressed: () {
@@ -155,13 +163,27 @@ class _EntregarPrueba extends State<EntregarPrueba> {
               child: const Text("Cancelar"),
             ),
             TextButton(
-              onPressed: () {
-                //TODO subir imagen
+              onPressed: () async {
+                SubirImagen subida = SubirImagen(
+                    idCompetencia: widget.idCompetencia,
+                    idEstudiante: id,
+                    imagen: _webImage!,
+                    nombre: extensionn);
+
+                bool guardado = await service.subir(subida);
 
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Entrega confirmada")),
-                );
+
+                if (guardado) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Entrega confirmada")),
+                  );
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Error al subir la imagen")),
+                  );
+                }
               },
               child: const Text("Confirmar"),
             ),
