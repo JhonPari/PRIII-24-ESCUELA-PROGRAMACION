@@ -1,10 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
-
+//TODO falta que ala hora de crear
 void main() {
   runApp(const RegistrarEscuela());
 }
@@ -14,8 +16,8 @@ class RegistrarEscuela extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const RegistrarEscuelaPage(),
+    return const MaterialApp(
+      home: RegistrarEscuelaPage(),
     );
   }
 }
@@ -62,7 +64,7 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            constraints: BoxConstraints(maxWidth: 650),
+            constraints: const BoxConstraints(maxWidth: 650),
             padding: const EdgeInsets.all(45),
             decoration: BoxDecoration(
               color: const Color(0xFFE0BFC7),
@@ -100,7 +102,7 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                       );
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Error al crear la Escuela")),
+                        const SnackBar(content: Text("Error al crear la Escuela")),
                       );
                     }
                   },

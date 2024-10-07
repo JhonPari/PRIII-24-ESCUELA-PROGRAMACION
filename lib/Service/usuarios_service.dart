@@ -170,5 +170,18 @@ Future<List<ReporteEstudiante>> getReportFechaEstudiantes() async {
     throw Exception("Error al cargar todos los Reportes de Estudiantes");
   }
 }
-
+ Future<bool> recuperarContrasena(String correo) async {
+    final url = Uri.parse('$baseUri/RecuperarContrasenia');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'correo': correo}),
+    );
+ 
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

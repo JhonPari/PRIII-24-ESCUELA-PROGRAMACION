@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/MenuDocente.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Estudiante/menu_est.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/registrarse.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
-
-
-// Instancia de Flutter Secure Storage
+import 'package:prlll_24_escuela_programacion/pages/estudiante/menu_est.dart';
+import 'package:prlll_24_escuela_programacion/pages/Login/RecuperarPassword.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,12 +19,6 @@ class _LoginState extends State<LoginPage> {
   final TextEditingController _passwController = TextEditingController();
   final UsuariosService _usuarioService = UsuariosService();
   final storage = Session();
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSession();
-  }
 
   Future<void> _loadSession() async {
     Map<String, String?> data = await storage.getSession();
@@ -61,17 +54,17 @@ class _LoginState extends State<LoginPage> {
 
   void redireccionRoles(String role) {
     if (role == 'A') {
-       Navigator.pushReplacement(
-         context,
-         MaterialPageRoute(builder: (context) => const MenuAdmin()),
-       );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MenuAdmin()),
+      );
     } else if (role == 'D') {
-       Navigator.pushReplacement(
-         context,
-         MaterialPageRoute(builder: (context) => const MenuDoce()),
-       );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MenuDoce()),
+      );
     } else if (role == 'E') {
-     Navigator.pushReplacement(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const MenuEst()),
       );
@@ -143,7 +136,7 @@ class _LoginState extends State<LoginPage> {
                         ElevatedButton(
                           onPressed: hacerLogin,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black, // Color del botón
+                            backgroundColor: Colors.black,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 40, vertical: 15),
                             shape: RoundedRectangleBorder(
@@ -161,11 +154,11 @@ class _LoginState extends State<LoginPage> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // TODO: Lógica para recuperar contraseña
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Prueba: recuperar contraseña')),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          RecuperarContrasenaPage()),
                                 );
                               },
                               child: const Text(
@@ -178,7 +171,11 @@ class _LoginState extends State<LoginPage> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                // TODO: Lógica para registrarse
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RegistrarsePage()),
+                                );
                               },
                               child: const Text(
                                 'Registrarse',

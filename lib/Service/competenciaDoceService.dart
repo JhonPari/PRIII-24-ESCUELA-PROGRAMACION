@@ -3,7 +3,7 @@ import 'package:prlll_24_escuela_programacion/models/Competencia.dart';
 import 'package:http/http.dart' as http;
 
 class CompetenciaDoceService {
-  final String baseUri = "https://localhost:7096/Competencias/CompetenciasDoce";
+  final String baseUri = "https://localhost:7096/Competencias";
 
   Future<List<Competencia>> getAll() async {
     final url = Uri.parse(baseUri);
@@ -13,7 +13,7 @@ class CompetenciaDoceService {
       List<dynamic> jsonData = jsonDecode(response.body);
       return jsonData.map((json) => Competencia.fromJson(json)).toList();
     } else {
-      throw Exception("Error al cargar todas las Escuelas");
+      throw Exception("Error al cargar todas las Competencias");
     }
   }
 }
