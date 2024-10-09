@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/ImagenLogroEst.dart';
 import 'package:prlll_24_escuela_programacion/Models/LogroEst.dart';
@@ -25,7 +27,7 @@ class _VerLogrosState extends State<VerLogrosPage> {
   final storage = Session();
   String? name;
   int id = 0;
-  ImagenLogrosEst? _imagenSeleccionada;
+  Uint8List? _imagenSeleccionada;
 
   @override
   void initState() {
@@ -47,7 +49,6 @@ class _VerLogrosState extends State<VerLogrosPage> {
     } else {
       setState(() {
         name = data['name'] ?? 'Sin Nombre';
-        
       });
     }
   }
@@ -56,7 +57,7 @@ class _VerLogrosState extends State<VerLogrosPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      appBar: estNavBar(name ?? '...', storage, context,id),
+      appBar: estNavBar(name ?? '...', storage, context, id),
       body: Center(
         child: Column(
           children: [
@@ -71,6 +72,10 @@ class _VerLogrosState extends State<VerLogrosPage> {
             ),
             const SizedBox(height: 20),
             tablaLogros(),
+            const SizedBox(height: 20),
+            _imagenSeleccionada != null
+                ? tarjetaImagen(_imagenSeleccionada!)
+                : const SizedBox(),
           ],
         ),
       ),
@@ -133,10 +138,11 @@ class _VerLogrosState extends State<VerLogrosPage> {
                                 ? ElevatedButton(
                                     onPressed: () async {
                                       // Llamar al servicio para obtener la imagen
-                                      ImagenLogrosEst? imagen = await imagenesService.obtenerImagen(logro.id);
+                                      Uint8List? imagen = await imagenesService
+                                          .obtenerImagen(logro.id);
                                       if (imagen != null) {
                                         setState(() {
-                                          _imagenSeleccionada = imagen; // Actualizar el estado
+                                          _imagenSeleccionada = imagen;
                                         });
                                       }
                                     },
@@ -162,20 +168,14 @@ class _VerLogrosState extends State<VerLogrosPage> {
     );
   }
 
-  Widget tarjetaImagen(ImagenLogrosEst imagenLogro) {
+  Widget tarjetaImagen(Uint8List img) {
     return Card(
       elevation: 5,
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
-          const Text(
-            'Prueba del Logro',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          // Mostrar la imagen
           Image.memory(
-            imagenLogro.archivo,
+            img,
             height: 200,
             fit: BoxFit.cover,
           ),

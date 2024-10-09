@@ -1,8 +1,6 @@
-import 'dart:convert';
-
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:prlll_24_escuela_programacion/Models/ImagenLogroEst.dart';
 import 'package:prlll_24_escuela_programacion/Models/SubirImagen.dart';
 
 class ImagenesService {
@@ -35,19 +33,20 @@ class ImagenesService {
     }
   }
 
-  Future<ImagenLogrosEst?> obtenerImagen(int idCalificacion) async {
+  Future<Uint8List?> obtenerImagen(int idCalificacion) async {
     final url = Uri.parse("$baseUri/obtenerImagen/$idCalificacion");
 
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      return response.bodyBytes;
+      // final Map<String, dynamic> data = jsonDecode(response.body);
 
-      return ImagenLogrosEst(
-        idCalificacion: data['idCalificacion'],
-        nombre: data['nombre'],
-        archivo: response.bodyBytes,
-      );
+      // return ImagenLogrosEst(
+      //   idCalificacion: data['idCalificacion'],
+      //   nombre: data['nombre'],
+      //   archivo: response.bodyBytes,
+      // );
     } else {
       return null;
     }
