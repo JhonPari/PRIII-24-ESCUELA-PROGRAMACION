@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Docente/EstudianteCompetencia.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/MenuDocente.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
@@ -17,7 +18,7 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const MenuDoce()), // Navegar a la página MenuEst
+              MaterialPageRoute(builder: (context) => const MenuDoce()), // Navegar a la página MenuDoce
             );
           },
           child: const CircleAvatar(
@@ -34,20 +35,20 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
               style: commonTextStyle.copyWith(color: Colors.white38),
             ),
             const Text(
-              'Estudiante Univalle',
+              'Docente Univalle',
               style: TextStyle(color: Colors.white54, fontSize: 16),
             ),
           ],
         ),
         const Spacer(),
+        // Competencias
         PopupMenuButton<String>(
           onSelected: (value) {
             switch (value) {
               case 'competencias':
-                // Redirigir a la página de competencias
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>verCompetenciaDoce()), // Asegúrate de crear esta página
+                  MaterialPageRoute(builder: (context) => verCompetenciaDoce()),
                 );
                 break;
             }
@@ -66,47 +67,64 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
           ),
         ),
         const SizedBox(width: 10),
+        // Estudiantes
         PopupMenuButton<String>(
           onSelected: (value) {
             switch (value) {
               case 'lista_Estudiantes':
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => verCompetenciaDoce()), // Asegúrate de crear esta página
+                  MaterialPageRoute(builder: (context) => verCompetenciaDoce()),
                 );
                 break;
-              /*case 'agregar_estudiante':
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AgregarEstudiantePage()), // Asegúrate de crear esta página
-                );
-                break;
-              case 'solicitud':
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const VerSolicitudesPage()), // Asegúrate de crear esta página
-                );
-                break;*/
             }
           },
           itemBuilder: (BuildContext context) {
             return [
               PopupMenuItem<String>(
                 value: 'lista_Estudiantes',
-                child: Text('Lista Estudiantes', style: commonTextStyle),
-              ),
-              PopupMenuItem<String>(
-                value: 'agregar_estudiante',
-                child: Text('Agregar Estudiante', style: commonTextStyle),
-              ),
-              PopupMenuItem<String>(
-                value: 'solicitud',
-                child: Text('Ver Solicitudes', style: commonTextStyle),
+                child: Text('Lista Estudiantes por competencia', style: commonTextStyle),
               ),
             ];
           },
           child: Text(
             'Estudiantes',
+            style: commonTextStyle,
+          ),
+        ),
+        const SizedBox(width: 10),
+        // Reportes
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            switch (value) {
+              case 'reporte_puntos':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const VistaReporte()),
+                );
+                break;
+              case 'reporte_fechas':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
+                );
+                break;
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<String>(
+                value: 'reporte_puntos',
+                child: Text('Reporte por Puntos', style: commonTextStyle),
+              ),
+              PopupMenuItem<String>(
+                value: 'reporte_fechas',
+                child: Text('Reporte por Fechas', style: commonTextStyle),
+              ),
+            ];
+          },
+          child: Text(
+            'Reportes',
             style: commonTextStyle,
           ),
         ),

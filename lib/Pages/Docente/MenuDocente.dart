@@ -4,7 +4,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
-
+//TODO borrar el boton de estudiantes por competencias
 class MenuDoce extends StatefulWidget {
   const MenuDoce({super.key});
 

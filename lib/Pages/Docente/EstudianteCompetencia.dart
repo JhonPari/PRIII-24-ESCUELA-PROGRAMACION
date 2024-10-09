@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Service/CalificarEstudianteService.dart';
 import 'package:prlll_24_escuela_programacion/models/EstudianteCalificacion.dart';
 import 'package:prlll_24_escuela_programacion/pages/docente/calificar_prueba.dart';
-
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class CompetenciaPage extends StatefulWidget {
   final int idCompetencia;
 
-  CompetenciaPage({required this.idCompetencia}); // Asegúrate de que esto esté definido
-
+  CompetenciaPage({required this.idCompetencia});
 
   @override
   _CompetenciaPageState createState() => _CompetenciaPageState();
@@ -21,11 +21,23 @@ class _CompetenciaPageState extends State<CompetenciaPage> {
   List<Estudiante> estudiantes = [];
   List<Estudiante> filteredEstudiantes = [];
   bool isLoading = true;
+  final Session storage = Session();
+  String? name;
 
   @override
   void initState() {
     super.initState();
     fetchEstudiantes();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    Map<String, String?> data = await storage.getSession();
+    if (data['name'] != null) {
+      setState(() {
+        name = data['name'];
+      });
+    }
   }
 
   Future<void> fetchEstudiantes() async {
@@ -69,32 +81,7 @@ class _CompetenciaPageState extends State<CompetenciaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset('assets/images/logo_univalle.png', height: 50),
-            SizedBox(width: 10),
-            Text("Lista de Estudiantes en Competencia"),
-          ],
-        ),
-        backgroundColor: Color(0xFF8E244D),
-        actions: [
-          DropdownButton(
-            icon: Icon(Icons.people, color: Colors.white),
-            items: [DropdownMenuItem(child: Text('Estudiantes'))],
-            onChanged: (value) {},
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Lógica para cerrar sesión
-            },
-            child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-            ),
-          ),
-        ],
-      ),
+      appBar: docenteNavBar(name ?? '...', storage, context), // Uso del navbar personalizado
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

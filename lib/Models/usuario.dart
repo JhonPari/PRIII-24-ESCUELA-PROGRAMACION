@@ -89,3 +89,18 @@ class NewUsuario {
     };
   }
 }
+class RecuperarContrasenia {
+  String correo;
+ 
+  RecuperarContrasenia({
+    required this.correo,
+  });
+ 
+ 
+  Map<String, dynamic> toJson() {
+    return {
+      'correo': correo,
+    };
+  }
+}
+ 

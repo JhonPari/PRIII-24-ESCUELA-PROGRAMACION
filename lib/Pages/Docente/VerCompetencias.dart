@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/CompetenciasService.dart';
 import 'package:prlll_24_escuela_programacion/Service/competenciaDoceService.dart';
 import 'package:prlll_24_escuela_programacion/models/Competencia.dart';
 import 'package:prlll_24_escuela_programacion/pages/docente/EstudianteCompetencia.dart';
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
 
 void main() {
   runApp(verCompetenciaDocePage());
@@ -26,39 +29,39 @@ class verCompetenciaDocePage extends StatelessWidget {
   }
 }
 
-class verCompetenciaDoce extends StatelessWidget {
-  final CompetenciaDoceService  competenciaService = CompetenciaDoceService();
+class verCompetenciaDoce extends StatefulWidget {
+  @override
+  _verCompetenciaDoceState createState() => _verCompetenciaDoceState();
+}
+
+class _verCompetenciaDoceState extends State<verCompetenciaDoce> {
+  final CompetenciaDoceService competenciaService = CompetenciaDoceService();
+  final Session storage = Session();
+  String? name;
+  int id = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    Map<String, String?> data = await storage.getSession();
+    if (data['name'] != null) {
+      setState(() {
+        name = data['name'];
+        id = int.parse(data['id']!);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset('assets/images/logo_univalle.png', height: 50),
-            SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Karen Poma', style: TextStyle(fontSize: 18)),
-                Text('Estudiante Univalle', style: TextStyle(fontSize: 14)),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {},
-            child: Text('Cerrar Sesión', style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-            ),
-          ),
-        ],
-        backgroundColor: Color(0xFF8E244D),
-      ),
+      appBar: docenteNavBar (name ?? '...', storage, context), // Uso del navbar existente
       body: FutureBuilder<List<Competencia>>(
-        future: competenciaService.getAll(), // Future no nulo
+        future: competenciaService.getAll(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
