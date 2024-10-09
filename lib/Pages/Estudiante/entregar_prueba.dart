@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:prlll_24_escuela_programacion/Models/SubirImagen.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
-import 'package:prlll_24_escuela_programacion/Service/SubirImagenesService.dart';
+import 'package:prlll_24_escuela_programacion/Service/ImagenesService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class EntregarPrueba extends StatefulWidget {
@@ -26,7 +26,7 @@ class _EntregarPrueba extends State<EntregarPrueba> {
   String? name;
   int id = 0;
 
-  SubirImagenesService service = SubirImagenesService();
+  ImagenesService service = ImagenesService();
 
   @override
   void initState() {
@@ -170,7 +170,7 @@ class _EntregarPrueba extends State<EntregarPrueba> {
                     imagen: _webImage!,
                     nombre: extensionn);
 
-                bool guardado = await service.subir(subida);
+                bool guardado = await service.subirImagen(subida);
 
                 Navigator.of(context).pop();
 

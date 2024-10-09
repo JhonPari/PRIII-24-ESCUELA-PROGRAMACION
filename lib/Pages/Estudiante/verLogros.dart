@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Models/ImagenLogroEst.dart';
 import 'package:prlll_24_escuela_programacion/Models/LogroEst.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
 import 'package:prlll_24_escuela_programacion/Service/CompetenciasService.dart';
+import 'package:prlll_24_escuela_programacion/Service/ImagenesService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class VerLogrosPage extends StatefulWidget {
@@ -18,10 +20,12 @@ class VerLogrosPage extends StatefulWidget {
 
 class _VerLogrosState extends State<VerLogrosPage> {
   CompetenciasService competenciasService = CompetenciasService();
+  ImagenesService imagenesService = ImagenesService();
   late Future<List<LogrosEst>> _listaLogros;
   final storage = Session();
   String? name;
   int id = 0;
+  ImagenLogrosEst? _imagenSeleccionada;
 
   @override
   void initState() {
@@ -125,17 +129,25 @@ class _VerLogrosState extends State<VerLogrosPage> {
                             }(),
                           )),
                           DataCell(
-                            ElevatedButton(
-                              onPressed: () {
-                                //TODO boton pendiente carga imagen
-                              },
-                              style: TextButton.styleFrom(
-                                  backgroundColor: Colors.black),
-                              child: const Text(
-                                'Ver Prueba',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
+                            logro.imagen == 1 // hay imagen subida
+                                ? ElevatedButton(
+                                    onPressed: () async {
+                                      // Llamar al servicio para obtener la imagen
+                                      ImagenLogrosEst? imagen = await imagenesService.obtenerImagen(logro.id);
+                                      if (imagen != null) {
+                                        setState(() {
+                                          _imagenSeleccionada = imagen; // Actualizar el estado
+                                        });
+                                      }
+                                    },
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: Colors.black),
+                                    child: const Text(
+                                      'Ver Prueba',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                : const Text("No se subió una prueba"),
                           ),
                         ],
                       );
@@ -146,6 +158,28 @@ class _VerLogrosState extends State<VerLogrosPage> {
             );
           }
         },
+      ),
+    );
+  }
+
+  Widget tarjetaImagen(ImagenLogrosEst imagenLogro) {
+    return Card(
+      elevation: 5,
+      margin: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          const Text(
+            'Prueba del Logro',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          // Mostrar la imagen
+          Image.memory(
+            imagenLogro.archivo,
+            height: 200,
+            fit: BoxFit.cover,
+          ),
+        ],
       ),
     );
   }
