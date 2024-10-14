@@ -3,6 +3,8 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vis
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/MenuDocente.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/vistaDoce_porFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/vistaDoce_porPuntos.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
@@ -67,32 +69,6 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
           ),
         ),
         const SizedBox(width: 10),
-        // Estudiantes
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            switch (value) {
-              case 'lista_Estudiantes':
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => verCompetenciaDoce()),
-                );
-                break;
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem<String>(
-                value: 'lista_Estudiantes',
-                child: Text('Lista Estudiantes por competencia', style: commonTextStyle),
-              ),
-            ];
-          },
-          child: Text(
-            'Estudiantes',
-            style: commonTextStyle,
-          ),
-        ),
-        const SizedBox(width: 10),
         // Reportes
         PopupMenuButton<String>(
           onSelected: (value) {
@@ -100,13 +76,13 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
               case 'reporte_puntos':
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const VistaReporte()),
+                  MaterialPageRoute(builder: (context) => const VistaDoceReporte()),
                 );
                 break;
               case 'reporte_fechas':
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
+                  MaterialPageRoute(builder: (context) => const VistaDoceReporteFecha()),
                 );
                 break;
             }

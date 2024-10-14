@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Docente/EstudianteCompetencia.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/vistaDoce_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -50,14 +50,14 @@ class _MenuDoceState extends State<MenuDoce> {
               ElevatedButton(
                 onPressed: () {
                   // Navegación para Ver Reportes
-                  /*
+                  
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => VerReportesPage(),
+                      builder: (context) => VistaDoceReporteFecha(),
                     ),
                   );
-                  */
+                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B2D56),
@@ -73,31 +73,7 @@ class _MenuDoceState extends State<MenuDoce> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Navegación a la lista de estudiantes
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => verCompetenciaDocePage (),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8B2D56),
-                  minimumSize: const Size(300, 80),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(21),
-                  ),
-                ),
-                child: const Text(
-                  'Estudiantes X Competencia',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {

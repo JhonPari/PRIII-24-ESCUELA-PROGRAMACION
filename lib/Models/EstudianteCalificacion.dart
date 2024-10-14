@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Estudiante {
   final String nombre;
   final String correo;

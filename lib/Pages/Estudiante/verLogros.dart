@@ -49,6 +49,7 @@ class _VerLogrosState extends State<VerLogrosPage> {
     } else {
       setState(() {
         name = data['name'] ?? 'Sin Nombre';
+        id = int.parse(data['id']!);
       });
     }
   }

@@ -130,7 +130,7 @@ class _VistaDoceState extends State<VistaDoce> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Descripcion siuu',
+                        'Descripcion ',
                         style: TextStyle(fontSize: 14),
                       ),
                       const Spacer(),
@@ -216,7 +216,7 @@ class _VistaDoceState extends State<VistaDoce> {
                   );
 
                   setState(() {
-                    _listaUsuarios = usuariosService.getEstudiantes();
+                    _listaUsuarios = usuariosService.getDocentes();
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
