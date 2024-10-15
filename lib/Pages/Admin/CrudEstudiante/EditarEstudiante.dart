@@ -71,26 +71,26 @@ class _EditarEstState extends State<EditarEstPage> {
     return null;
   }
 
-  Future<void> actualizarUsuario(BuildContext context) async {
-    try {
-      if (_usuario != null) {
-        _usuario!.nombre = _nombreController.text;
-        _usuario!.correo = _correoController.text;
+Future<void> actualizarUsuario(BuildContext context) async {
+  try {
+    if (_usuario != null) {
+      _usuario!.nombre = _nombreController.text;
+      _usuario!.correo = _correoController.text;
 
-        await _usuarioService.put(widget.idUsuario, _usuario!);
+      await _usuarioService.put(widget.idUsuario, _usuario!);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Usuario actualizado con éxito")),
-        );
-
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error al actualizar el usuario")),
+        const SnackBar(content: Text("Usuario actualizado con éxito")),
       );
+
+      Navigator.of(context).pop(true); // Retorna 'true' para indicar que se actualizó
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Error al actualizar el usuario")),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

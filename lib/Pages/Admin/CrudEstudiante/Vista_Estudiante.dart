@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/EditarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart'; // Importa el adminNavBar
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -24,8 +24,14 @@ class _VistaEstState extends State<VistaEst> {
   @override
   void initState() {
     super.initState();
-    _listaUsuarios = usuariosService.getEstudiantes();
+    _loadUsuarios();
     _loadSession();
+  }
+
+  Future<void> _loadUsuarios() async {
+    setState(() {
+      _listaUsuarios = usuariosService.getEstudiantes();
+    });
   }
 
   Future<void> _loadSession() async {
@@ -39,7 +45,7 @@ class _VistaEstState extends State<VistaEst> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: adminNavBar(name ?? '...', storage, context), // Usa el adminNavBar aquí
+        appBar: adminNavBar(name ?? '...', storage, context),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -57,11 +63,12 @@ class _VistaEstState extends State<VistaEst> {
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => RegistrarEstPage()),
                     );
+                    _loadUsuarios(); // Refresca la lista después de registrar un estudiante.
                   },
                   icon: const Icon(Icons.person_add, color: Colors.white),
                   label: const Text('Añadir'),
@@ -96,13 +103,13 @@ class _VistaEstState extends State<VistaEst> {
             List<Usuario> usuarios = snapshot.data!;
             return Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFE0BFC7), // Fondo rosado para la tabla
+                color: const Color(0xFFE0BFC7),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal, // Para scroll horizontal si es necesario
+                  scrollDirection: Axis.horizontal,
                   child: DataTable(
                     columns: const [
                       DataColumn(label: Text('Nombres')),
@@ -115,16 +122,20 @@ class _VistaEstState extends State<VistaEst> {
                         cells: [
                           DataCell(Text(usuario.nombre)),
                           DataCell(Text(usuario.correo)),
-                          const DataCell(Text("0")), // TODO recibir puntos
+                          const DataCell(Text("0")),
                           DataCell(
                             Row(
                               children: [
                                 ElevatedButton.icon(
-                                  onPressed: () {
-                                    Navigator.push(
+                                  onPressed: () async {
+                                    await Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => EditarEstPage(idUsuario: usuario.id!)),
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditarEstPage(idUsuario: usuario.id!),
+                                      ),
                                     );
+                                    _loadUsuarios(); // Refresca la lista después de modificar.
                                   },
                                   icon: const Icon(Icons.sync, color: Colors.white),
                                   label: const Text('Modificar', style: TextStyle(color: Colors.white)),
@@ -167,11 +178,11 @@ class _VistaEstState extends State<VistaEst> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
-          content: const Text('¿Estás seguro de que deseas eliminar este usuario?'),
+          content: const Text('¿Estás seguro de que deseas eliminar este estudiante?'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
+                Navigator.of(context).pop();
               },
               child: const Text(
                 'Cancelar',
@@ -182,25 +193,28 @@ class _VistaEstState extends State<VistaEst> {
               onPressed: () async {
                 try {
                   Navigator.of(context).pop();
+
                   await usuariosService.deleteLogic(id);
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Usuario eliminado exitosamente.'),
+                      content: Text('Estudiante eliminado exitosamente.'),
                     ),
                   );
+
                   setState(() {
                     _listaUsuarios = usuariosService.getEstudiantes();
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Error al eliminar el usuario."),
+                      content: Text("Error al eliminar el estudiante."),
                     ),
                   );
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8E244D), // Color del botón de confirmación
+                backgroundColor: const Color(0xFF8E244D),
               ),
               child: const Text(
                 'Eliminar',

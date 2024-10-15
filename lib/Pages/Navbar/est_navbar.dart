@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/EstCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/menu_est.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';

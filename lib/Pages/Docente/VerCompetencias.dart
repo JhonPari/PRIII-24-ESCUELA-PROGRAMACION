@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
-import 'package:prlll_24_escuela_programacion/Service/CompetenciasService.dart';
 import 'package:prlll_24_escuela_programacion/Service/competenciaDoceService.dart';
 import 'package:prlll_24_escuela_programacion/models/Competencia.dart';
 import 'package:prlll_24_escuela_programacion/pages/docente/EstudianteCompetencia.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
+
 
 void main() {
   runApp(verCompetenciaDocePage());
@@ -17,9 +16,9 @@ class verCompetenciaDocePage extends StatelessWidget {
     return MaterialApp(
       home: verCompetenciaDoce(),
       theme: ThemeData(
-        primaryColor: Color(0xFF8E244D),
+        primaryColor: const Color(0xFF8E244D),
         buttonTheme: ButtonThemeData(
-          buttonColor: Color(0xFF8E244D),
+          buttonColor: const Color(0xFF8E244D),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -64,11 +63,11 @@ class _verCompetenciaDoceState extends State<verCompetenciaDoce> {
         future: competenciaService.getAll(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No hay competencias disponibles.'));
+            return const Center(child: Text('No hay competencias disponibles.'));
           }
 
           List<Competencia> competencias = snapshot.data!;
@@ -107,7 +106,7 @@ class CompetenciaCard extends StatelessWidget {
   final String fechaFin;
   final String estado;
 
-  CompetenciaCard({
+  const CompetenciaCard({
     required this.id,
     required this.titulo,
     required this.descripcion,

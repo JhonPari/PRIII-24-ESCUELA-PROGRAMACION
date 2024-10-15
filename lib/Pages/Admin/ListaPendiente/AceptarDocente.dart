@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
-
+import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 void main() => runApp(const VerificarDoce());
 
@@ -16,40 +16,54 @@ class VerificarDoce extends StatefulWidget {
 class _VerificarDoceState extends State<VerificarDoce> {
   UsuariosService usuariosService = UsuariosService();
   late Future<List<Usuario>> _listaUsuarios;
+  final Session storage = Session();
+  String? name;
 
   @override
   void initState() {
     super.initState();
     _listaUsuarios = usuariosService.getListaPendienteDocente();
+    _loadSession();
+  }
+
+  Future<void> _loadSession() async {
+    Map<String, String?> data = await storage.getSession();
+    if (data['name'] != null) {
+      setState(() {
+        name = data['name'] ?? 'Sin Nombre';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            const Text(
-              'LISTA DE ESTUDIANTES PENDIENTES',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF8E244D),
+      home: Scaffold(
+        appBar: adminNavBar(name ?? '...', storage, context),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              const Text(
+                'LISTA DE ESTUDIANTES PENDIENTES',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8E244D),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const Align(
-              alignment: Alignment.centerRight,
-            ),
-            const SizedBox(height: 15),
-            TablaEst(),
-          ],
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerRight,
+              ),
+              const SizedBox(height: 15),
+              TablaEst(),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 
   Expanded TablaEst() {
@@ -68,14 +82,13 @@ class _VerificarDoceState extends State<VerificarDoce> {
             List<Usuario> usuarios = snapshot.data!;
             return Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFE0BFC7), // Fondo rosado para la tabla
+                color: const Color(0xFFE0BFC7),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: SingleChildScrollView(
-                  scrollDirection:
-                      Axis.horizontal, // Para scroll horizontal si es necesario
+                  scrollDirection: Axis.horizontal,
                   child: DataTable(
                     columns: const [
                       DataColumn(label: Text('Nombres')),
@@ -99,7 +112,8 @@ class _VerificarDoceState extends State<VerificarDoce> {
                                   icon: const Icon(Icons.check,
                                       color: Colors.white),
                                   label: const Text('Modificar',
-                                      style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+                                      style: TextStyle(
+                                          color: Color.fromARGB(255, 255, 255, 255))),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF4CAF50),
                                     minimumSize: const Size(100, 30),
@@ -135,7 +149,7 @@ class _VerificarDoceState extends State<VerificarDoce> {
       ),
     );
   }
-  
+
   void mostrarDialogoConfirmacion(BuildContext context, int id) {
     showDialog(
       context: context,
@@ -147,7 +161,7 @@ class _VerificarDoceState extends State<VerificarDoce> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
+                Navigator.of(context).pop();
               },
               child: const Text(
                 'Cancelar',
@@ -158,7 +172,6 @@ class _VerificarDoceState extends State<VerificarDoce> {
               onPressed: () async {
                 try {
                   Navigator.of(context).pop();
-
                   await usuariosService.deleteLogic(id);
 
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -168,9 +181,9 @@ class _VerificarDoceState extends State<VerificarDoce> {
                   );
 
                   setState(() {
-                    _listaUsuarios = usuariosService.getListaPendienteDocente();
+                    _listaUsuarios =
+                        usuariosService.getListaPendienteDocente();
                   });
-
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -180,8 +193,7 @@ class _VerificarDoceState extends State<VerificarDoce> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    const Color(0xFF8E244D), // Color del botón de confirmación
+                backgroundColor: const Color(0xFF8E244D),
               ),
               child: const Text(
                 'Eliminar',
@@ -193,67 +205,64 @@ class _VerificarDoceState extends State<VerificarDoce> {
       },
     );
   }
-//aceptar solicitud
+
   void mostrarConfirmacionVerificacion(BuildContext context, int id) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Confirmar aceptación'),
-        content: const Text('¿Estás seguro de que deseas aceptar esta solicitud?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
-            },
-            child: const Text(
-              'Cancelar',
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar aceptación'),
+          content:
+              const Text('¿Estás seguro de que deseas aceptar esta solicitud?'),
+          actions: [
+            TextButton(
+              onPressed: () {
                 Navigator.of(context).pop();
-
-                Usuario usuario = await usuariosService.get(id);
-                usuario.solicitud = 'A'; // Actualiza la solicitud del usuario
-
-                await usuariosService.putAceptarSolicitud(id, usuario);
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Solicitud aceptada exitosamente.'),
-                  ),
-                );
-
-                setState(() {
-                  // Actualiza la lista de usuarios pendientes (puedes ajustar según tu necesidad)
-                  _listaUsuarios = usuariosService.getListaPendienteDocente();
-                });
-
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Error al aceptar la solicitud del usuario."),
-                  ),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF8E244D), // Color del botón de confirmación
+              },
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
-            child: const Text(
-              'Aceptar',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      );
-    },
-  );
-}
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  Navigator.of(context).pop();
 
-  
-  
+                  Usuario usuario = await usuariosService.get(id);
+                  usuario.solicitud = 'A';
+
+                  await usuariosService.putAceptarSolicitud(id, usuario);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Solicitud aceptada exitosamente.'),
+                    ),
+                  );
+
+                  setState(() {
+                    _listaUsuarios =
+                        usuariosService.getListaPendienteDocente();
+                  });
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Error al aceptar la solicitud del usuario."),
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF8E244D),
+              ),
+              child: const Text(
+                'Aceptar',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

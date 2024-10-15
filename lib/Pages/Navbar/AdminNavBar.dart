@@ -6,6 +6,8 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/registrar
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ListaPendiente/AceptarDocente.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ListaPendiente/AceptarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
@@ -50,15 +52,12 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
         // Botón "Reportes"
         PopupMenuButton<String>(
           onSelected: (value) {
-            // Redirige según la opción seleccionada
             if (value == 'ver_puntos') {
-              // Cambia 'VistaPuntos' por el nombre de la página que deseas
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const VistaReporte()),
               );
             } else if (value == 'ver_fecha') {
-              // Cambia 'VistaFecha' por el nombre de la página que deseas
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
@@ -80,12 +79,12 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
             if (value == 'lista_escuelas') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const VistaEscuela()), // Redirige a la página de lista de escuelas
+                MaterialPageRoute(builder: (context) => const VistaEscuela()),
               );
             } else if (value == 'agregar_escuela') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const RegistrarEscuela()), // Redirige a la página de agregar escuela
+                MaterialPageRoute(builder: (context) => const RegistrarEscuela()),
               );
             }
           },
@@ -144,6 +143,32 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
             ];
           },
           child: Text('Docentes', style: commonTextStyle),
+        ),
+        const SizedBox(width: 10),
+        // Botón "Listas Pendientes"
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'lista_pendiente_docente') {
+              // Reemplaza con la ruta de la página que muestra la lista pendiente de docentes
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VerificarDoce()),
+              );
+            } else if (value == 'lista_pendiente_estudiante') {
+              // Reemplaza con la ruta de la página que muestra la lista pendiente de estudiantes
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VerificarEst()),
+              );
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<String>(value: 'lista_pendiente_docente', child: Text('Lista Pendiente Docente', style: commonTextStyle)),
+              PopupMenuItem<String>(value: 'lista_pendiente_estudiante', child: Text('Lista Pendiente Estudiante', style: commonTextStyle)),
+            ];
+          },
+          child: Text('Listas Pendientes', style: commonTextStyle),
         ),
         const SizedBox(width: 25),
         // Botón "Cerrar Sesión"
