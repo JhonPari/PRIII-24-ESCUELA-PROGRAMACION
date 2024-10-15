@@ -1,8 +1,12 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 
 class RegistrarsePage extends StatefulWidget {
+  const RegistrarsePage({super.key});
+
   @override
   _RegistroPageState createState() => _RegistroPageState();
 }
@@ -52,7 +56,7 @@ class _RegistroPageState extends State<RegistrarsePage> {
           child: Container(
             padding: const EdgeInsets.all(16.0),
             constraints:
-                BoxConstraints(maxWidth: 600), 
+                const BoxConstraints(maxWidth: 600), 
             child: Form(
               key: _formKey,
               child: Column(

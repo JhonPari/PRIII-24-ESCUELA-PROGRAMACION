@@ -1,16 +1,16 @@
+// ignore_for_file: unused_local_variable, avoid_web_libraries_in_flutter, deprecated_member_use
+
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'dart:html' as html;
 import 'dart:convert';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
+
 
 void main() => runApp(const VistaDoceReporte());
 
@@ -74,7 +74,7 @@ class _VistaDoceReportState extends State<VistaDoceReporte> {
           return pw.Center(
             child: pw.Column(
               children: [
-                pw.Text('Reporte de Estudiantes', style: pw.TextStyle(fontSize: 24)),
+                pw.Text('Reporte de Estudiantes', style: const pw.TextStyle(fontSize: 24)),
                 pw.SizedBox(height: 20),
                 pw.Table.fromTextArray(
                   context: context,
@@ -125,7 +125,7 @@ class _VistaDoceReportState extends State<VistaDoceReporte> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => RegistrarEstPage()),
+                      MaterialPageRoute(builder: (context) => const RegistrarEstPage()),
                     );
                   },
                   icon: const Icon(Icons.person_add, color: Colors.white),

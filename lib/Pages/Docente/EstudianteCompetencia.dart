@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Service/CalificarEstudianteService.dart';
 import 'package:prlll_24_escuela_programacion/models/EstudianteCalificacion.dart';
@@ -8,7 +10,7 @@ import 'package:prlll_24_escuela_programacion/Service/session.dart';
 class CompetenciaPage extends StatefulWidget {
   final int idCompetencia;
 
-  CompetenciaPage({required this.idCompetencia});
+  const CompetenciaPage({super.key, required this.idCompetencia});
 
   @override
   _CompetenciaPageState createState() => _CompetenciaPageState();
@@ -115,7 +117,7 @@ class _CompetenciaPageState extends State<CompetenciaPage> {
                       },
                       decoration: InputDecoration(
                         hintText: 'Nombres, Apellidos o Correos',
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -123,22 +125,22 @@ class _CompetenciaPageState extends State<CompetenciaPage> {
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _filterEstudiantes,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF8E244D),
+                    backgroundColor: const Color(0xFF8E244D),
                   ),
-                  child: Text('Buscar', style: TextStyle(color: Colors.white)),
+                  child: const Text('Buscar', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: Container(
                 color: Colors.pink[50],
                 child: isLoading
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         itemCount: filteredEstudiantes.length,
                         itemBuilder: (context, index) {
@@ -156,7 +158,7 @@ class _CompetenciaPageState extends State<CompetenciaPage> {
 
   Widget studentRow(Estudiante estudiante) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       color: Colors.pink[50],
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,7 +178,7 @@ class _CompetenciaPageState extends State<CompetenciaPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                   ),
-                  child: Text('Evaluar', style: TextStyle(color: Colors.white)),
+                  child: const Text('Evaluar', style: TextStyle(color: Colors.white)),
                 )
               : Text(getEstadoText(estudiante.aprobado)),
         ],

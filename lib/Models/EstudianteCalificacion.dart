@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_is_not_operator, avoid_print
+
 class Estudiante {
   final String nombre;
   final String correo;

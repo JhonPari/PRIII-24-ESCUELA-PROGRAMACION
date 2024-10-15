@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/EditarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
@@ -66,7 +68,7 @@ class _VistaEstState extends State<VistaEst> {
                   onPressed: () async {
                     await Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => RegistrarEstPage()),
+                      MaterialPageRoute(builder: (context) => const RegistrarEstPage()),
                     );
                     _loadUsuarios(); // Refresca la lista después de registrar un estudiante.
                   },

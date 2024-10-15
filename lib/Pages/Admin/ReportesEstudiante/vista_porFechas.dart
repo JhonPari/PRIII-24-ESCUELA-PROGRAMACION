@@ -3,7 +3,6 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -119,23 +118,6 @@ class _VistaReportFechaState extends State<VistaReporteFecha> {
                 ),
               ),
               const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const RegistrarEstPage()),
-                    );
-                  },
-                  icon: const Icon(Icons.person_add, color: Colors.white),
-                  label: const Text('Añadir'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.grey,
-                  ),
-                ),
-              ),
               const SizedBox(height: 15),
               Expanded(child: _buildReportTable()),
             ],

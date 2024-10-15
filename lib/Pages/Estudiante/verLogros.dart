@@ -1,7 +1,7 @@
-import 'dart:typed_data';
+// ignore_for_file: use_build_context_synchronously
 
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Models/ImagenLogroEst.dart';
 import 'package:prlll_24_escuela_programacion/Models/LogroEst.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';

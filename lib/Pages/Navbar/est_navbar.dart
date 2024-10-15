@@ -54,7 +54,7 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EstCompetenciaPage()),
+              MaterialPageRoute(builder: (context) => const EstCompetenciaPage()),
             );
           },
           child: const Text(

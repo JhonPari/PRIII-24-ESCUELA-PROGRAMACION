@@ -1,4 +1,6 @@
 include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
+    avoid_print: ignore
     file_names: ignore
+    use_build_context_synchronously: ignore

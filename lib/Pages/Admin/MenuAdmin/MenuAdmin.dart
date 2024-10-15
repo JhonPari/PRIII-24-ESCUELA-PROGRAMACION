@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart'; 
@@ -118,15 +120,6 @@ class _MenuAdminState extends State<MenuAdmin> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // Navegación para Calificaciones
-                        /*
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CalificacionesPage(),
-                          ),
-                        );
-                        */
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF8B2D56),
@@ -149,7 +142,7 @@ class _MenuAdminState extends State<MenuAdmin> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => VistaEst(),
+                            builder: (context) => const VistaEst(),
                           ),
                         );
                       },

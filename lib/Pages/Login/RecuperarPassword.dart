@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
@@ -28,8 +30,8 @@ class _RecuperarContrasenaState extends State<RecuperarContrasenaPage> {
     if (resultado) {
       
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Se ha enviado un correo para recuperar la contraseña.'),
+        const SnackBar(
+          content: Text('Se ha enviado un correo para recuperar la contraseña.'),
           backgroundColor: Colors.green,
         ),
       );
@@ -37,8 +39,8 @@ class _RecuperarContrasenaState extends State<RecuperarContrasenaPage> {
     } else {
       
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Error: no se pudo enviar el correo de recuperación'),
+        const SnackBar(
+          content: Text('Error: no se pudo enviar el correo de recuperación'),
           backgroundColor: Colors.red, 
         ),
       );

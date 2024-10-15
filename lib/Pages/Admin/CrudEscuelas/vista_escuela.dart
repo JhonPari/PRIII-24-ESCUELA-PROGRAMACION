@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/Modificar_Escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/registrar_escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
@@ -75,7 +75,8 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const RegistrarEscuelaPage(), // Redirige a la página de registro
+                        builder: (context) =>
+                            const RegistrarEscuelaPage(), // Redirige a la página de registro
                       ),
                     );
                   },
@@ -91,14 +92,16 @@ class _VistaEscuelaState extends State<VistaEscuela> {
               Expanded(
                 child: FutureBuilder<List<Escuela>>(
                   future: _listaEscuelas,
-                  builder: (BuildContext context, AsyncSnapshot<List<Escuela>> snapshot) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Escuela>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(
-                        child: Text('No hay Escuelas', style: TextStyle(fontSize: 18)),
+                        child: Text('No hay Escuelas',
+                            style: TextStyle(fontSize: 18)),
                       );
                     } else {
                       List<Escuela> escuelas = snapshot.data!;
@@ -114,12 +117,14 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                               child: Card(
                                 color: const Color(0xFFB1778E),
                                 elevation: 4.0,
-                                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Container(
                                   height: 140,
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(escuela.nombre,
                                           style: const TextStyle(
@@ -128,10 +133,12 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                                       const SizedBox(height: 8.0),
                                       Text(escuela.descripcion,
                                           style: const TextStyle(
-                                              color: Color.fromARGB(255, 72, 6, 6))),
+                                              color: Color.fromARGB(
+                                                  255, 72, 6, 6))),
                                       const Spacer(),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
                                           TextButton(
                                             onPressed: () {
@@ -139,7 +146,8 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                                             },
                                             style: TextButton.styleFrom(
                                               foregroundColor: Colors.black,
-                                              side: const BorderSide(color: Colors.black),
+                                              side: const BorderSide(
+                                                  color: Colors.black),
                                             ),
                                             child: const Text('Eliminar'),
                                           ),
@@ -149,13 +157,17 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => EditEscuelaPage(idescuela: escuela.id!),
+                                                  builder: (context) =>
+                                                      EditEscuelaPage(
+                                                          idescuela:
+                                                              escuela.id!),
                                                 ),
                                               );
                                             },
                                             style: TextButton.styleFrom(
                                               foregroundColor: Colors.white,
-                                              side: const BorderSide(color: Colors.black),
+                                              side: const BorderSide(
+                                                  color: Colors.black),
                                             ),
                                             child: const Text('Modificar'),
                                           ),
@@ -207,7 +219,8 @@ class _VistaEscuelaState extends State<VistaEscuela> {
               },
             ),
             TextButton(
-              child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+              child:
+                  const Text('Eliminar', style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop();
                 _deleteEscuela(escuela.id);

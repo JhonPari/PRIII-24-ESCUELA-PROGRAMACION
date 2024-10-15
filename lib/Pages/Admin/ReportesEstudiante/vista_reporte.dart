@@ -3,14 +3,12 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'dart:html' as html;
 import 'dart:convert';
 import 'package:pdf/widgets.dart' as pw;
-
 
 void main() => runApp(const VistaReporte());
 
@@ -41,20 +39,16 @@ class _VistaReportState extends State<VistaReporte> {
     });
   }
 
-  // Función para exportar a Excel y descargar en la web
   Future<void> _exportToExcel(List<ReporteEstudiante> reportes) async {
     var excel = Excel.createExcel();
     Sheet sheet = excel['Reporte'];
 
-    // Agregar encabezados
     sheet.appendRow(['Nombres', 'Correo', 'Puntos']);
 
-    // Agregar los datos de los estudiantes
     for (var reporte in reportes) {
       sheet.appendRow([reporte.nombre, reporte.correo, reporte.puntos.toString()]);
     }
 
-    // Convertir a bytes y crear enlace de descarga
     var excelBytes = excel.encode();
     final content = base64Encode(excelBytes!);
     final anchor = html.AnchorElement(
@@ -63,11 +57,9 @@ class _VistaReportState extends State<VistaReporte> {
       ..click();
   }
 
-  // Función para exportar a PDF
   Future<void> _exportToPdf(List<ReporteEstudiante> reportes) async {
     final pdf = pw.Document();
 
-    // Crear la estructura del PDF
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
@@ -90,7 +82,6 @@ class _VistaReportState extends State<VistaReporte> {
       ),
     );
 
-    // Convertir a bytes y crear enlace de descarga para web
     final pdfBytes = await pdf.save();
     final blob = html.Blob([pdfBytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
@@ -119,23 +110,6 @@ class _VistaReportState extends State<VistaReporte> {
                 ),
               ),
               const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const RegistrarEstPage()),
-                    );
-                  },
-                  icon: const Icon(Icons.person_add, color: Colors.white),
-                  label: const Text('Añadir'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.grey,
-                  ),
-                ),
-              ),
               const SizedBox(height: 15),
               Expanded(child: _buildReportTable()),
             ],

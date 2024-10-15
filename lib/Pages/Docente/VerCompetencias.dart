@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, avoid_print, sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/competenciaDoceService.dart';
@@ -120,11 +122,11 @@ class CompetenciaCard extends StatelessWidget {
     return Container(
       width: 350,
       height: 250,
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 10,
@@ -136,13 +138,13 @@ class CompetenciaCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(titulo,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
           Text('Descripcion: $descripcion'),
           Text('Fecha de Inicio: $fechaInicio'),
           Text('Fecha de Finalización: $fechaFin'),
           Text('Estado: $estado'),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Center(
             child: ElevatedButton(
               onPressed: () {
@@ -153,9 +155,9 @@ class CompetenciaCard extends StatelessWidget {
                       builder: (context) => CompetenciaPage(idCompetencia: id)),
                 );
               },
-              child: Text('Calificar', style: TextStyle(color: Colors.white)),
+              child: const Text('Calificar', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF8E244D),
+                backgroundColor: const Color(0xFF8E244D),
               ),
             ),
           ),

@@ -1,9 +1,12 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart'; 
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 AppBar NavBarMenus(String nombre, Session sesion, BuildContext context) {
-  TextStyle commonTextStyle = const TextStyle(fontSize: 16, color: Colors.black);
+  TextStyle commonTextStyle =
+      const TextStyle(fontSize: 16, color: Colors.black);
 
   return AppBar(
     backgroundColor: const Color(0xFF8B2D56),
@@ -29,7 +32,7 @@ AppBar NavBarMenus(String nombre, Session sesion, BuildContext context) {
               style: commonTextStyle.copyWith(color: Colors.white38),
             ),
             const Text(
-              'Estudiante Univalle',
+              'Univalle',
               style: TextStyle(color: Colors.white54, fontSize: 16),
             ),
           ],

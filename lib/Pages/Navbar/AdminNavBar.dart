@@ -43,7 +43,7 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
               style: commonTextStyle.copyWith(color: Colors.white38),
             ),
             const Text(
-              'Admin',
+              'Admin Univalle',
               style: TextStyle(color: Colors.white54, fontSize: 16),
             ),
           ],

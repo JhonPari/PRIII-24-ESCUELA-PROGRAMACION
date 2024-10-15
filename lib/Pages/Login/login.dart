@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, unused_element, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/MenuDocente.dart';
@@ -158,7 +160,7 @@ class _LoginState extends State<LoginPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          RecuperarContrasenaPage()),
+                                          const RecuperarContrasenaPage()),
                                 );
                               },
                               child: const Text(
@@ -174,7 +176,7 @@ class _LoginState extends State<LoginPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => RegistrarsePage()),
+                                      builder: (context) => const RegistrarsePage()),
                                 );
                               },
                               child: const Text(

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -7,15 +9,15 @@ import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart'; //
 class EditEscuelaPage extends StatefulWidget {
   final int idescuela;
 
-  const EditEscuelaPage({Key? key, required this.idescuela}) : super(key: key);
+  const EditEscuelaPage({super.key, required this.idescuela});
 
   @override
   _EditEscuelaPageState createState() => _EditEscuelaPageState();
 }
 
 class _EditEscuelaPageState extends State<EditEscuelaPage> {
-  late TextEditingController _nombreController = TextEditingController();
-  late TextEditingController _descripcionController = TextEditingController();
+  late final TextEditingController _nombreController = TextEditingController();
+  late final TextEditingController _descripcionController = TextEditingController();
   final EscuelaService _escuelaService = EscuelaService();
   final _formKey = GlobalKey<FormState>();
   late Escuela? _escuela; // Cambiado para permitir valores nulos
@@ -36,7 +38,7 @@ class _EditEscuelaPageState extends State<EditEscuelaPage> {
         _nombreController.text = _escuela!.nombre;
         _descripcionController.text = _escuela!.descripcion;
       } else {
-        //TODO cerrar esta ventana
+       
       }
     });
   }
