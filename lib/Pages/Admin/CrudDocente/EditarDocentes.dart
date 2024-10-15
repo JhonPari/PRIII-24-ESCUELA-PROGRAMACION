@@ -18,7 +18,7 @@ class _EditarDoceState extends State<EditarDocePage> {
   final TextEditingController _correoController = TextEditingController();
   final UsuariosService _usuarioService = UsuariosService();
   final _formKey = GlobalKey<FormState>();
-  late Usuario? _usuario;
+  late Usuario? _usuario; // Cambiado para permitir valores nulos
   final Session storage = Session();
   String? name;
 
@@ -37,17 +37,12 @@ class _EditarDoceState extends State<EditarDocePage> {
         _nombreController.text = _usuario!.nombre;
         _correoController.text = _usuario!.correo;
       }
-      else {
-        // TODO cerrar esta ventana
-      }
     });
   }
 
   Future<void> _loadSession() async {
     Map<String, String?> data = await storage.getSession();
-    if (data['id'] == null || data['name'] == null || data['role'] == null) {
-      Navigator.pushReplacementNamed(context, '/login');
-    } else {
+    if (data['name'] != null) {
       setState(() {
         name = data['name'] ?? 'Sin Nombre';
       });
@@ -88,7 +83,7 @@ class _EditarDoceState extends State<EditarDocePage> {
           const SnackBar(content: Text("Usuario actualizado con éxito")),
         );
 
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true); // Retorna 'true' para indicar que se actualizó
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -100,7 +95,7 @@ class _EditarDoceState extends State<EditarDocePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: adminNavBar(name ?? '...', storage, context), // Aquí se añade el navbar
+      appBar: adminNavBar(name ?? '...', storage, context), // Usa el navbar de AdminNavBar
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

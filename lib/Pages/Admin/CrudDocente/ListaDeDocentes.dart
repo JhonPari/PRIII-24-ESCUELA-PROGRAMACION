@@ -22,18 +22,18 @@ class _VistaDoceState extends State<VistaDoce> {
   @override
   void initState() {
     super.initState();
-    _listaUsuarios = usuariosService.getDocentes();
-    _loadSession();
+    _listaUsuarios = usuariosService.getDocentes(); // Carga la lista de docentes
+    _loadSession(); // Verifica la sesión del usuario
   }
 
   Future<void> _loadSession() async {
     Map<String, String?> data = await storage.getSession();
 
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/login'); // Redirige a login si no hay sesión
     } else {
       setState(() {
-        name = data['name'] ?? 'Sin Nombre';
+        name = data['name'] ?? 'Sin Nombre'; // Establece el nombre del usuario
       });
     }
   }
@@ -41,7 +41,7 @@ class _VistaDoceState extends State<VistaDoce> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: adminNavBar(name ?? '...', storage, context),
+      appBar: adminNavBar(name ?? '...', storage, context), // Navegación
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -76,7 +76,7 @@ class _VistaDoceState extends State<VistaDoce> {
               ),
             ),
             const SizedBox(height: 15),
-            Expanded(child: docentesGrid()),
+            Expanded(child: docentesGrid()), // Carga la cuadrícula de docentes
           ],
         ),
       ),
@@ -85,12 +85,12 @@ class _VistaDoceState extends State<VistaDoce> {
 
   Widget docentesGrid() {
     return FutureBuilder<List<Usuario>>(
-      future: _listaUsuarios,
+      future: _listaUsuarios, // Espera a que se carguen los usuarios
       builder: (BuildContext context, AsyncSnapshot<List<Usuario>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator()); // Muestra indicador de carga
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          return Center(child: Text('Error: ${snapshot.error}')); // Manejo de errores
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(
             child: Text(
@@ -130,7 +130,7 @@ class _VistaDoceState extends State<VistaDoce> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Descripcion ',
+                        'Descripción',
                         style: TextStyle(fontSize: 14),
                       ),
                       const Spacer(),
@@ -138,14 +138,21 @@ class _VistaDoceState extends State<VistaDoce> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
+                            onPressed: () async {
+                              final result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       EditarDocePage(idUsuario: usuario.id!),
                                 ),
                               );
+
+                              // Verifica si se ha actualizado el usuario
+                              if (result == true) {
+                                setState(() {
+                                  _listaUsuarios = usuariosService.getDocentes(); // Actualiza la lista de docentes
+                                });
+                              }
                             },
                             icon: const Icon(Icons.sync, color: Colors.white),
                             label: const Text(
@@ -160,7 +167,7 @@ class _VistaDoceState extends State<VistaDoce> {
                           const SizedBox(width: 10),
                           ElevatedButton.icon(
                             onPressed: () {
-                              mostrarDialogoConfirmacion(context, usuario.id!);
+                              mostrarDialogoConfirmacion(context, usuario.id!); // Muestra dialogo de eliminación
                             },
                             icon: const Icon(Icons.cancel, color: Colors.white),
                             label: const Text(
@@ -195,7 +202,7 @@ class _VistaDoceState extends State<VistaDoce> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Cierra el dialogo
               },
               child: const Text(
                 'Cancelar',
@@ -205,9 +212,9 @@ class _VistaDoceState extends State<VistaDoce> {
             ElevatedButton(
               onPressed: () async {
                 try {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Cierra el dialogo
 
-                  await usuariosService.deleteLogic(id);
+                  await usuariosService.deleteLogic(id); // Lógica de eliminación
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -216,7 +223,7 @@ class _VistaDoceState extends State<VistaDoce> {
                   );
 
                   setState(() {
-                    _listaUsuarios = usuariosService.getDocentes();
+                    _listaUsuarios = usuariosService.getDocentes(); // Actualiza la lista de docentes
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(

@@ -1,12 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
-//TODO falta que ala hora de crear
+
+
 void main() {
   runApp(const RegistrarEscuela());
 }
@@ -90,8 +92,8 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                   onPressed: () async {
                     try {
                       NewEscuela nuevaEscuela = NewEscuela(
-                          nombre: "${_nombreController.text}",
-                          descripcion: "${_descripcionController.text}");
+                          nombre: _nombreController.text,
+                          descripcion: _descripcionController.text);
 
                       Escuela escuela = await _escuelaService.post(nuevaEscuela);
 
@@ -100,6 +102,13 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                           content: Text("Escuela creada con éxito: ${escuela.id}"),
                         ),
                       );
+
+                      // Redirigir a la lista de escuelas y refrescar los datos
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const VistaEscuela()), // Reemplaza con tu vista de lista de escuelas
+                      );
+
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Error al crear la Escuela")),
