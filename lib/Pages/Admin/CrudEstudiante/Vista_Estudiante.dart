@@ -26,8 +26,8 @@ class _VistaEstState extends State<VistaEst> {
   @override
   void initState() {
     super.initState();
-    _loadUsuarios();
     _loadSession();
+    _loadUsuarios();
   }
 
   Future<void> _loadUsuarios() async {
@@ -41,6 +41,15 @@ class _VistaEstState extends State<VistaEst> {
     setState(() {
       name = data['name'] ?? 'Sin Nombre';
     });
+  }
+
+  Future<void> _deleteEstudiante(int id) async {
+    try {
+      await usuariosService.deleteLogic(id);
+      _loadUsuarios();
+    } catch (e) {
+      print('Error al eliminar el estudiante: $e');
+    }
   }
 
   @override
@@ -68,9 +77,11 @@ class _VistaEstState extends State<VistaEst> {
                   onPressed: () async {
                     await Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const RegistrarEstPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const RegistrarEstPage()),
                     );
-                    _loadUsuarios(); // Refresca la lista después de registrar un estudiante.
+                    if (mounted)
+                      _loadUsuarios(); // Refresca la lista después de registrar un estudiante.
                   },
                   icon: const Icon(Icons.person_add, color: Colors.white),
                   label: const Text('Añadir'),
@@ -133,14 +144,17 @@ class _VistaEstState extends State<VistaEst> {
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditarEstPage(idUsuario: usuario.id!),
+                                        builder: (context) => EditarEstPage(
+                                            idUsuario: usuario.id!),
                                       ),
                                     );
-                                    _loadUsuarios(); // Refresca la lista después de modificar.
+                                    if (mounted)
+                                      _loadUsuarios(); // Refresca la lista después de modificar.
                                   },
-                                  icon: const Icon(Icons.sync, color: Colors.white),
-                                  label: const Text('Modificar', style: TextStyle(color: Colors.white)),
+                                  icon: const Icon(Icons.sync,
+                                      color: Colors.white),
+                                  label: const Text('Modificar',
+                                      style: TextStyle(color: Colors.white)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.grey,
                                     minimumSize: const Size(100, 30),
@@ -149,10 +163,12 @@ class _VistaEstState extends State<VistaEst> {
                                 const SizedBox(width: 10),
                                 ElevatedButton.icon(
                                   onPressed: () {
-                                    mostrarDialogoConfirmacion(context, usuario.id!);
+                                    mostrarDialogoConfirmacion(usuario.id!);
                                   },
-                                  icon: const Icon(Icons.cancel, color: Colors.white),
-                                  label: const Text('Eliminar', style: TextStyle(color: Colors.white)),
+                                  icon: const Icon(Icons.cancel,
+                                      color: Colors.white),
+                                  label: const Text('Eliminar',
+                                      style: TextStyle(color: Colors.white)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF8E244D),
                                     minimumSize: const Size(100, 30),
@@ -174,13 +190,14 @@ class _VistaEstState extends State<VistaEst> {
     );
   }
 
-  void mostrarDialogoConfirmacion(BuildContext context, int id) {
+  void mostrarDialogoConfirmacion(int id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
-          content: const Text('¿Estás seguro de que deseas eliminar este estudiante?'),
+          content: const Text(
+              '¿Estás seguro de que deseas eliminar este estudiante?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -193,27 +210,8 @@ class _VistaEstState extends State<VistaEst> {
             ),
             ElevatedButton(
               onPressed: () async {
-                try {
-                  Navigator.of(context).pop();
-
-                  await usuariosService.deleteLogic(id);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Estudiante eliminado exitosamente.'),
-                    ),
-                  );
-
-                  setState(() {
-                    _listaUsuarios = usuariosService.getEstudiantes();
-                  });
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Error al eliminar el estudiante."),
-                    ),
-                  );
-                }
+                Navigator.of(context).pop();
+                _deleteEstudiante(id);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8E244D),

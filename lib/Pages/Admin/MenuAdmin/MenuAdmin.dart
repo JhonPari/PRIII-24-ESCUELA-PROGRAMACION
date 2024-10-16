@@ -121,6 +121,24 @@ class _MenuAdminState extends State<MenuAdmin> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8B2D56),
+                          minimumSize: const Size(500, 80),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(21),
+                          ),
+                        ),
+                        child: const Text(
+                          'Calificaciones',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
                           // Navegación a la lista de estudiantes
                           Navigator.push(
                             context,

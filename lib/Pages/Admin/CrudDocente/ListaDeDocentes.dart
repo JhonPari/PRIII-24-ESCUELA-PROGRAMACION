@@ -24,15 +24,23 @@ class _VistaDoceState extends State<VistaDoce> {
   @override
   void initState() {
     super.initState();
-    _listaUsuarios = usuariosService.getDocentes(); // Carga la lista de docentes
+    // Carga la lista de docentes
     _loadSession(); // Verifica la sesión del usuario
+    _loadDocentes();
+  }
+
+  Future<void> _loadDocentes() async {
+    setState(() {
+      _listaUsuarios = usuariosService.getDocentes();
+    });
   }
 
   Future<void> _loadSession() async {
     Map<String, String?> data = await storage.getSession();
 
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
-      Navigator.pushReplacementNamed(context, '/login'); // Redirige a login si no hay sesión
+      Navigator.pushReplacementNamed(
+          context, '/login'); // Redirige a login si no hay sesión
     } else {
       setState(() {
         name = data['name'] ?? 'Sin Nombre'; // Establece el nombre del usuario
@@ -61,13 +69,14 @@ class _VistaDoceState extends State<VistaDoce> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const RegistrarDocePage(),
                     ),
                   );
+                  _loadDocentes();
                 },
                 icon: const Icon(Icons.person_add, color: Colors.white),
                 label: const Text('Añadir'),
@@ -90,9 +99,11 @@ class _VistaDoceState extends State<VistaDoce> {
       future: _listaUsuarios, // Espera a que se carguen los usuarios
       builder: (BuildContext context, AsyncSnapshot<List<Usuario>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator()); // Muestra indicador de carga
+          return const Center(
+              child: CircularProgressIndicator()); // Muestra indicador de carga
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}')); // Manejo de errores
+          return Center(
+              child: Text('Error: ${snapshot.error}')); // Manejo de errores
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(
             child: Text(
@@ -152,7 +163,8 @@ class _VistaDoceState extends State<VistaDoce> {
                               // Verifica si se ha actualizado el usuario
                               if (result == true) {
                                 setState(() {
-                                  _listaUsuarios = usuariosService.getDocentes(); // Actualiza la lista de docentes
+                                  _listaUsuarios = usuariosService
+                                      .getDocentes(); // Actualiza la lista de docentes
                                 });
                               }
                             },
@@ -169,7 +181,10 @@ class _VistaDoceState extends State<VistaDoce> {
                           const SizedBox(width: 10),
                           ElevatedButton.icon(
                             onPressed: () {
-                              mostrarDialogoConfirmacion(context, usuario.id!); // Muestra dialogo de eliminación
+                              mostrarDialogoConfirmacion(
+                                  context,
+                                  usuario
+                                      .id!); // Muestra dialogo de eliminación
                             },
                             icon: const Icon(Icons.cancel, color: Colors.white),
                             label: const Text(
@@ -200,7 +215,8 @@ class _VistaDoceState extends State<VistaDoce> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
-          content: const Text('¿Estás seguro de que deseas eliminar este usuario?'),
+          content:
+              const Text('¿Estás seguro de que deseas eliminar este usuario?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -216,7 +232,8 @@ class _VistaDoceState extends State<VistaDoce> {
                 try {
                   Navigator.of(context).pop(); // Cierra el dialogo
 
-                  await usuariosService.deleteLogic(id); // Lógica de eliminación
+                  await usuariosService
+                      .deleteLogic(id); // Lógica de eliminación
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -225,7 +242,8 @@ class _VistaDoceState extends State<VistaDoce> {
                   );
 
                   setState(() {
-                    _listaUsuarios = usuariosService.getDocentes(); // Actualiza la lista de docentes
+                    _listaUsuarios = usuariosService
+                        .getDocentes(); // Actualiza la lista de docentes
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
