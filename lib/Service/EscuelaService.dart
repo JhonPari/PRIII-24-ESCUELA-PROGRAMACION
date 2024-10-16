@@ -45,7 +45,7 @@ class EscuelaService {
     }
   }
 
-  Future<Escuela> put(int id, Escuela escuelaModificada) async {
+  Future put(int id, Escuela escuelaModificada) async {
     final url = Uri.parse("$baseUri/$id");
     var response = await http.put(
       url,
@@ -54,13 +54,12 @@ class EscuelaService {
     );
 
     if (response.statusCode == 200) {
-      return Escuela.fromJson(jsonDecode(response.body));
+      return;
     } else {
       throw Exception(
           "Error al actualizar la escuela. Código de estado: ${response.statusCode}");
     }
   }
-  
 
   /*Future<Escuela> put(int id, Escuela usr) async {
     final url = Uri.parse("$baseUri/$id");

@@ -22,6 +22,12 @@ class _LoginState extends State<LoginPage> {
   final UsuariosService _usuarioService = UsuariosService();
   final storage = Session();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadSession();
+  }
+
   Future<void> _loadSession() async {
     Map<String, String?> data = await storage.getSession();
 
