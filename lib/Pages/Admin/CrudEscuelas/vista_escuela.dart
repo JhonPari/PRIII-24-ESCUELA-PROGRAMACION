@@ -28,7 +28,13 @@ class _VistaEscuelaState extends State<VistaEscuela> {
   void initState() {
     super.initState();
     _loadSession();
-    _listaEscuelas = escuelaService.getAll();
+    _loadEscuelas();
+  }
+
+  Future<void> _loadEscuelas() async {
+    setState(() {
+      _listaEscuelas = escuelaService.getAll();
+    });
   }
 
   Future<void> _loadSession() async {
@@ -71,14 +77,15 @@ class _VistaEscuelaState extends State<VistaEscuela> {
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
                             const RegistrarEscuelaPage(), // Redirige a la página de registro
                       ),
                     );
+                    _loadEscuelas();
                   },
                   icon: const Icon(Icons.add, color: Colors.white),
                   label: const Text('Añadir Escuela'),
@@ -153,16 +160,17 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                                           ),
                                           const SizedBox(width: 8.0),
                                           TextButton(
-                                            onPressed: () {
-                                              Navigator.push(
+                                            onPressed: () async {
+                                              await Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       EditEscuelaPage(
                                                           idescuela:
-                                                              escuela.id!),
+                                                              escuela.id),
                                                 ),
                                               );
+                                              _loadEscuelas();
                                             },
                                             style: TextButton.styleFrom(
                                               foregroundColor: Colors.white,
@@ -195,9 +203,7 @@ class _VistaEscuelaState extends State<VistaEscuela> {
   Future<void> _deleteEscuela(int id) async {
     try {
       await escuelaService.deleteLogic(id);
-      setState(() {
-        _listaEscuelas = escuelaService.getAll();
-      });
+      _loadEscuelas();
     } catch (e) {
       print('Error al eliminar la escuela: $e');
     }
