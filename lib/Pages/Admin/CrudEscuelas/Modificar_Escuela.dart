@@ -17,7 +17,8 @@ class EditEscuelaPage extends StatefulWidget {
 
 class _EditEscuelaPageState extends State<EditEscuelaPage> {
   late final TextEditingController _nombreController = TextEditingController();
-  late final TextEditingController _descripcionController = TextEditingController();
+  late final TextEditingController _descripcionController =
+      TextEditingController();
   final EscuelaService _escuelaService = EscuelaService();
   final _formKey = GlobalKey<FormState>();
   late Escuela? _escuela; // Cambiado para permitir valores nulos
@@ -26,8 +27,8 @@ class _EditEscuelaPageState extends State<EditEscuelaPage> {
   @override
   void initState() {
     super.initState();
-    _cargarEscuela();
     _loadSession(); // Carga la sesión al iniciar
+    _cargarEscuela();
   }
 
   void _cargarEscuela() async {
@@ -38,13 +39,14 @@ class _EditEscuelaPageState extends State<EditEscuelaPage> {
         _nombreController.text = _escuela!.nombre;
         _descripcionController.text = _escuela!.descripcion;
       } else {
-       
+        Navigator.pop(context); // no deberia pasar
       }
     });
   }
 
   Future<void> _loadSession() async {
-    Map<String, String?> data = await Session().getSession(); // Reemplaza con tu método de sesión
+    Map<String, String?> data =
+        await Session().getSession(); // Reemplaza con tu método de sesión
     setState(() {
       name = data['name'] ?? 'Sin Nombre';
     });
@@ -62,7 +64,7 @@ class _EditEscuelaPageState extends State<EditEscuelaPage> {
           const SnackBar(content: Text("Escuela actualizada con éxito")),
         );
 
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -74,7 +76,8 @@ class _EditEscuelaPageState extends State<EditEscuelaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: adminNavBar(name ?? '...', Session(), context), // Añadido el navbar
+      appBar:
+          adminNavBar(name ?? '...', Session(), context), // Añadido el navbar
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -148,7 +151,8 @@ class _EditEscuelaPageState extends State<EditEscuelaPage> {
                         backgroundColor: Colors.grey,
                         minimumSize: const Size(double.infinity, 40),
                       ),
-                      child: const Text('Volver', style: TextStyle(color: Colors.white)),
+                      child: const Text('Volver',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),
