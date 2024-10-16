@@ -42,67 +42,69 @@ class _MenuDoceState extends State<MenuDoce> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: NavBarMenus(name ?? '...', storage, context),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 70.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Navegación para Ver Reportes
-                  
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const VistaDoceReporteFecha(),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 70.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Navegación para Ver Reportes
+                    
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const VistaDoceReporteFecha(),
+                      ),
+                    );
+                    
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF8B2D56),
+                    minimumSize: const Size(300, 80),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(21),
                     ),
-                  );
-                  
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8B2D56),
-                  minimumSize: const Size(300, 80),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(21),
                   ),
-                ),
-                child: const Text(
-                  'Ver Reportes',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Navegación para Competencia
-                  
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => verCompetenciaDocePage (),
+                  child: const Text(
+                    'Ver Reportes',
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
-                  );
-                  
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8B2D56),
-                  minimumSize: const Size(300, 80),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(21),
                   ),
                 ),
-                child: const Text(
-                  'Competencia',
-                  style: TextStyle(
-                    color: Colors.white,
+                
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Navegación para Competencia
+                    
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => verCompetenciaDocePage (),
+                      ),
+                    );
+                    
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF8B2D56),
+                    minimumSize: const Size(300, 80),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(21),
+                    ),
+                  ),
+                  child: const Text(
+                    'Competencia',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
