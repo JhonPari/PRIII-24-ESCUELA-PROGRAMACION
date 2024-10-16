@@ -10,17 +10,16 @@ import 'dart:html' as html;
 import 'dart:convert';
 import 'package:pdf/widgets.dart' as pw;
 
-
 void main() => runApp(const VistaReporteFecha());
 
 class VistaReporteFecha extends StatefulWidget {
   const VistaReporteFecha({super.key});
 
   @override
-  State<VistaReporteFecha> createState() => _VistaReportFechaState();
+  State<VistaReporteFecha> createState() => _VistaReportState();
 }
 
-class _VistaReportFechaState extends State<VistaReporteFecha> {
+class _VistaReportState extends State<VistaReporteFecha> {
   UsuariosService usuariosService = UsuariosService();
   late Future<List<ReporteEstudiante>> _listaReportes;
   final Session storage = Session();
@@ -40,20 +39,16 @@ class _VistaReportFechaState extends State<VistaReporteFecha> {
     });
   }
 
-  // Función para exportar a Excel y descargar en la web
   Future<void> _exportToExcel(List<ReporteEstudiante> reportes) async {
     var excel = Excel.createExcel();
     Sheet sheet = excel['Reporte'];
 
-    // Agregar encabezados
     sheet.appendRow(['Nombres', 'Correo', 'Puntos']);
 
-    // Agregar los datos de los estudiantes
     for (var reporte in reportes) {
       sheet.appendRow([reporte.nombre, reporte.correo, reporte.puntos.toString()]);
     }
 
-    // Convertir a bytes y crear enlace de descarga
     var excelBytes = excel.encode();
     final content = base64Encode(excelBytes!);
     final anchor = html.AnchorElement(
@@ -62,11 +57,9 @@ class _VistaReportFechaState extends State<VistaReporteFecha> {
       ..click();
   }
 
-  // Función para exportar a PDF
   Future<void> _exportToPdf(List<ReporteEstudiante> reportes) async {
     final pdf = pw.Document();
 
-    // Crear la estructura del PDF
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
@@ -89,7 +82,6 @@ class _VistaReportFechaState extends State<VistaReporteFecha> {
       ),
     );
 
-    // Convertir a bytes y crear enlace de descarga para web
     final pdfBytes = await pdf.save();
     final blob = html.Blob([pdfBytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
@@ -104,101 +96,100 @@ class _VistaReportFechaState extends State<VistaReporteFecha> {
     return MaterialApp(
       home: Scaffold(
         appBar: adminNavBar(name ?? '...', storage, context),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              const Text(
-                'REPORTE DE ESTUDIANTES POR PUNTOS',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF8E244D),
+        body: Center(  // Centra el contenido de la pantalla
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,  // Centra verticalmente los elementos
+              children: [
+                const Text(
+                  'REPORTE DE ESTUDIANTES POR PUNTOS',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF8E244D),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const SizedBox(height: 15),
-              Expanded(child: _buildReportTable()),
-            ],
+                const SizedBox(height: 20),
+                _buildExportButtons(),  // Los botones de exportación
+                const SizedBox(height: 20),
+                Expanded(child: _buildReportTable()),  // La tabla expandida con el espacio restante
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Expanded _buildReportTable() {
-    return Expanded(
-      child: FutureBuilder<List<ReporteEstudiante>>(
-        future: _listaReportes,
-        builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudiante>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('No hay estudiantes', style: TextStyle(fontSize: 18)),
-            );
-          } else {
-            List<ReporteEstudiante> reportes = snapshot.data!;
-            return Column(
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => _exportToExcel(reportes),
-                  icon: const Icon(Icons.download, color: Colors.white),
-                  label: const Text('Exportar a Excel'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton.icon(
-                  onPressed: () => _exportToPdf(reportes),
-                  icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
-                  label: const Text('Exportar a PDF'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.red,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE0BFC7),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Nombres')),
-                            DataColumn(label: Text('Correo')),
-                            DataColumn(label: Text('Puntos')),
-                          ],
-                          rows: reportes.map((reporte) {
-                            return DataRow(
-                              cells: [
-                                DataCell(Text(reporte.nombre)),
-                                DataCell(Text(reporte.correo)),
-                                DataCell(Text(reporte.puntos.toString())),
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+  Widget _buildExportButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton.icon(
+          onPressed: () => _listaReportes.then((reportes) => _exportToExcel(reportes)),
+          icon: const Icon(Icons.download, color: Colors.white),
+          label: const Text('Exportar a Excel'),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.green,
+          ),
+        ),
+        const SizedBox(width: 20),
+        ElevatedButton.icon(
+          onPressed: () => _listaReportes.then((reportes) => _exportToPdf(reportes)),
+          icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
+          label: const Text('Exportar a PDF'),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.red,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReportTable() {
+    return FutureBuilder<List<ReporteEstudiante>>(
+      future: _listaReportes,
+      builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudiante>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Text('No hay estudiantes', style: TextStyle(fontSize: 18)),
+          );
+        } else {
+          List<ReporteEstudiante> reportes = snapshot.data!;
+          return Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFE0BFC7),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: DataTable(
+                columns: const [
+                  DataColumn(label: Text('Nombres')),
+                  DataColumn(label: Text('Correo')),
+                  DataColumn(label: Text('Puntos')),
+                ],
+                rows: reportes.map((reporte) {
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(reporte.nombre)),
+                      DataCell(Text(reporte.correo)),
+                      DataCell(Text(reporte.puntos.toString())),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }

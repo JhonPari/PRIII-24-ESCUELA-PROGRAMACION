@@ -96,101 +96,100 @@ class _VistaReportState extends State<VistaReporte> {
     return MaterialApp(
       home: Scaffold(
         appBar: adminNavBar(name ?? '...', storage, context),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              const Text(
-                'REPORTE DE ESTUDIANTES POR PUNTOS',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF8E244D),
+        body: Center(  // Centra el contenido de la pantalla
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,  // Centra verticalmente los elementos
+              children: [
+                const Text(
+                  'REPORTE DE ESTUDIANTES POR PUNTOS',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF8E244D),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const SizedBox(height: 15),
-              Expanded(child: _buildReportTable()),
-            ],
+                const SizedBox(height: 20),
+                _buildExportButtons(),  // Los botones de exportación
+                const SizedBox(height: 20),
+                Expanded(child: _buildReportTable()),  // La tabla expandida con el espacio restante
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Expanded _buildReportTable() {
-    return Expanded(
-      child: FutureBuilder<List<ReporteEstudiante>>(
-        future: _listaReportes,
-        builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudiante>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('No hay estudiantes', style: TextStyle(fontSize: 18)),
-            );
-          } else {
-            List<ReporteEstudiante> reportes = snapshot.data!;
-            return Column(
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => _exportToExcel(reportes),
-                  icon: const Icon(Icons.download, color: Colors.white),
-                  label: const Text('Exportar a Excel'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton.icon(
-                  onPressed: () => _exportToPdf(reportes),
-                  icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
-                  label: const Text('Exportar a PDF'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.red,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE0BFC7),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Nombres')),
-                            DataColumn(label: Text('Correo')),
-                            DataColumn(label: Text('Puntos')),
-                          ],
-                          rows: reportes.map((reporte) {
-                            return DataRow(
-                              cells: [
-                                DataCell(Text(reporte.nombre)),
-                                DataCell(Text(reporte.correo)),
-                                DataCell(Text(reporte.puntos.toString())),
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+  Widget _buildExportButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton.icon(
+          onPressed: () => _listaReportes.then((reportes) => _exportToExcel(reportes)),
+          icon: const Icon(Icons.download, color: Colors.white),
+          label: const Text('Exportar a Excel'),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.green,
+          ),
+        ),
+        const SizedBox(width: 20),
+        ElevatedButton.icon(
+          onPressed: () => _listaReportes.then((reportes) => _exportToPdf(reportes)),
+          icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
+          label: const Text('Exportar a PDF'),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.red,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReportTable() {
+    return FutureBuilder<List<ReporteEstudiante>>(
+      future: _listaReportes,
+      builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudiante>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Text('No hay estudiantes', style: TextStyle(fontSize: 18)),
+          );
+        } else {
+          List<ReporteEstudiante> reportes = snapshot.data!;
+          return Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFE0BFC7),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: DataTable(
+                columns: const [
+                  DataColumn(label: Text('Nombres')),
+                  DataColumn(label: Text('Correo')),
+                  DataColumn(label: Text('Puntos')),
+                ],
+                rows: reportes.map((reporte) {
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(reporte.nombre)),
+                      DataCell(Text(reporte.correo)),
+                      DataCell(Text(reporte.puntos.toString())),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }
