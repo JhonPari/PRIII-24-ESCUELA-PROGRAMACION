@@ -6,6 +6,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/v
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
+
 class MenuDoce extends StatefulWidget {
   const MenuDoce({super.key});
 
@@ -42,69 +43,62 @@ class _MenuDoceState extends State<MenuDoce> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: NavBarMenus(name ?? '...', storage, context),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 70.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Navegación para Ver Reportes
-                    
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const VistaDoceReporteFecha(),
-                      ),
-                    );
-                    
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF8B2D56),
-                    minimumSize: const Size(300, 80),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(21),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 70.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  // Navegación para Ver Reportes
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const VistaDoceReporteFecha(),
                     ),
-                  ),
-                  child: const Text(
-                    'Ver Reportes',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B2D56),
+                  minimumSize: const Size(300, 80),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(21),
                   ),
                 ),
-                
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navegación para Competencia
-                    
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => verCompetenciaDocePage (),
-                      ),
-                    );
-                    
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF8B2D56),
-                    minimumSize: const Size(300, 80),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(21),
-                    ),
-                  ),
-                  child: const Text(
-                    'Competencia',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                child: const Text(
+                  'Ver Reportes',
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navegación para Competencia
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => verCompetenciaDocePage(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B2D56),
+                  minimumSize: const Size(300, 80),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(21),
+                  ),
+                ),
+                child: const Text(
+                  'Competencia',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

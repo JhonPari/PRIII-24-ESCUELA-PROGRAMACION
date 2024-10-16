@@ -3,7 +3,7 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'dart:html' as html;
@@ -95,7 +95,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: adminNavBar(name ?? '...', storage, context),
+        appBar: docenteNavBar(name ?? '...', storage, context),
         body: Center(  // Centra el contenido de la pantalla
           child: Padding(
             padding: const EdgeInsets.all(16.0),
