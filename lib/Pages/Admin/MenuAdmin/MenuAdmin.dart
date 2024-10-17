@@ -1,10 +1,9 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart'; 
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ListaPendiente/AceptarDocente.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
@@ -24,6 +23,7 @@ class MenuAdmin extends StatefulWidget {
 class _MenuAdminState extends State<MenuAdmin> {
   final storage = Session();
   String? name;
+  String selectedReportOption = 'Ver Reportes';
 
   @override
   void initState() {
@@ -32,22 +32,20 @@ class _MenuAdminState extends State<MenuAdmin> {
   }
 
   Future<void> _loadSession() async {
-    // Obtiene el mapa con los datos de la sesión
     Map<String, String?> data = await storage.getSession();
-    
+
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
-      //if del rol
-    }
-    else {
+    } else {
       setState(() {
-        name = data['name'] ?? 'Sin Nombre'; 
+        name = data['name'] ?? 'Sin Nombre';
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -67,15 +65,12 @@ class _MenuAdminState extends State<MenuAdmin> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          // Navegación para Tareas (descomentar cuando la clase esté disponible)
-                          
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const VerificarDoce(),
                             ),
                           );
-                          
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF8B2D56),
@@ -92,36 +87,69 @@ class _MenuAdminState extends State<MenuAdmin> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navegación para Ver Reportes
-                          
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VistaReporte(),
-                            ),
-                          );
-                          
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8B2D56),
-                          minimumSize: const Size(500, 80),
-                          shape: RoundedRectangleBorder(
+                      DropdownButtonFormField<String>(
+                        value: selectedReportOption,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: const Color(0xFF8B2D56),
+                          border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(21),
+                            borderSide: BorderSide.none,
                           ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 15),
                         ),
-                        child: const Text(
-                          'Ver Reportes',
-                          style: TextStyle(
-                            color: Colors.white,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        dropdownColor: const Color(0xFF8B2D56),
+                        alignment: Alignment.center,
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'Ver Reportes',
+                            child: Center(
+                              child: Text(
+                                'Ver Reportes',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
-                        ),
+                          DropdownMenuItem(
+                            value: 'Ver Reportes por Fecha',
+                            child: Center(
+                              child: Text(
+                                'Ver Reportes por Fecha',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ],
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedReportOption = newValue!;
+                          });
+                          if (newValue == 'Ver Reportes') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const VistaReporte(),
+                              ),
+                            );
+                          } else if (newValue == 'Ver Reportes por Fecha') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const VistaReporteFecha(),
+                              ),
+                            );
+                          }
+                        },
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          // Navegación a la lista de estudiantes
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -146,7 +174,6 @@ class _MenuAdminState extends State<MenuAdmin> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          // Navegación a la lista de docentes
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -171,7 +198,6 @@ class _MenuAdminState extends State<MenuAdmin> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          // Navegación a la lista de escuelas (corregida a VistaDoce)
                           Navigator.push(
                             context,
                             MaterialPageRoute(
