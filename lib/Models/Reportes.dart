@@ -16,4 +16,5 @@ class ReporteEstudiante {
       puntos: json['total_Puntos'] ?? 0, // Campo actualizado
     );
   }
+
 }

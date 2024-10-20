@@ -1,21 +1,22 @@
-/*class ReportefechaEstudiante {
+class ReporteEstudianteFecha {
   String nombre;
   String correo;
-  DateTime fechaInicio; // Cambiado a DateTime
   int puntos;
+  DateTime fechaInicioCompetencia;
 
-  ReportefechaEstudiante({
+  ReporteEstudianteFecha({
     required this.nombre,
     required this.correo,
-    required this.fechaInicio
+    required this.puntos,
+    required this.fechaInicioCompetencia,
   });
 
-  factory ReportefechaEstudiante.fromJson(Map<String, dynamic> json) {
-    return ReportefechaEstudiante(
-      nombre: json['nombre_Estudiante'] ?? 'Sin Nombre', // Campo actualizado
-      correo: json['correo_Estudiante'] ?? 'Sin Correo', // Campo actualizado
-      fechaInicio: DateTime.parse(json['fecha_Inicio']),
-      
+  factory ReporteEstudianteFecha.fromJson(Map<String, dynamic> json) {
+    return ReporteEstudianteFecha(
+      nombre: json['nombreUsuario'] ?? 'Sin Nombre',
+      correo: json['correoUsuario'] ?? 'Sin Correo',
+      puntos: json['totalPuntos'] ?? 0,
+      fechaInicioCompetencia: DateTime.parse(json['fechaInicioCompetencia']),
     );
   }
-}*/
+}

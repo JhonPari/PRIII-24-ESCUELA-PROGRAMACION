@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:prlll_24_escuela_programacion/Models/ReporteFechas.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 import 'package:http/http.dart' as http;
@@ -159,17 +160,20 @@ class UsuariosService {
     throw Exception("Error al cargar todos los Reportes de Estudiantes");
   }
 }
-Future<List<ReporteEstudiante>> getReportFechaEstudiantes() async {
-  final url = Uri.parse("$baseUri/EstudiantesReporteFechas");
+Future<List<ReporteEstudianteFecha>> getReportEstudiantesFecha() async {
+  final url = Uri.parse("$baseUri/EstudiantesReporteFecha");
   var response = await http.get(url);
-  
+
   if (response.statusCode == 200) {
     List<dynamic> jsonData = jsonDecode(response.body);
-    return jsonData.map((json) => ReporteEstudiante.fromJson(json)).toList();
+    return jsonData
+        .map((json) => ReporteEstudianteFecha.fromJson(json))
+        .toList();
   } else {
-    throw Exception("Error al cargar todos los Reportes de Estudiantes");
+    throw Exception("Error al cargar todos los reportes de estudiantes");
   }
 }
+
  Future<bool> recuperarContrasena(String correo) async {
     final url = Uri.parse('$baseUri/RecuperarContrasenia');
     final response = await http.post(
