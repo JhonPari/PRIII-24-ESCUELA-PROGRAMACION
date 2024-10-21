@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/CompetenciaEst.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/entregar_prueba.dart';
@@ -19,13 +17,18 @@ class _EstCompetenciaPageState extends State<EstCompetenciaPage> {
   final CompetenciasService service = CompetenciasService();
   String? name;
   int id = 0;
-  late Future<List<CompetenciaEst>> competencias;
+  late Future<List<CompetenciaEst>> competencias = Future.value([]);
 
   @override
   void initState() {
     super.initState();
     _loadSession();
-    competencias = service.getCompetenciasEstudiante(id);
+  }
+
+  Future<void> _loadCompetencias() async {
+    setState(() {
+      competencias = service.getCompetenciasEstudiante(id);
+    });
   }
 
   Future<void> _loadSession() async {
@@ -35,8 +38,8 @@ class _EstCompetenciaPageState extends State<EstCompetenciaPage> {
       setState(() {
         name = data['name']!;
         id = int.parse(data['id']!);
-        competencias = service.getCompetenciasEstudiante(id);
       });
+      _loadCompetencias(); // Llamada a competencias después de obtener el id
     }
   }
 
@@ -52,8 +55,7 @@ class _EstCompetenciaPageState extends State<EstCompetenciaPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-                child: Text('No hay competencias disponibles.'));
+            return const Center(child: Text('No hay competencias disponibles.'));
           }
 
           final competenciasData = snapshot.data!;
@@ -69,7 +71,10 @@ class _EstCompetenciaPageState extends State<EstCompetenciaPage> {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CompetenciaCard(comp: competenciasData[index]),
+                  child: CompetenciaCard(
+                    comp: competenciasData[index],
+                    onRevisar: _loadCompetencias, // Callback
+                  ),
                 );
               },
             ),
@@ -82,7 +87,9 @@ class _EstCompetenciaPageState extends State<EstCompetenciaPage> {
 
 class CompetenciaCard extends StatefulWidget {
   final CompetenciaEst comp;
-  const CompetenciaCard({super.key, required this.comp});
+  final VoidCallback onRevisar; // Callback para actualizar la lista
+
+  const CompetenciaCard({super.key, required this.comp, required this.onRevisar});
 
   @override
   State<CompetenciaCard> createState() => _CompetenciaCardState();
@@ -93,8 +100,17 @@ class _CompetenciaCardState extends State<CompetenciaCard> {
     return '${fecha.day}/${fecha.month}/${fecha.year}';
   }
 
+  // Determinar si la competencia está lista para ser revisada
+  bool isRevisable() {
+    return widget.comp.imagen == 0 && widget.comp.revisado == 0;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final buttonStyle = ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF8E244D),
+    );
+
     return Container(
       width: 300,
       height: 200, // Ajusta el tamaño de los cuadros
@@ -133,24 +149,25 @@ class _CompetenciaCardState extends State<CompetenciaCard> {
             }
           }()),
           const SizedBox(height: 20),
-          if (widget.comp.estado == 'A')
+          if (isRevisable())
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            EntregarPrueba(idCompetencia: widget.comp.id)),
+                      builder: (context) =>
+                          EntregarPrueba(idCompetencia: widget.comp.id),
+                    ),
                   );
+                  widget.onRevisar(); // Llamada al callback
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8E244D),
-                ),
-                child: const Text('Revisar',
-                    style: TextStyle(color: Colors.white)),
+                style: buttonStyle,
+                child: const Text('Revisar', style: TextStyle(color: Colors.white)),
               ),
-            ),
+            )
+          else
+            const Center(child: Text("Entregado")),
         ],
       ),
     );

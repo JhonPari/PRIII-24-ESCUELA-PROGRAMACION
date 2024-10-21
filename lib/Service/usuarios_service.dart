@@ -188,4 +188,23 @@ Future<List<ReporteEstudianteFecha>> getReportEstudiantesFecha() async {
       return false;
     }
   }
+
+  Future<bool> changePassword(String correo, String currentPassword, String newPassword) async {
+    final url = Uri.parse('$baseUri/CambiarContrasenia');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'Correo': correo,
+        'ContraseniaActual': currentPassword,
+        'NuevaContrasenia': newPassword
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(jsonDecode(response.body)['message']);
+    }
+  }
 }

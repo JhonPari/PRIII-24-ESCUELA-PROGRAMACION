@@ -3,12 +3,14 @@ import 'package:prlll_24_escuela_programacion/Pages/Docente/MenuDocente.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/vistaDoce_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/vistaDoce_porPuntos.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/CambiarContrasenia.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
   // Definir un estilo de texto común
-  TextStyle commonTextStyle = const TextStyle(fontSize: 16, color: Colors.black);
+  TextStyle commonTextStyle =
+      const TextStyle(fontSize: 16, color: Colors.black);
 
   return AppBar(
     backgroundColor: const Color(0xFF8B2D56),
@@ -18,7 +20,9 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const MenuDoce()), // Navegar a la página MenuDoce
+              MaterialPageRoute(
+                  builder: (context) =>
+                      const MenuDoce()), // Navegar a la página MenuDoce
             );
           },
           child: const CircleAvatar(
@@ -74,13 +78,15 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
               case 'reporte_puntos':
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const VistaDoceReporte()),
+                  MaterialPageRoute(
+                      builder: (context) => const VistaDoceReporte()),
                 );
                 break;
               case 'reporte_fechas':
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const VistaDoceReporteFecha()),
+                  MaterialPageRoute(
+                      builder: (context) => const VistaDoceReporteFecha()),
                 );
                 break;
             }
@@ -103,25 +109,49 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
           ),
         ),
         const SizedBox(width: 25),
-        ElevatedButton(
-          onPressed: () async {
-            await sesion.removeSession();
-
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
+        // Botón desplegable de "Cuenta" con el mismo estilo de "Cerrar Sesión"
+        PopupMenuButton<String>(
+          onSelected: (value) async {
+            if (value == 'Cerrar Sesión') {
+              await sesion.removeSession();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            }  else if (value == 'Cambiar Contraseña') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CambiarContrasenia()), // Página para cambiar contraseña
+              );
+            }
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+          child: ElevatedButton(
+            onPressed:
+                null, // Hacemos el botón desplegable no clickeable directamente
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Fondo negro
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5), // Bordes redondeados
+              ),
+            ),
+            child: const Text(
+              'Cuenta',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 16), // Texto en blanco
             ),
           ),
-          child: const Text(
-            'Cerrar Sesión',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
+          itemBuilder: (BuildContext context) {
+            return [
+              const PopupMenuItem<String>(
+                value: 'Cerrar Sesión',
+                child: Text('Cerrar Sesión'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Cambiar Contraseña',
+                child: Text('Cambiar Contraseña'),
+              ),
+            ];
+          },
         ),
       ],
     ),

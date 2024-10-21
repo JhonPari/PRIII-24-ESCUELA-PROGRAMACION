@@ -1,9 +1,12 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/CalificarEstudianteService.dart';
+import 'package:prlll_24_escuela_programacion/Service/ImagenesService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/Pages/docente/EstudianteCompetencia.dart';
 
@@ -22,11 +25,13 @@ class CalificarPrueba extends StatefulWidget {
 }
 
 class CalificarPruebaState extends State<CalificarPrueba> {
+  ImagenesService imagenesService = ImagenesService();
   String? competenciaTitulo;
   String? estudianteNombre;
   final storage = Session();
   String? name;
-
+  Uint8List? _imagenSeleccionada;
+  
   @override
   void initState() {
     super.initState();
@@ -57,6 +62,13 @@ class CalificarPruebaState extends State<CalificarPrueba> {
         competenciaTitulo = data['competenciaTitulo'];
         estudianteNombre = data['estudianteNombre'];
       });
+
+      Uint8List? imagen = await imagenesService.obtenerImagen(widget.id);
+      if (imagen != null) {
+        setState(() {
+          _imagenSeleccionada = imagen;
+        });
+      }
     } catch (e) {
       print('Error loading data: $e');
     }
@@ -100,11 +112,16 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                           width: 500,
                           height: 350,
                           color: const Color.fromARGB(153, 243, 243, 243),
-                          child: const Icon(
-                            Icons.image,
-                            size: 100,
-                            color: Color.fromARGB(255, 115, 115, 115),
-                          ),
+                          child: _imagenSeleccionada != null
+                              ? Image.memory(
+                                  _imagenSeleccionada!,
+                                  fit: BoxFit.contain, // Ajusta la imagen al tamaño del contenedor
+                                )
+                              : const Icon(
+                                  Icons.image,
+                                  size: 100,
+                                  color: Color.fromARGB(255, 115, 115, 115),
+                                ),
                         ),
                       ],
                     ),

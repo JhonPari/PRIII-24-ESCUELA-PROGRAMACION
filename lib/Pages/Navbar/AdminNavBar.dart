@@ -11,12 +11,14 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/ListaPendiente/Aceptar
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/CambiarContrasenia.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 // Asegúrate de importar las demás páginas necesarias
 
 AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
-  TextStyle commonTextStyle = const TextStyle(fontSize: 16, color: Colors.black);
+  TextStyle commonTextStyle =
+      const TextStyle(fontSize: 16, color: Colors.black);
 
   return AppBar(
     backgroundColor: const Color(0xFF8B2D56),
@@ -60,14 +62,19 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
             } else if (value == 'ver_fecha') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
+                MaterialPageRoute(
+                    builder: (context) => const VistaReporteFecha()),
               );
             }
           },
           itemBuilder: (BuildContext context) {
             return [
-              PopupMenuItem<String>(value: 'ver_puntos', child: Text('Ver Puntos', style: commonTextStyle)),
-              PopupMenuItem<String>(value: 'ver_fecha', child: Text('Ver Fecha', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'ver_puntos',
+                  child: Text('Ver Puntos', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'ver_fecha',
+                  child: Text('Ver Fecha', style: commonTextStyle)),
             ];
           },
           child: Text('Reportes', style: commonTextStyle),
@@ -84,14 +91,19 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
             } else if (value == 'agregar_escuela') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const RegistrarEscuela()),
+                MaterialPageRoute(
+                    builder: (context) => const RegistrarEscuela()),
               );
             }
           },
           itemBuilder: (BuildContext context) {
             return [
-              PopupMenuItem<String>(value: 'lista_escuelas', child: Text('Lista Escuelas', style: commonTextStyle)),
-              PopupMenuItem<String>(value: 'agregar_escuela', child: Text('Agregar Escuelas', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'lista_escuelas',
+                  child: Text('Lista Escuelas', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'agregar_escuela',
+                  child: Text('Agregar Escuelas', style: commonTextStyle)),
             ];
           },
           child: Text('Escuelas', style: commonTextStyle),
@@ -108,14 +120,19 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
             } else if (value == 'agregar_estudiante') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const RegistrarEstPage()),
+                MaterialPageRoute(
+                    builder: (context) => const RegistrarEstPage()),
               );
             }
           },
           itemBuilder: (BuildContext context) {
             return [
-              PopupMenuItem<String>(value: 'lista_estudiantes', child: Text('Lista Estudiantes', style: commonTextStyle)),
-              PopupMenuItem<String>(value: 'agregar_estudiante', child: Text('Agregar Estudiante', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'lista_estudiantes',
+                  child: Text('Lista Estudiantes', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'agregar_estudiante',
+                  child: Text('Agregar Estudiante', style: commonTextStyle)),
             ];
           },
           child: Text('Estudiantes', style: commonTextStyle),
@@ -132,14 +149,19 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
             } else if (value == 'agregar_docente') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const RegistrarDocePage()),
+                MaterialPageRoute(
+                    builder: (context) => const RegistrarDocePage()),
               );
             }
           },
           itemBuilder: (BuildContext context) {
             return [
-              PopupMenuItem<String>(value: 'lista_docentes', child: Text('Lista Docentes', style: commonTextStyle)),
-              PopupMenuItem<String>(value: 'agregar_docente', child: Text('Agregar Docente', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'lista_docentes',
+                  child: Text('Lista Docentes', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'agregar_docente',
+                  child: Text('Agregar Docente', style: commonTextStyle)),
             ];
           },
           child: Text('Docentes', style: commonTextStyle),
@@ -164,32 +186,63 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
           },
           itemBuilder: (BuildContext context) {
             return [
-              PopupMenuItem<String>(value: 'lista_pendiente_docente', child: Text('Lista Pendiente Docente', style: commonTextStyle)),
-              PopupMenuItem<String>(value: 'lista_pendiente_estudiante', child: Text('Lista Pendiente Estudiante', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'lista_pendiente_docente',
+                  child:
+                      Text('Lista Pendiente Docente', style: commonTextStyle)),
+              PopupMenuItem<String>(
+                  value: 'lista_pendiente_estudiante',
+                  child: Text('Lista Pendiente Estudiante',
+                      style: commonTextStyle)),
             ];
           },
           child: Text('Listas Pendientes', style: commonTextStyle),
         ),
         const SizedBox(width: 25),
-        // Botón "Cerrar Sesión"
-        ElevatedButton(
-          onPressed: () async {
-            await sesion.removeSession();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
+        // Botón desplegable de "Cuenta" con el mismo estilo de "Cerrar Sesión"
+        PopupMenuButton<String>(
+          onSelected: (value) async {
+            if (value == 'Cerrar Sesión') {
+              await sesion.removeSession();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            } else if (value == 'Cambiar Contraseña') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CambiarContrasenia()), // Página para cambiar contraseña
+              );
+            }
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+          child: ElevatedButton(
+            onPressed:
+                null, // Hacemos el botón desplegable no clickeable directamente
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  const Color.fromARGB(255, 255, 255, 255), // Fondo negro
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5), // Bordes redondeados
+              ),
+            ),
+            child: const Text(
+              'Cuenta',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 16), // Texto en blanco
             ),
           ),
-          child: const Text(
-            'Cerrar Sesión',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
+          itemBuilder: (BuildContext context) {
+            return [
+              const PopupMenuItem<String>(
+                value: 'Cerrar Sesión',
+                child: Text('Cerrar Sesión'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Cambiar Contraseña',
+                child: Text('Cambiar Contraseña'),
+              ),
+            ];
+          },
         ),
       ],
     ),

@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/EstCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/menu_est.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/CambiarContrasenia.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/pages/Login/login.dart';
 
-
 AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
+  TextStyle commonTextStyle =
+      const TextStyle(fontSize: 16, color: Colors.black);
+
   return AppBar(
     backgroundColor: const Color(0xFF8B2D56),
     title: Row(
@@ -15,7 +18,9 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const MenuEst ()), // Redirige al menú de estudiante
+              MaterialPageRoute(
+                  builder: (context) =>
+                      const MenuEst()), // Redirige al menú de estudiante
             );
           },
           child: const CircleAvatar(
@@ -54,7 +59,8 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const EstCompetenciaPage()),
+              MaterialPageRoute(
+                  builder: (context) => const EstCompetenciaPage()),
             );
           },
           child: const Text(
@@ -63,25 +69,49 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
           ),
         ),
         const SizedBox(width: 10),
-        ElevatedButton(
-          onPressed: () async {
-            await sesion.removeSession();
-
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
+        // Botón desplegable de "Cuenta" con el mismo estilo de "Cerrar Sesión"
+        PopupMenuButton<String>(
+          onSelected: (value) async {
+            if (value == 'Cerrar Sesión') {
+              await sesion.removeSession();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            }  else if (value == 'Cambiar Contraseña') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CambiarContrasenia()), // Página para cambiar contraseña
+              );
+            }
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5), // Rounded corners
+          child: ElevatedButton(
+            onPressed:
+                null, // Hacemos el botón desplegable no clickeable directamente
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Fondo negro
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5), // Bordes redondeados
+              ),
+            ),
+            child: const Text(
+              'Cuenta',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 16), // Texto en blanco
             ),
           ),
-          child: const Text(
-            'Cerrar Sesión',
-            style: TextStyle(color: Colors.white),
-          ),
+          itemBuilder: (BuildContext context) {
+            return [
+              const PopupMenuItem<String>(
+                value: 'Cerrar Sesión',
+                child: Text('Cerrar Sesión'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Cambiar Contraseña',
+                child: Text('Cambiar Contraseña'),
+              ),
+            ];
+          },
         ),
       ],
     ),
