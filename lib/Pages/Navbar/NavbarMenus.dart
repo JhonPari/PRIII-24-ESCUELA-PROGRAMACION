@@ -1,7 +1,6 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
+
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 AppBar NavBarMenus(String nombre, Session sesion, BuildContext context) {
@@ -38,25 +37,49 @@ AppBar NavBarMenus(String nombre, Session sesion, BuildContext context) {
           ],
         ),
         const Spacer(),
-        // Botón de Cerrar Sesión
-        ElevatedButton(
-          onPressed: () async {
-            await sesion.removeSession();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
+        // Botón desplegable de "Cuenta" con el mismo estilo de "Cerrar Sesión"
+        PopupMenuButton<String>(
+          onSelected: (value) async {
+            if (value == 'Cerrar Sesión') {
+              await sesion.removeSession();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            } /* else if (value == 'Cambiar Contraseña') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ChangePasswordPage()), // Página para cambiar contraseña
+              );
+            }*/
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+          child: ElevatedButton(
+            onPressed:
+                null, // Hacemos el botón desplegable no clickeable directamente
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Fondo negro
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5), // Bordes redondeados
+              ),
+            ),
+            child: const Text(
+              'Cuenta',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 16), // Texto en blanco
             ),
           ),
-          child: const Text(
-            'Cerrar Sesión',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
+          itemBuilder: (BuildContext context) {
+            return [
+              const PopupMenuItem<String>(
+                value: 'Cerrar Sesión',
+                child: Text('Cerrar Sesión'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Cambiar Contraseña',
+                child: Text('Cambiar Contraseña'),
+              ),
+            ];
+          },
         ),
       ],
     ),

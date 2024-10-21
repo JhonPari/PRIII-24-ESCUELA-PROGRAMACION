@@ -2,7 +2,8 @@
 
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
+import 'package:prlll_24_escuela_programacion/Models/ReporteFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -21,14 +22,14 @@ class VistaDoceReporteFecha extends StatefulWidget {
 
 class _VistaReportState extends State<VistaDoceReporteFecha> {
   UsuariosService usuariosService = UsuariosService();
-  late Future<List<ReporteEstudiante>> _listaReportes;
+  late Future<List<ReporteEstudianteFecha>> _listaReportes;
   final Session storage = Session();
   String? name;
 
   @override
   void initState() {
     super.initState();
-    _listaReportes = usuariosService.getReportEstudiantes();
+    _listaReportes = usuariosService.getReportEstudiantesFecha();
     _loadSession();
   }
 
@@ -39,14 +40,19 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
     });
   }
 
-  Future<void> _exportToExcel(List<ReporteEstudiante> reportes) async {
+  Future<void> _exportToExcel(List<ReporteEstudianteFecha> reportes) async {
     var excel = Excel.createExcel();
     Sheet sheet = excel['Reporte'];
 
-    sheet.appendRow(['Nombres', 'Correo', 'Puntos']);
+    sheet.appendRow(['Nombres', 'Correo', 'Puntos', 'Fecha de Inicio']);
 
     for (var reporte in reportes) {
-      sheet.appendRow([reporte.nombre, reporte.correo, reporte.puntos.toString()]);
+      sheet.appendRow([
+        reporte.nombre,
+        reporte.correo,
+        reporte.puntos.toString(),
+        reporte.fechaInicioCompetencia.toString().split(' ')[0] // Formatear la fecha
+      ]);
     }
 
     var excelBytes = excel.encode();
@@ -57,7 +63,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
       ..click();
   }
 
-  Future<void> _exportToPdf(List<ReporteEstudiante> reportes) async {
+  Future<void> _exportToPdf(List<ReporteEstudianteFecha> reportes) async {
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -70,9 +76,14 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
                 pw.SizedBox(height: 20),
                 pw.Table.fromTextArray(
                   context: context,
-                  headers: ['Nombres', 'Correo', 'Puntos'],
+                  headers: ['Nombres', 'Correo', 'Puntos', 'Fecha de Inicio'],
                   data: reportes
-                      .map((e) => [e.nombre, e.correo, e.puntos.toString()])
+                      .map((e) => [
+                            e.nombre,
+                            e.correo,
+                            e.puntos.toString(),
+                            e.fechaInicioCompetencia.toString().split(' ')[0] // Formatear la fecha
+                          ])
                       .toList(),
                 ),
               ],
@@ -81,7 +92,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
         },
       ),
     );
-
+//hola
     final pdfBytes = await pdf.save();
     final blob = html.Blob([pdfBytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
@@ -96,11 +107,11 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
     return MaterialApp(
       home: Scaffold(
         appBar: docenteNavBar(name ?? '...', storage, context),
-        body: Center(  // Centra el contenido de la pantalla
+        body: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,  // Centra verticalmente los elementos
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   'REPORTE DE ESTUDIANTES POR PUNTOS',
@@ -111,9 +122,9 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildExportButtons(),  // Los botones de exportación
+                _buildExportButtons(),
                 const SizedBox(height: 20),
-                Expanded(child: _buildReportTable()),  // La tabla expandida con el espacio restante
+                Expanded(child: _buildReportTable()),
               ],
             ),
           ),
@@ -150,9 +161,9 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
   }
 
   Widget _buildReportTable() {
-    return FutureBuilder<List<ReporteEstudiante>>(
+    return FutureBuilder<List<ReporteEstudianteFecha>>(
       future: _listaReportes,
-      builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudiante>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudianteFecha>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
@@ -162,7 +173,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
             child: Text('No hay estudiantes', style: TextStyle(fontSize: 18)),
           );
         } else {
-          List<ReporteEstudiante> reportes = snapshot.data!;
+          List<ReporteEstudianteFecha> reportes = snapshot.data!;
           return Container(
             decoration: BoxDecoration(
               color: const Color(0xFFE0BFC7),
@@ -175,6 +186,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
                   DataColumn(label: Text('Nombres')),
                   DataColumn(label: Text('Correo')),
                   DataColumn(label: Text('Puntos')),
+                  DataColumn(label: Text('Fecha de Inicio')),
                 ],
                 rows: reportes.map((reporte) {
                   return DataRow(
@@ -182,6 +194,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
                       DataCell(Text(reporte.nombre)),
                       DataCell(Text(reporte.correo)),
                       DataCell(Text(reporte.puntos.toString())),
+                      DataCell(Text(reporte.fechaInicioCompetencia.toString().split(' ')[0])), // Formatear la fecha
                     ],
                   );
                 }).toList(),
