@@ -5,8 +5,8 @@ import 'package:prlll_24_escuela_programacion/Pages/Estudiante/EstCompetencias.d
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
+import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/pages/Login/login.dart';
-
 
 void main() {
   runApp(const MenuEst());
@@ -20,9 +20,11 @@ class MenuEst extends StatefulWidget {
 }
 
 class _MenuEstState extends State<MenuEst> {
+  UsuariosService usuariosService = UsuariosService();
   final storage = Session();
   String? name;
   int id = 0;
+  late int puntos = 0;
 
   @override
   void initState() {
@@ -33,18 +35,19 @@ class _MenuEstState extends State<MenuEst> {
   Future<void> _loadSession() async {
     // Obtiene el mapa con los datos de la sesión
     Map<String, String?> data = await storage.getSession();
-    
+
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
       //if del rol
-    }
-    else {
+    } else {
+      int p = await usuariosService.getPoints(int.parse(data['id']!));
       setState(() {
-        name = data['name'] ?? 'Sin Nombre'; 
+        name = data['name'] ?? 'Sin Nombre';
         id = int.parse(data['id']!);
+        puntos = p;
       });
     }
   }
@@ -53,14 +56,14 @@ class _MenuEstState extends State<MenuEst> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: estNavBar(name ?? '...', storage, context,id),
+        appBar: estNavBar(name ?? '...', storage, context, id),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                '1000  Pts',
-                style: TextStyle(
+              Text(
+                '$puntos pts',
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -78,7 +81,8 @@ class _MenuEstState extends State<MenuEst> {
                   // Redirigir a la página de Tareas
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const EstCompetenciaPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const EstCompetenciaPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -101,7 +105,8 @@ class _MenuEstState extends State<MenuEst> {
                   // Redirigir a la página de Logros
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => VerLogrosPage(idEst: id)),
+                    MaterialPageRoute(
+                        builder: (context) => VerLogrosPage(idEst: id)),
                   );
                 },
                 style: ElevatedButton.styleFrom(

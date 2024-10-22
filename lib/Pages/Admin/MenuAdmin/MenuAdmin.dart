@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/VerCompetenciasAdmin.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/calificar_pruebaAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
@@ -81,6 +83,30 @@ class _MenuAdminState extends State<MenuAdmin> {
                         ),
                         child: const Text(
                           'Lista Pendientes',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => verCompetenciaAdmin(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8B2D56),
+                          minimumSize: const Size(500, 80),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(21),
+                          ),
+                        ),
+                        child: const Text(
+                          'Calificar',
                           style: TextStyle(
                             color: Colors.white,
                           ),

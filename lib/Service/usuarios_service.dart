@@ -207,4 +207,15 @@ Future<List<ReporteEstudianteFecha>> getReportEstudiantesFecha() async {
       throw Exception(jsonDecode(response.body)['message']);
     }
   }
+  Future<int> getPoints(int id) async {
+    final url = Uri.parse('$baseUri/EstPoints/$id');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['puntos'];
+    } else {
+      throw Exception('Error al obtener los puntos');
+    }
+  }
 }

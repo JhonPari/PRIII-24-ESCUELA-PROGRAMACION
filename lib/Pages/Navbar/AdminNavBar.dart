@@ -1,5 +1,7 @@
 // Asegúrate de importar las demás páginas necesarias
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/EstudianteCompetenciaAdmin.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/VerCompetenciasAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/CrearDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/registrar_escuela.dart';
@@ -197,6 +199,27 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
             ];
           },
           child: Text('Listas Pendientes', style: commonTextStyle),
+        ),
+        const SizedBox(width: 10),
+        // Botón "Calificar"
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'Calificar') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => verCompetenciaAdmin()),
+              );
+            } 
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<String>(
+                  value: 'Calificar',
+                  child: Text('Calificar', style: commonTextStyle)),
+              
+            ];
+          },
+          child: Text('Calificar', style: commonTextStyle),
         ),
         const SizedBox(width: 25),
         // Botón desplegable de "Cuenta" con el mismo estilo de "Cerrar Sesión"
