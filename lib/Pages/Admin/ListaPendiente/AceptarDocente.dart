@@ -128,7 +128,7 @@ class _VerificarDoceState extends State<VerificarDoce> {
                                   },
                                   icon: const Icon(Icons.cancel,
                                       color: Colors.white),
-                                  label: const Text('Eliminar',
+                                  label: const Text('Rechazar',
                                       style: TextStyle(color: Colors.white)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF8E244D),

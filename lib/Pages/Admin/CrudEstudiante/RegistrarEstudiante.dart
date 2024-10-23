@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
@@ -93,8 +94,12 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
                   onPressed: () {
                     Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
                     // Redirigir a la pantalla anterior o a la lista de estudiantes
-                    Navigator.of(context)
-                        .pop(); // Para cerrar la pantalla de registro
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const VistaEst()), // Redirigir a VistaEst
+                    );
                   },
                   child: const Text('OK'),
                 ),
