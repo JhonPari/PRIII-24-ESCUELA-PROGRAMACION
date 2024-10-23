@@ -172,15 +172,15 @@ class _VerificarDoceState extends State<VerificarDoce> {
                 try {
                   Navigator.of(context).pop();
                   await usuariosService.deleteLogic(id);
-                  _mostrarDialogoExito('Eliminación exitosa',
-                      'Usuario eliminado correctamente.');
+                  _mostrarDialogoExito(
+                      'Rechazado exitosa', 'Usuario Rechazado correctamente.');
                   setState(() {
                     _listaUsuarios = usuariosService.getListaPendienteDocente();
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text("Error al eliminar el usuario.")),
+                        content: Text("Error al Rechazado el usuario.")),
                   );
                 }
               },

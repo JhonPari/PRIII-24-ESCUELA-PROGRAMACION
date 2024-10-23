@@ -24,14 +24,8 @@ class _VerificarEstState extends State<VerificarEst> {
   @override
   void initState() {
     super.initState();
+    _listaUsuarios = usuariosService.getListaPendienteEstudiante();
     _loadSession();
-    _loadUsuarios();
-  }
-
-  void _loadUsuarios() {
-    setState(() {
-      _listaUsuarios = usuariosService.getListaPendienteEstudiante();
-    });
   }
 
   Future<void> _loadSession() async {
@@ -120,9 +114,7 @@ class _VerificarEstState extends State<VerificarEst> {
                                   icon: const Icon(Icons.check,
                                       color: Colors.white),
                                   label: const Text('Aceptar',
-                                      style: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255))),
+                                      style: TextStyle(color: Colors.white)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF4CAF50),
                                     minimumSize: const Size(100, 30),
@@ -166,40 +158,38 @@ class _VerificarEstState extends State<VerificarEst> {
         return AlertDialog(
           title: const Text('Confirmar Rechazo de Solicitud'),
           content:
-              const Text('¿Estás seguro de que deseas Rechazar este usuario?'),
+              const Text('¿Estás seguro de que deseas rechazar este usuario?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'Cancelar',
-                style: TextStyle(color: Colors.black),
-              ),
+              child:
+                  const Text('Cancelar', style: TextStyle(color: Colors.black)),
             ),
             ElevatedButton(
               onPressed: () async {
                 try {
                   Navigator.of(context).pop();
                   await usuariosService.deleteLogic(id);
-                  _loadUsuarios();
-                  mostrarDialogoExito(context, 'Eliminación Exitosa',
-                      'Usuario eliminado correctamente.');
+                  _mostrarDialogoExito(
+                      'Rechazado exitosa', 'Usuario Rechazado correctamente.');
+                  setState(() {
+                    _listaUsuarios =
+                        usuariosService.getListaPendienteEstudiante();
+                  });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Error al rechazar el usuario."),
-                    ),
+                        content: Text("Error al rechazar el usuario.")),
                   );
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8E244D),
               ),
-              child: const Text(
-                'Rechazar',
-                style: TextStyle(color: Colors.white),
-              ),
+              child:
+                  const Text('Rechazar', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -220,38 +210,35 @@ class _VerificarEstState extends State<VerificarEst> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'Cancelar',
-                style: TextStyle(color: Colors.black),
-              ),
+              child:
+                  const Text('Cancelar', style: TextStyle(color: Colors.black)),
             ),
             ElevatedButton(
               onPressed: () async {
                 try {
                   Navigator.of(context).pop();
-
                   Usuario usuario = await usuariosService.get(id);
                   usuario.solicitud = 'A';
-
                   await usuariosService.putAceptarSolicitud(id, usuario);
-                  _loadUsuarios();
-                  mostrarDialogoExito(context, 'Aceptación Exitosa',
-                      'Usuario aceptado correctamente.');
+                  _mostrarDialogoExito('Aceptación exitosa',
+                      'Solicitud aceptada correctamente.');
+                  setState(() {
+                    _listaUsuarios =
+                        usuariosService.getListaPendienteEstudiante();
+                  });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Error al aceptar el usuario."),
-                    ),
+                        content:
+                            Text("Error al aceptar la solicitud del usuario.")),
                   );
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8E244D),
+                backgroundColor: const Color(0xFF4CAF50),
               ),
-              child: const Text(
-                'Aceptar',
-                style: TextStyle(color: Colors.white),
-              ),
+              child:
+                  const Text('Aceptar', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -259,20 +246,25 @@ class _VerificarEstState extends State<VerificarEst> {
     );
   }
 
-  void mostrarDialogoExito(BuildContext context, String title, String message) {
+  void _mostrarDialogoExito(String title, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),
-          content: Text(message),
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green),
+              const SizedBox(width: 10),
+              Expanded(child: Text(message)),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child:
-                  const Text('Aceptar', style: TextStyle(color: Colors.black)),
+              child: const Text('Cerrar'),
             ),
           ],
         );
