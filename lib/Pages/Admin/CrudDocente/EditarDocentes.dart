@@ -1,10 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
+
 
 class EditarDocePage extends StatefulWidget {
   final int idUsuario; // Recibe el id del usuario
@@ -81,11 +83,36 @@ class _EditarDoceState extends State<EditarDocePage> {
 
         await _usuarioService.put(widget.idUsuario, _usuario!);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Usuario actualizado con éxito")),
+        // Mostrar cuadro de diálogo de éxito
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Modificación exitosa'),
+              content: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text('Docente modificado correctamente'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                    // Redirigir a VistaDoce
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const VistaDoce()), // Redirigir a VistaDoce
+                    );
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
         );
 
-        Navigator.of(context).pop(true); // Retorna 'true' para indicar que se actualizó
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

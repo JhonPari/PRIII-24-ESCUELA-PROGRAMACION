@@ -1,6 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
@@ -72,15 +73,42 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
         solicitud: 'A',
       );
       Usuario estudiante = await _usuarioService.post(nuevoUsuario);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Usuario creado con éxito: ${estudiante.idUsuario}"),
-        ),
+
+      // Mostrar cuadro de diálogo de éxito
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Registro exitoso'),
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.green),
+                SizedBox(width: 10),
+                Text('Docente registrado correctamente'),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                  // Redirigir a VistaDoce
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const VistaDoce()), // Redirigir a VistaDoce
+                  );
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
       );
+
     } catch (e) {
+      // Manejar el error
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Error al crear el usuario"),
+          content: Text("Error al crear el docente"),
         ),
       );
     }
@@ -89,7 +117,7 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: adminNavBar(name ?? '...', storage, context), // Usa el mismo navbar que en EditarDocePage
+      appBar: adminNavBar(name ?? '...', storage, context),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

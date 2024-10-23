@@ -24,9 +24,8 @@ class _VistaDoceState extends State<VistaDoce> {
   @override
   void initState() {
     super.initState();
-    // Carga la lista de docentes
     _loadSession(); // Verifica la sesión del usuario
-    _loadDocentes();
+    _loadDocentes(); // Carga la lista de docentes
   }
 
   Future<void> _loadDocentes() async {
@@ -39,8 +38,7 @@ class _VistaDoceState extends State<VistaDoce> {
     Map<String, String?> data = await storage.getSession();
 
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
-      Navigator.pushReplacementNamed(
-          context, '/login'); // Redirige a login si no hay sesión
+      Navigator.pushReplacementNamed(context, '/login'); // Redirige a login si no hay sesión
     } else {
       setState(() {
         name = data['name'] ?? 'Sin Nombre'; // Establece el nombre del usuario
@@ -76,7 +74,7 @@ class _VistaDoceState extends State<VistaDoce> {
                       builder: (context) => const RegistrarDocePage(),
                     ),
                   );
-                  _loadDocentes();
+                  _loadDocentes(); // Recarga la lista después de añadir un docente
                 },
                 icon: const Icon(Icons.person_add, color: Colors.white),
                 label: const Text('Añadir'),
@@ -163,8 +161,7 @@ class _VistaDoceState extends State<VistaDoce> {
                               // Verifica si se ha actualizado el usuario
                               if (result == true) {
                                 setState(() {
-                                  _listaUsuarios = usuariosService
-                                      .getDocentes(); // Actualiza la lista de docentes
+                                  _listaUsuarios = usuariosService.getDocentes();
                                 });
                               }
                             },
@@ -182,9 +179,7 @@ class _VistaDoceState extends State<VistaDoce> {
                           ElevatedButton.icon(
                             onPressed: () {
                               mostrarDialogoConfirmacion(
-                                  context,
-                                  usuario
-                                      .id!); // Muestra dialogo de eliminación
+                                  context, usuario.id!);
                             },
                             icon: const Icon(Icons.cancel, color: Colors.white),
                             label: const Text(
@@ -215,12 +210,17 @@ class _VistaDoceState extends State<VistaDoce> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
-          content:
-              const Text('¿Estás seguro de que deseas eliminar este usuario?'),
+          content: const Row(
+            children: [
+              Icon(Icons.warning, color: Colors.red),
+              SizedBox(width: 10),
+              Expanded(child: Text('¿Estás seguro de que deseas eliminar este usuario?')),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el dialogo
+                Navigator.of(context).pop(); // Cierra el diálogo
               },
               child: const Text(
                 'Cancelar',
@@ -230,10 +230,9 @@ class _VistaDoceState extends State<VistaDoce> {
             ElevatedButton(
               onPressed: () async {
                 try {
-                  Navigator.of(context).pop(); // Cierra el dialogo
+                  Navigator.of(context).pop(); // Cierra el diálogo
 
-                  await usuariosService
-                      .deleteLogic(id); // Lógica de eliminación
+                  await usuariosService.deleteLogic(id); // Lógica de eliminación
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -242,8 +241,7 @@ class _VistaDoceState extends State<VistaDoce> {
                   );
 
                   setState(() {
-                    _listaUsuarios = usuariosService
-                        .getDocentes(); // Actualiza la lista de docentes
+                    _listaUsuarios = usuariosService.getDocentes(); // Actualiza la lista
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(

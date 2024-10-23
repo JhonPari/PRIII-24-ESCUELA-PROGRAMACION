@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart'; // Asegúrate de importar el navbar
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart'; // Asegúrate de importar la vista
 
 class EditEscuelaPage extends StatefulWidget {
   final int idescuela;
@@ -60,11 +61,35 @@ class _EditEscuelaPageState extends State<EditEscuelaPage> {
 
         await _escuelaService.put(widget.idescuela, _escuela!);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Escuela actualizada con éxito")),
+        // Mostrar cuadro de diálogo de éxito
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Modificación exitosa'),
+              content: Row(
+                children: const [
+                  Icon(Icons.check_circle, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text('Escuela actualizada correctamente'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                    // Redirigir a VistaEscuela
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const VistaEscuela()),
+                    );
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
         );
-
-        Navigator.of(context).pop(true);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

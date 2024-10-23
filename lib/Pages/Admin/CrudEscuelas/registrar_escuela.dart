@@ -8,7 +8,6 @@ import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
 
-
 void main() {
   runApp(const RegistrarEscuela());
 }
@@ -97,16 +96,34 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
 
                       Escuela escuela = await _escuelaService.post(nuevaEscuela);
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Escuela creada con éxito: ${escuela.id}"),
-                        ),
-                      );
-
-                      // Redirigir a la lista de escuelas y refrescar los datos
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const VistaEscuela()), // Reemplaza con tu vista de lista de escuelas
+                      // Mostrar cuadro de diálogo de éxito
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Registro exitoso'),
+                            content: const Row(
+                              children: [
+                                Icon(Icons.check_circle, color: Colors.green),
+                                SizedBox(width: 10),
+                                Text('Escuela registrada correctamente'),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                                  // Redirigir a VistaEscuela
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const VistaEscuela()),
+                                  );
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
                       );
 
                     } catch (e) {
