@@ -38,7 +38,8 @@ class _VistaDoceState extends State<VistaDoce> {
     Map<String, String?> data = await storage.getSession();
 
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
-      Navigator.pushReplacementNamed(context, '/login'); // Redirige a login si no hay sesión
+      Navigator.pushReplacementNamed(
+          context, '/login'); // Redirige a login si no hay sesión
     } else {
       setState(() {
         name = data['name'] ?? 'Sin Nombre'; // Establece el nombre del usuario
@@ -161,7 +162,8 @@ class _VistaDoceState extends State<VistaDoce> {
                               // Verifica si se ha actualizado el usuario
                               if (result == true) {
                                 setState(() {
-                                  _listaUsuarios = usuariosService.getDocentes();
+                                  _listaUsuarios =
+                                      usuariosService.getDocentes();
                                 });
                               }
                             },
@@ -178,8 +180,7 @@ class _VistaDoceState extends State<VistaDoce> {
                           const SizedBox(width: 10),
                           ElevatedButton.icon(
                             onPressed: () {
-                              mostrarDialogoConfirmacion(
-                                  context, usuario.id!);
+                              mostrarDialogoConfirmacion(usuario.id!);
                             },
                             icon: const Icon(Icons.cancel, color: Colors.white),
                             label: const Text(
@@ -204,7 +205,7 @@ class _VistaDoceState extends State<VistaDoce> {
     );
   }
 
-  void mostrarDialogoConfirmacion(BuildContext context, int id) {
+  void mostrarDialogoConfirmacion(int id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -214,7 +215,9 @@ class _VistaDoceState extends State<VistaDoce> {
             children: [
               Icon(Icons.warning, color: Colors.red),
               SizedBox(width: 10),
-              Expanded(child: Text('¿Estás seguro de que deseas eliminar este usuario?')),
+              Expanded(
+                  child: Text(
+                      '¿Estás seguro de que deseas eliminar este usuario?')),
             ],
           ),
           actions: [
@@ -232,16 +235,15 @@ class _VistaDoceState extends State<VistaDoce> {
                 try {
                   Navigator.of(context).pop(); // Cierra el diálogo
 
-                  await usuariosService.deleteLogic(id); // Lógica de eliminación
+                  await usuariosService
+                      .deleteLogic(id); // Lógica de eliminación
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Usuario eliminado exitosamente.'),
-                    ),
-                  );
+                  // Mostrar el diálogo de éxito
+                  mostrarDialogoExito(); // Llama al diálogo de éxito
 
                   setState(() {
-                    _listaUsuarios = usuariosService.getDocentes(); // Actualiza la lista
+                    _listaUsuarios =
+                        usuariosService.getDocentes(); // Actualiza la lista
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -258,6 +260,34 @@ class _VistaDoceState extends State<VistaDoce> {
                 'Eliminar',
                 style: TextStyle(color: Colors.white),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void mostrarDialogoExito() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Elimacion Éxitosa'),
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle,
+                  color: Colors.green, size: 24), // Icono de éxito
+              const SizedBox(width: 10),
+              const Expanded(
+                  child: Text('El usuario se eliminó exitosamente.')),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: const Text('Aceptar'),
             ),
           ],
         );

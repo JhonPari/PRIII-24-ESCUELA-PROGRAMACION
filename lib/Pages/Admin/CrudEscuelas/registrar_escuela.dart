@@ -52,7 +52,7 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
       );
     } else {
       setState(() {
-        name = data['name'] ?? 'Sin Nombre'; 
+        name = data['name'] ?? 'Sin Nombre';
       });
     }
   }
@@ -85,16 +85,49 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                 const SizedBox(height: 20),
                 buildTextField('Nombre', _nombreController),
                 const SizedBox(height: 10),
-                buildTextField('Descripcion', _descripcionController),
+                buildTextField('Descripción', _descripcionController),
                 const SizedBox(height: 20),
                 ElevatedButton.icon(
                   onPressed: () async {
+                    if (_nombreController.text.isEmpty ||
+                        _descripcionController.text.isEmpty) {
+                      // Mostrar cuadro de diálogo de error si los campos están vacíos
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error en el registro'),
+                            content: const Row(
+                              children: [
+                                Icon(Icons.error,
+                                    color: Colors.red), // Ícono de error
+                                SizedBox(width: 10),
+                                Text('Por favor, completa todos los campos.'),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // Cerrar el cuadro de diálogo
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return; // Salir si hay un error
+                    }
+
                     try {
                       NewEscuela nuevaEscuela = NewEscuela(
-                          nombre: _nombreController.text,
-                          descripcion: _descripcionController.text);
+                        nombre: _nombreController.text,
+                        descripcion: _descripcionController.text,
+                      );
 
-                      Escuela escuela = await _escuelaService.post(nuevaEscuela);
+                      Escuela escuela =
+                          await _escuelaService.post(nuevaEscuela);
 
                       // Mostrar cuadro de diálogo de éxito
                       showDialog(
@@ -112,11 +145,14 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                                  Navigator.of(context)
+                                      .pop(); // Cerrar el cuadro de diálogo
                                   // Redirigir a VistaEscuela
                                   Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const VistaEscuela()),
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const VistaEscuela()),
                                   );
                                 },
                                 child: const Text('OK'),
@@ -125,10 +161,10 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                           );
                         },
                       );
-
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Error al crear la Escuela")),
+                        const SnackBar(
+                            content: Text("Error al crear la Escuela")),
                       );
                     }
                   },
@@ -145,13 +181,14 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Agrega la navegación de vuelta
+                    Navigator.of(context).pop(); // Regresar
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,
                     minimumSize: const Size(double.infinity, 40),
                   ),
-                  child: const Text('Volver', style: TextStyle(color: Colors.white)),
+                  child: const Text('Volver',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -170,7 +207,8 @@ class _RegistrarEscuelaState extends State<RegistrarEscuelaPage> {
           borderRadius: BorderRadius.circular(8),
         ),
         filled: true,
-        fillColor: const Color(0xFFF5E0E5), // Fondo rosado claro en los campos de texto
+        fillColor: const Color(
+            0xFFF5E0E5), // Fondo rosado claro en los campos de texto
       ),
     );
   }

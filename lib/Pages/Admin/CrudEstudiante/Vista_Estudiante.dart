@@ -47,6 +47,7 @@ class _VistaEstState extends State<VistaEst> {
     try {
       await usuariosService.deleteLogic(id);
       _loadUsuarios();
+      mostrarDialogoExito(); // Mostrar diálogo de éxito tras la eliminación
     } catch (e) {
       print('Error al eliminar el estudiante: $e');
     }
@@ -220,6 +221,34 @@ class _VistaEstState extends State<VistaEst> {
                 'Eliminar',
                 style: TextStyle(color: Colors.white),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void mostrarDialogoExito() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Elimacion Éxitosa'),
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle,
+                  color: Colors.green, size: 24), // Icono de éxito
+              const SizedBox(width: 10),
+              const Expanded(
+                  child: Text('El estudiante se eliminó exitosamente.')),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: const Text('Aceptar'),
             ),
           ],
         );

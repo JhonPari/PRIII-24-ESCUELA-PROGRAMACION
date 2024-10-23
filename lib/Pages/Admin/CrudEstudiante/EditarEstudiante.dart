@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
@@ -9,7 +10,8 @@ import 'package:prlll_24_escuela_programacion/Service/session.dart';
 class EditarEstPage extends StatefulWidget {
   final int idUsuario; // Recibe el id del usuario
 
-  const EditarEstPage({super.key, required this.idUsuario}); // Constructor con id
+  const EditarEstPage(
+      {super.key, required this.idUsuario}); // Constructor con id
 
   @override
   _EditarEstState createState() => _EditarEstState();
@@ -55,7 +57,8 @@ class _EditarEstState extends State<EditarEstPage> {
     if (value == null || value.isEmpty) {
       return 'Por favor, ingresa tu nombre completo';
     }
-    final nameRegex = RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
+    final nameRegex =
+        RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
     if (!nameRegex.hasMatch(value)) {
       return 'Por favor, ingresa un nombre completo válido (e.g., Juan Pérez)';
     }
@@ -73,31 +76,58 @@ class _EditarEstState extends State<EditarEstPage> {
     return null;
   }
 
-Future<void> actualizarUsuario(BuildContext context) async {
-  try {
-    if (_usuario != null) {
-      _usuario!.nombre = _nombreController.text;
-      _usuario!.correo = _correoController.text;
+  Future<void> actualizarUsuario(BuildContext context) async {
+    try {
+      if (_usuario != null) {
+        _usuario!.nombre = _nombreController.text;
+        _usuario!.correo = _correoController.text;
 
-      await _usuarioService.put(widget.idUsuario, _usuario!);
+        await _usuarioService.put(widget.idUsuario, _usuario!);
 
+        // Mostrar cuadro de diálogo de éxito
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Modificación exitosa'),
+              content: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text('Estudiante modificado correctamente'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                    // Redirigir a ListaDeEstudiantes
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const VistaEst()), // Redirigir a ListaDeEstudiantes
+                    );
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Usuario actualizado con éxito")),
+        const SnackBar(content: Text("Error al actualizar el usuario")),
       );
-
-      Navigator.of(context).pop(true); // Retorna 'true' para indicar que se actualizó
     }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Error al actualizar el usuario")),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: adminNavBar(name ?? '...', storage, context), // Usa el navbar de AdminNavBar
+      appBar: adminNavBar(
+          name ?? '...', storage, context), // Usa el navbar de AdminNavBar
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

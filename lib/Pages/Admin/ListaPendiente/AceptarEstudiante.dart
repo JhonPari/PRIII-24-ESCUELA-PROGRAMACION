@@ -24,8 +24,14 @@ class _VerificarEstState extends State<VerificarEst> {
   @override
   void initState() {
     super.initState();
-    _listaUsuarios = usuariosService.getListaPendienteEstudiante();
     _loadSession();
+    _loadUsuarios();
+  }
+
+  void _loadUsuarios() {
+    setState(() {
+      _listaUsuarios = usuariosService.getListaPendienteEstudiante();
+    });
   }
 
   Future<void> _loadSession() async {
@@ -56,6 +62,9 @@ class _VerificarEstState extends State<VerificarEst> {
                 ),
               ),
               const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerRight,
+              ),
               const SizedBox(height: 15),
               TablaEst(),
             ],
@@ -76,8 +85,7 @@ class _VerificarEstState extends State<VerificarEst> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
-              child: Text('No hay usuarios', style: TextStyle(fontSize: 18)),
-            );
+                child: Text('No hay usuarios', style: TextStyle(fontSize: 18)));
           } else {
             List<Usuario> usuarios = snapshot.data!;
             return Container(
@@ -111,8 +119,10 @@ class _VerificarEstState extends State<VerificarEst> {
                                   },
                                   icon: const Icon(Icons.check,
                                       color: Colors.white),
-                                  label: const Text('Modificar',
-                                      style: TextStyle(color: Colors.white)),
+                                  label: const Text('Aceptar',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255))),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF4CAF50),
                                     minimumSize: const Size(100, 30),
@@ -126,7 +136,7 @@ class _VerificarEstState extends State<VerificarEst> {
                                   },
                                   icon: const Icon(Icons.cancel,
                                       color: Colors.white),
-                                  label: const Text('Eliminar',
+                                  label: const Text('Rechazar',
                                       style: TextStyle(color: Colors.white)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF8E244D),
@@ -154,9 +164,9 @@ class _VerificarEstState extends State<VerificarEst> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar eliminación'),
+          title: const Text('Confirmar Rechazo de Solicitud'),
           content:
-              const Text('¿Estás seguro de que deseas eliminar este usuario?'),
+              const Text('¿Estás seguro de que deseas Rechazar este usuario?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -172,18 +182,13 @@ class _VerificarEstState extends State<VerificarEst> {
                 try {
                   Navigator.of(context).pop();
                   await usuariosService.deleteLogic(id);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Usuario eliminado exitosamente.'),
-                    ),
-                  );
-                  setState(() {
-                    _listaUsuarios = usuariosService.getListaPendienteEstudiante();
-                  });
+                  _loadUsuarios();
+                  mostrarDialogoExito(context, 'Eliminación Exitosa',
+                      'Usuario eliminado correctamente.');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Error al eliminar el usuario."),
+                      content: Text("Error al rechazar el usuario."),
                     ),
                   );
                 }
@@ -192,7 +197,7 @@ class _VerificarEstState extends State<VerificarEst> {
                 backgroundColor: const Color(0xFF8E244D),
               ),
               child: const Text(
-                'Eliminar',
+                'Rechazar',
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -224,21 +229,18 @@ class _VerificarEstState extends State<VerificarEst> {
               onPressed: () async {
                 try {
                   Navigator.of(context).pop();
+
                   Usuario usuario = await usuariosService.get(id);
                   usuario.solicitud = 'A';
+
                   await usuariosService.putAceptarSolicitud(id, usuario);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Solicitud aceptada exitosamente.'),
-                    ),
-                  );
-                  setState(() {
-                    _listaUsuarios = usuariosService.getListaPendienteEstudiante();
-                  });
+                  _loadUsuarios();
+                  mostrarDialogoExito(context, 'Aceptación Exitosa',
+                      'Usuario aceptado correctamente.');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Error al aceptar la solicitud del usuario."),
+                      content: Text("Error al aceptar el usuario."),
                     ),
                   );
                 }
@@ -250,6 +252,27 @@ class _VerificarEstState extends State<VerificarEst> {
                 'Aceptar',
                 style: TextStyle(color: Colors.white),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void mostrarDialogoExito(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child:
+                  const Text('Aceptar', style: TextStyle(color: Colors.black)),
             ),
           ],
         );

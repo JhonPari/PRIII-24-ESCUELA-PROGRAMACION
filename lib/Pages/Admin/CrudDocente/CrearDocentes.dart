@@ -7,7 +7,6 @@ import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
-
 class RegistrarDocePage extends StatefulWidget {
   const RegistrarDocePage({super.key});
 
@@ -44,7 +43,8 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
     if (value == null || value.isEmpty) {
       return 'Por favor, ingresa tu nombre completo';
     }
-    final nameRegex = RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
+    final nameRegex =
+        RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
     if (!nameRegex.hasMatch(value)) {
       return 'Por favor, ingresa un nombre completo válido (e.g., Juan Pérez)';
     }
@@ -63,53 +63,81 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
   }
 
   Future<void> crearUsuario(BuildContext context) async {
-    try {
-      NewUsuario nuevoUsuario = NewUsuario(
-        nombre: _nombreController.text,
-        contrasenia: "docente",
-        correo: _correoController.text,
-        rol: 'D',
-        idUsuario: 2,
-        solicitud: 'A',
-      );
-      Usuario estudiante = await _usuarioService.post(nuevoUsuario);
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        NewUsuario nuevoUsuario = NewUsuario(
+          nombre: _nombreController.text,
+          contrasenia: "docente",
+          correo: _correoController.text,
+          rol: 'D',
+          idUsuario: 2,
+          solicitud: 'A',
+        );
+        Usuario estudiante = await _usuarioService.post(nuevoUsuario);
 
-      // Mostrar cuadro de diálogo de éxito
+        // Mostrar cuadro de diálogo de éxito
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Registro exitoso'),
+              content: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text('Docente registrado correctamente'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                    // Redirigir a VistaDoce
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const VistaDoce()), // Redirigir a VistaDoce
+                    );
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } catch (e) {
+        // Manejar el error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Error al crear el docente"),
+          ),
+        );
+      }
+    } else {
+      // Mostrar cuadro de diálogo de error si los datos no son válidos
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Registro exitoso'),
+            title: const Text('Error en el registro'),
             content: const Row(
               children: [
-                Icon(Icons.check_circle, color: Colors.green),
+                Icon(Icons.error, color: Colors.red), // Ícono de error
                 SizedBox(width: 10),
-                Text('Docente registrado correctamente'),
+                Text('Por favor, completa todos los campos correctamente.'),
               ],
             ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
-                  // Redirigir a VistaDoce
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const VistaDoce()), // Redirigir a VistaDoce
-                  );
                 },
                 child: const Text('OK'),
               ),
             ],
           );
         },
-      );
-
-    } catch (e) {
-      // Manejar el error
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Error al crear el docente"),
-        ),
       );
     }
   }
@@ -170,9 +198,7 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
                     const SizedBox(height: 20),
                     ElevatedButton.icon(
                       onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          crearUsuario(context);
-                        }
+                        crearUsuario(context);
                       },
                       icon: const Icon(Icons.check, color: Colors.white),
                       label: const Text(

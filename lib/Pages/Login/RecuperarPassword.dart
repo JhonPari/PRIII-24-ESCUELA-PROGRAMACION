@@ -16,7 +16,6 @@ class _RecuperarContrasenaState extends State<RecuperarContrasenaPage> {
   final UsuariosService _usuarioService = UsuariosService();
   final storage = Session();
 
- 
   Future<void> recuperarContrasenia() async {
     String correo = _correoController.text.trim();
     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(correo)) {
@@ -26,22 +25,22 @@ class _RecuperarContrasenaState extends State<RecuperarContrasenaPage> {
       return;
     }
 
-   bool resultado = await _usuarioService.recuperarContrasena(correo);
+    bool resultado = await _usuarioService.recuperarContrasena(correo);
     if (resultado) {
-      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Se ha enviado un correo para recuperar la contraseña.'),
+          content:
+              Text('Se ha enviado un correo para recuperar la contraseña.'),
           backgroundColor: Colors.green,
         ),
       );
       _correoController.clear();
+      Navigator.of(context).pop();
     } else {
-      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Error: no se pudo enviar el correo de recuperación'),
-          backgroundColor: Colors.red, 
+          backgroundColor: Colors.red,
         ),
       );
     }
@@ -57,7 +56,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasenaPage> {
             padding: const EdgeInsets.all(20.0),
             child: Center(
               child: Container(
-                width: 600, 
+                width: 600,
                 decoration: BoxDecoration(
                   color: const Color(0xFFE0BFC7),
                   borderRadius: BorderRadius.circular(10),
@@ -90,8 +89,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasenaPage> {
                     ElevatedButton(
                       onPressed: recuperarContrasenia,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(
-                            132, 41, 76, 100), 
+                        backgroundColor: const Color.fromRGBO(132, 41, 76, 100),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 100, vertical: 15),
                         shape: RoundedRectangleBorder(
@@ -106,12 +104,11 @@ class _RecuperarContrasenaState extends State<RecuperarContrasenaPage> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(
-                            context);
+                        Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(
-                            255, 108, 106, 107), 
+                        backgroundColor:
+                            const Color.fromARGB(255, 108, 106, 107),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 100, vertical: 15),
                         shape: RoundedRectangleBorder(
@@ -122,8 +119,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasenaPage> {
                         'Volver',
                         style: TextStyle(
                           color: Colors.white,
-                          decoration:
-                              TextDecoration.none,
+                          decoration: TextDecoration.none,
                         ),
                       ),
                     ),

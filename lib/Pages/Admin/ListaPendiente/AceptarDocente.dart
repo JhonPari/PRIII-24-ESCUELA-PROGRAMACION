@@ -48,7 +48,7 @@ class _VerificarDoceState extends State<VerificarDoce> {
             children: [
               const SizedBox(height: 30),
               const Text(
-                'LISTA DE ESTUDIANTES PENDIENTES',
+                'LISTA DE DOCENTES PENDIENTES',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -113,9 +113,8 @@ class _VerificarDoceState extends State<VerificarDoce> {
                                   },
                                   icon: const Icon(Icons.check,
                                       color: Colors.white),
-                                  label: const Text('Modificar',
-                                      style: TextStyle(
-                                          color: Color.fromARGB(255, 255, 255, 255))),
+                                  label: const Text('Aceptar',
+                                      style: TextStyle(color: Colors.white)),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF4CAF50),
                                     minimumSize: const Size(100, 30),
@@ -165,42 +164,31 @@ class _VerificarDoceState extends State<VerificarDoce> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'Cancelar',
-                style: TextStyle(color: Colors.black),
-              ),
+              child:
+                  const Text('Cancelar', style: TextStyle(color: Colors.black)),
             ),
             ElevatedButton(
               onPressed: () async {
                 try {
                   Navigator.of(context).pop();
                   await usuariosService.deleteLogic(id);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Usuario Rechazado exitosamente.'),
-                    ),
-                  );
-
+                  _mostrarDialogoExito('Eliminación exitosa',
+                      'Usuario eliminado correctamente.');
                   setState(() {
-                    _listaUsuarios =
-                        usuariosService.getListaPendienteDocente();
+                    _listaUsuarios = usuariosService.getListaPendienteDocente();
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Error al eliminar el usuario."),
-                    ),
+                        content: Text("Error al eliminar el usuario.")),
                   );
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8E244D),
               ),
-              child: const Text(
-                'Eliminar',
-                style: TextStyle(color: Colors.white),
-              ),
+              child:
+                  const Text('Rechazar', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -221,46 +209,60 @@ class _VerificarDoceState extends State<VerificarDoce> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'Cancelar',
-                style: TextStyle(color: Colors.black),
-              ),
+              child:
+                  const Text('Cancelar', style: TextStyle(color: Colors.black)),
             ),
             ElevatedButton(
               onPressed: () async {
                 try {
                   Navigator.of(context).pop();
-
                   Usuario usuario = await usuariosService.get(id);
                   usuario.solicitud = 'A';
-
                   await usuariosService.putAceptarSolicitud(id, usuario);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Solicitud aceptada exitosamente.'),
-                    ),
-                  );
-
+                  _mostrarDialogoExito('Aceptación exitosa',
+                      'Solicitud aceptada correctamente.');
                   setState(() {
-                    _listaUsuarios =
-                        usuariosService.getListaPendienteDocente();
+                    _listaUsuarios = usuariosService.getListaPendienteDocente();
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Error al aceptar la solicitud del usuario."),
-                    ),
+                        content:
+                            Text("Error al aceptar la solicitud del usuario.")),
                   );
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8E244D),
               ),
-              child: const Text(
-                'Aceptar',
-                style: TextStyle(color: Colors.white),
-              ),
+              child:
+                  const Text('Aceptar', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _mostrarDialogoExito(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green),
+              const SizedBox(width: 10),
+              Expanded(child: Text(message)),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar'),
             ),
           ],
         );

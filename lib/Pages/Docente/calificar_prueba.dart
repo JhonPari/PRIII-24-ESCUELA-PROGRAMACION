@@ -31,7 +31,7 @@ class CalificarPruebaState extends State<CalificarPrueba> {
   final storage = Session();
   String? name;
   Uint8List? _imagenSeleccionada;
-  
+
   @override
   void initState() {
     super.initState();
@@ -83,7 +83,8 @@ class CalificarPruebaState extends State<CalificarPrueba> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => CompetenciaPage(idCompetencia: widget.idCompetencia),
+          builder: (context) =>
+              CompetenciaPage(idCompetencia: widget.idCompetencia),
         ),
       );
     } catch (e) {
@@ -115,7 +116,8 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                           child: _imagenSeleccionada != null
                               ? Image.memory(
                                   _imagenSeleccionada!,
-                                  fit: BoxFit.contain, // Ajusta la imagen al tamaño del contenedor
+                                  fit: BoxFit
+                                      .contain, // Ajusta la imagen al tamaño del contenedor
                                 )
                               : const Icon(
                                   Icons.image,
@@ -160,7 +162,7 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                                 ),
                               ),
                               child: const Text(
-                                ' Aceptar ',
+                                'Aprobar',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -177,7 +179,7 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                                 ),
                               ),
                               child: const Text(
-                                'Reprobar',
+                                'no Aprobar',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),

@@ -204,8 +204,38 @@ class _VistaEscuelaState extends State<VistaEscuela> {
     try {
       await escuelaService.deleteLogic(id);
       _loadEscuelas();
+
+      // Mostrar diálogo de éxito
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Eliminación exitosa'),
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.green), // Ícono de verificación
+                SizedBox(width: 10),
+                Expanded(child: Text('La escuela se eliminó correctamente.')),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cerrar el diálogo
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     } catch (e) {
       print('Error al eliminar la escuela: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error al eliminar la escuela."),
+        ),
+      );
     }
   }
 
@@ -215,21 +245,28 @@ class _VistaEscuelaState extends State<VistaEscuela> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
-          content: Text(
-              '¿Estás seguro de que deseas eliminar la escuela "${escuela.nombre}"?'),
+          content: const Row(
+            children: [
+              Icon(Icons.warning, color: Colors.red),
+              SizedBox(width: 10),
+              Expanded(child: Text('¿Estás seguro de que deseas eliminar esta escuela?')),
+            ],
+          ),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Cerrar el diálogo
               },
             ),
-            TextButton(
-              child:
-                  const Text('Eliminar', style: TextStyle(color: Colors.red)),
+            ElevatedButton(
+              child: const Text('Eliminar', style: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF8E244D),
+              ),
               onPressed: () {
-                Navigator.of(context).pop();
-                _deleteEscuela(escuela.id);
+                Navigator.of(context).pop(); // Cerrar el diálogo de confirmación
+                _deleteEscuela(escuela.id); // Llama al método de eliminación
               },
             ),
           ],

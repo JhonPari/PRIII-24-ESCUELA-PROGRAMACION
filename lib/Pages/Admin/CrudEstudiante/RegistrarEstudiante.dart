@@ -42,7 +42,8 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
     if (value == null || value.isEmpty) {
       return 'Por favor, ingresa tu nombre completo';
     }
-    final nameRegex = RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
+    final nameRegex =
+        RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
     if (!nameRegex.hasMatch(value)) {
       return 'Por favor, ingresa un nombre completo válido (e.g., Juan Pérez)';
     }
@@ -61,30 +62,78 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
   }
 
   Future<void> crearUsuario(BuildContext context) async {
-    try {
-      NewUsuario nuevoUsuario = NewUsuario(
-        nombre: _nombreController.text,
-        contrasenia: "prueba",
-        correo: _correoController.text,
-        rol: 'E',
-        idUsuario: 2,
-        solicitud: 'A',
-      );
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        NewUsuario nuevoUsuario = NewUsuario(
+          nombre: _nombreController.text,
+          contrasenia: "prueba",
+          correo: _correoController.text,
+          rol: 'E',
+          idUsuario: 2,
+          solicitud: 'A',
+        );
 
-      Usuario estudiante = await _usuarioService.post(nuevoUsuario);
+        Usuario estudiante = await _usuarioService.post(nuevoUsuario);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Usuario creado con éxito: ${estudiante.idUsuario}"),
-        ),
-      );
-
-      Navigator.of(context).pop();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Error al crear el usuario"),
-        ),
+        // Mostrar cuadro de diálogo de éxito
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Registro exitoso'),
+              content: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text('Estudiante registrado correctamente'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                    // Redirigir a la pantalla anterior o a la lista de estudiantes
+                    Navigator.of(context)
+                        .pop(); // Para cerrar la pantalla de registro
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } catch (e) {
+        // Manejar el error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Error al crear el usuario"),
+          ),
+        );
+      }
+    } else {
+      // Mostrar cuadro de diálogo de error si los datos no son válidos
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error en el registro'),
+            content: const Row(
+              children: [
+                Icon(Icons.error, color: Colors.red),
+                SizedBox(width: 10),
+                Text('Por favor, completa todos los campos correctamente.'),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
       );
     }
   }
@@ -92,7 +141,8 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: adminNavBar(name ?? '...', storage, context), // Usa el navbar de Admin
+      appBar: adminNavBar(
+          name ?? '...', storage, context), // Usa el navbar de Admin
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -145,9 +195,7 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
                     const SizedBox(height: 20),
                     ElevatedButton.icon(
                       onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          crearUsuario(context);
-                        }
+                        crearUsuario(context);
                       },
                       icon: const Icon(Icons.check, color: Colors.white),
                       label: const Text(
@@ -168,7 +216,8 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
                         backgroundColor: Colors.grey,
                         minimumSize: const Size(double.infinity, 40),
                       ),
-                      child: const Text('Volver', style: TextStyle(color: Colors.white)),
+                      child: const Text('Volver',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),
