@@ -3,6 +3,7 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/ReporteFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -20,10 +21,17 @@ class VistaReporteFecha extends StatefulWidget {
 }
 
 class _VistaReportState extends State<VistaReporteFecha> {
-  UsuariosService usuariosService = UsuariosService();
+  final UsuariosService usuariosService = UsuariosService();
   late Future<List<ReporteEstudianteFecha>> _listaReportes;
   final Session storage = Session();
   String? name;
+
+  // Lista de opciones para el menú desplegable
+  List<String> opciones = [
+    'Ver Reportes por Puntos',
+    'Ver Reportes por Fechas',
+  ];
+  String? opcionSeleccionada;
 
   @override
   void initState() {
@@ -91,7 +99,7 @@ class _VistaReportState extends State<VistaReporteFecha> {
         },
       ),
     );
-//hola
+
     final pdfBytes = await pdf.save();
     final blob = html.Blob([pdfBytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
@@ -99,6 +107,21 @@ class _VistaReportState extends State<VistaReporteFecha> {
       ..setAttribute("download", "ReporteEstudiantes.pdf")
       ..click();
     html.Url.revokeObjectUrl(url);
+  }
+
+  // Método para navegar según la opción seleccionada
+  void _navegar() {
+    if (opcionSeleccionada == 'Ver Reportes por Puntos') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporte()),
+      );
+    } else if (opcionSeleccionada == 'Ver Reportes por Fechas') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
+      );
+    }
   }
 
   @override
@@ -120,6 +143,26 @@ class _VistaReportState extends State<VistaReporteFecha> {
                     color: Color(0xFF8E244D),
                   ),
                 ),
+                const SizedBox(height: 20),
+
+                // DropdownButton para seleccionar opciones
+                DropdownButton<String>(
+                  hint: const Text('Reporte por Fecha'), // Cambiado aquí
+                  value: opcionSeleccionada,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      opcionSeleccionada = newValue;
+                    });
+                    _navegar(); // Navegar al seleccionar una opción
+                  },
+                  items: opciones.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+
                 const SizedBox(height: 20),
                 _buildExportButtons(),
                 const SizedBox(height: 20),

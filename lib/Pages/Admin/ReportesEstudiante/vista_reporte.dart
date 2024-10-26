@@ -3,6 +3,7 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -25,11 +26,16 @@ class _VistaReportState extends State<VistaReporte> {
   final Session storage = Session();
   String? name;
 
+  // Opción seleccionada para el dropdown
+  String? _selectedReportType;
+  final List<String> _reportTypes = ['Ver Reporte por Puntos', 'Ver Reporte por Fecha'];
+
   @override
   void initState() {
     super.initState();
     _listaReportes = usuariosService.getReportEstudiantes();
     _loadSession();
+    _selectedReportType = _reportTypes[0]; // Valor predeterminado
   }
 
   Future<void> _loadSession() async {
@@ -46,7 +52,8 @@ class _VistaReportState extends State<VistaReporte> {
     sheet.appendRow(['Nombres', 'Correo', 'Puntos']);
 
     for (var reporte in reportes) {
-      sheet.appendRow([reporte.nombre, reporte.correo, reporte.puntos.toString()]);
+      sheet.appendRow(
+          [reporte.nombre, reporte.correo, reporte.puntos.toString()]);
     }
 
     var excelBytes = excel.encode();
@@ -66,7 +73,8 @@ class _VistaReportState extends State<VistaReporte> {
           return pw.Center(
             child: pw.Column(
               children: [
-                pw.Text('Reporte de Estudiantes', style: const pw.TextStyle(fontSize: 24)),
+                pw.Text('Reporte de Estudiantes',
+                    style: const pw.TextStyle(fontSize: 24)),
                 pw.SizedBox(height: 20),
                 pw.Table.fromTextArray(
                   context: context,
@@ -96,14 +104,14 @@ class _VistaReportState extends State<VistaReporte> {
     return MaterialApp(
       home: Scaffold(
         appBar: adminNavBar(name ?? '...', storage, context),
-        body: Center(  // Centra el contenido de la pantalla
+        body: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,  // Centra verticalmente los elementos
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'REPORTE DE ESTUDIANTES POR PUNTOS',
+                  'REPORTE DE ESTUDIANTES',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -111,9 +119,34 @@ class _VistaReportState extends State<VistaReporte> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildExportButtons(),  // Los botones de exportación
+
+                // Dropdown para seleccionar el tipo de reporte
+                DropdownButton<String>(
+                  value: _selectedReportType,
+                  items: _reportTypes.map((String type) {
+                    return DropdownMenuItem<String>(
+                      value: type,
+                      child: Text(type),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedReportType = newValue;
+                      // Redireccionar a la vista con el tipo de reporte seleccionado
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const VistaReporteFecha(),
+                        ),
+                      );
+                    });
+                  },
+                ),
+
                 const SizedBox(height: 20),
-                Expanded(child: _buildReportTable()),  // La tabla expandida con el espacio restante
+                _buildExportButtons(),
+                const SizedBox(height: 20),
+                Expanded(child: _buildReportTable()),
               ],
             ),
           ),
@@ -127,7 +160,8 @@ class _VistaReportState extends State<VistaReporte> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton.icon(
-          onPressed: () => _listaReportes.then((reportes) => _exportToExcel(reportes)),
+          onPressed: () =>
+              _listaReportes.then((reportes) => _exportToExcel(reportes)),
           icon: const Icon(Icons.download, color: Colors.white),
           label: const Text('Exportar a Excel'),
           style: ElevatedButton.styleFrom(
@@ -137,7 +171,8 @@ class _VistaReportState extends State<VistaReporte> {
         ),
         const SizedBox(width: 20),
         ElevatedButton.icon(
-          onPressed: () => _listaReportes.then((reportes) => _exportToPdf(reportes)),
+          onPressed: () =>
+              _listaReportes.then((reportes) => _exportToPdf(reportes)),
           icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
           label: const Text('Exportar a PDF'),
           style: ElevatedButton.styleFrom(
@@ -152,7 +187,8 @@ class _VistaReportState extends State<VistaReporte> {
   Widget _buildReportTable() {
     return FutureBuilder<List<ReporteEstudiante>>(
       future: _listaReportes,
-      builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudiante>> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<List<ReporteEstudiante>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {

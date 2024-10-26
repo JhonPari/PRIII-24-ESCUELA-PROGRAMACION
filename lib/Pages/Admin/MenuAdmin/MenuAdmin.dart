@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/VerCompetenciasAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/calificar_pruebaAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
@@ -113,65 +114,28 @@ class _MenuAdminState extends State<MenuAdmin> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      DropdownButtonFormField<String>(
-                        value: selectedReportOption,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color(0xFF8B2D56),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(21),
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 15),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        dropdownColor: const Color(0xFF8B2D56),
-                        alignment: Alignment.center,
-                        items: const [
-                          DropdownMenuItem(
-                            value: 'Ver Reportes',
-                            child: Center(
-                              child: Text(
-                                'Ver Reportes',
-                                textAlign: TextAlign.center,
-                              ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>  const VistaReporte(),
                             ),
-                          ),
-                          DropdownMenuItem(
-                            value: 'Ver Reportes por Fecha',
-                            child: Center(
-                              child: Text(
-                                'Ver Reportes por Fecha',
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ],
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedReportOption = newValue!;
-                          });
-                          if (newValue == 'Ver Reportes') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const VistaReporte(),
-                              ),
-                            );
-                          } else if (newValue == 'Ver Reportes por Fecha') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const VistaReporteFecha(),
-                              ),
-                            );
-                          }
+                          );
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8B2D56),
+                          minimumSize: const Size(500, 80),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(21),
+                          ),
+                        ),
+                        child: const Text(
+                          'Reportes',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
