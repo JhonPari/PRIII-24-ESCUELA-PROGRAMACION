@@ -16,35 +16,82 @@ class _RecuperarContrasenaState extends State<RecuperarContrasenaPage> {
   final UsuariosService _usuarioService = UsuariosService();
   final storage = Session();
 
-  Future<void> recuperarContrasenia() async {
-    String correo = _correoController.text.trim();
-    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(correo)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, ingresa un correo válido.')),
-      );
-      return;
-    }
-
-    bool resultado = await _usuarioService.recuperarContrasena(correo);
-    if (resultado) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content:
-              Text('Se ha enviado un correo para recuperar la contraseña.'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      _correoController.clear();
-      Navigator.of(context).pop();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error: no se pudo enviar el correo de recuperación'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+Future<void> recuperarContrasenia() async {
+  String correo = _correoController.text.trim();
+  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(correo)) {
+    _mostrarDialogoFallido();
+    return;
   }
+
+  bool resultado = await _usuarioService.recuperarContrasena(correo);
+  if (resultado) {
+    _mostrarDialogoExito();
+    _correoController.clear();
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Error: no se pudo enviar el correo de recuperación'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
+void _mostrarDialogoFallido() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Recuperación fallida'),
+        content: const Row(
+          children: [
+            Icon(Icons.cancel, color: Colors.red),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text('Por favor, ingresa un correo válido.'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();  // Cierra el diálogo
+            },
+            child: const Text('Cerrar', style: TextStyle(color: Colors.black)),
+          ),
+        ],
+      );
+    },
+  );
+}
+void _mostrarDialogoExito() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Contraseña de recuperación enviada'),
+        content: const Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.green),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text('Se ha enviado un correo para recuperar la contraseña.'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();  // Cierra el diálogo
+              Navigator.of(context).pop();  // Regresa a la pantalla anterior
+            },
+            child: const Text('Cerrar', style: TextStyle(color: Colors.black)),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {

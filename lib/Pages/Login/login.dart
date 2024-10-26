@@ -36,7 +36,6 @@ class _LoginState extends State<LoginPage> {
     }
   }
 
-  // Método que maneja el inicio de sesión
   Future<void> hacerLogin() async {
     String correo = _correoController.text;
     String passw = _passwController.text;
@@ -48,16 +47,41 @@ class _LoginState extends State<LoginPage> {
       String name = usuario['name'];
       String role = usuario['role'];
 
-      // Guardar la sesión
       await storage.saveSession(id, name, role);
-
       redireccionRoles(usuario['role']);
     } else {
-      // Mostrar error si el login falla
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error: correo o contraseña incorrectos')),
-      );
+      // Mostrar diálogo de error si el inicio de sesión falla
+      _mostrarDialogoError();
     }
+  }
+
+  void _mostrarDialogoError() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Inicio de sesión fallido'),
+          content: const Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text('Contraseña o usuario incorrecto.'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child:
+                  const Text('Cerrar', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void redireccionRoles(String role) {
@@ -182,7 +206,8 @@ class _LoginState extends State<LoginPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const RegistrarsePage()),
+                                      builder: (context) =>
+                                          const RegistrarsePage()),
                                 );
                               },
                               child: const Text(

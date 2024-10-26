@@ -19,6 +19,13 @@ class _RegistroPageState extends State<RegistrarsePage> {
   String _rolSeleccionado = 'DOCENTE';
 
   Future<void> crearUsuario(BuildContext context) async {
+    if (_nombreController.text.isEmpty ||
+        _correoController.text.isEmpty ||
+        _rolSeleccionado.isEmpty) {
+      _mostrarDialogoAdvertencia();
+      return;
+    }
+
     try {
       NewUsuario nuevoUsuario = NewUsuario(
         nombre: _nombreController.text,
@@ -31,21 +38,77 @@ class _RegistroPageState extends State<RegistrarsePage> {
 
       Usuario estudiante = await _usuarioService.post(nuevoUsuario);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Usuario creado con éxito: ${estudiante.idUsuario}"),
-        ),
-      );
+      _mostrarDialogoExito(estudiante.idUsuario);
 
-      Navigator.of(context).pop();
+      _nombreController.clear();
+      _correoController.clear();
+      setState(() {
+        _rolSeleccionado = 'DOCENTE';
+      });
     } catch (e) {
-      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Error al crear el usuario"),
         ),
       );
     }
+  }
+
+  void _mostrarDialogoAdvertencia() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Campos incompletos'),
+          content: const Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text("Por favor, no deje ningún campo vacío."),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();  // Cierra el diálogo
+              },
+              child: const Text('Cerrar', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _mostrarDialogoExito(int idUsuario) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Registro Exitoso'),
+          content: const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text("Espere a ser aceptado"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();  // Cierra el diálogo
+                Navigator.of(context).pop();  // Regresa a la pantalla anterior
+              },
+              child: const Text('Cerrar', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -55,8 +118,7 @@ class _RegistroPageState extends State<RegistrarsePage> {
         body: Center(
           child: Container(
             padding: const EdgeInsets.all(16.0),
-            constraints:
-                const BoxConstraints(maxWidth: 600), 
+            constraints: const BoxConstraints(maxWidth: 600),
             child: Form(
               key: _formKey,
               child: Column(
@@ -125,9 +187,8 @@ class _RegistroPageState extends State<RegistrarsePage> {
                               _rolSeleccionado = newValue!;
                             });
                           },
-                          validator: (value) => value == null
-                              ? 'Por favor seleccione un rol'
-                              : null,
+                          validator: (value) =>
+                              value == null ? 'Por favor seleccione un rol' : null,
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton.icon(

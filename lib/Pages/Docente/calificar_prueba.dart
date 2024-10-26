@@ -78,7 +78,10 @@ class CalificarPruebaState extends State<CalificarPrueba> {
     try {
       await updateCalificacion(widget.id, aprobado);
 
-      print('idCompetencia: ${widget.idCompetencia}');
+      if (!mounted) return;
+
+      // Muestra el cuadro de diálogo de éxito o falla
+      _mostrarDialogoCalificacion(aprobado == 1);
 
       Navigator.pushReplacement(
         context,
@@ -90,6 +93,45 @@ class CalificarPruebaState extends State<CalificarPrueba> {
     } catch (e) {
       print('Error updating calificacion: $e');
     }
+  }
+
+  void _mostrarDialogoCalificacion(bool esExitoso) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(esExitoso ? 'Calificación exitosa' : 'Calificación fallida'),
+          content: Row(
+            children: [
+              Icon(
+                esExitoso ? Icons.check_circle : Icons.cancel,
+                color: esExitoso ? Colors.green : Colors.red,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  esExitoso
+                      ? 'La calificación se ha aprobado exitosamente.'
+                      : 'La calificación no se aprobó.',
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: const Text(
+                'Cerrar',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -116,8 +158,7 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                           child: _imagenSeleccionada != null
                               ? Image.memory(
                                   _imagenSeleccionada!,
-                                  fit: BoxFit
-                                      .contain, // Ajusta la imagen al tamaño del contenedor
+                                  fit: BoxFit.contain,
                                 )
                               : const Icon(
                                   Icons.image,
@@ -152,7 +193,7 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                _updateCalificacion(1); // Aceptar
+                                _updateCalificacion(1); // Aprobar
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF16772B),
@@ -169,7 +210,7 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                             const SizedBox(width: 40),
                             ElevatedButton(
                               onPressed: () {
-                                _updateCalificacion(2); // Reprobar
+                                _updateCalificacion(2); // No aprobar
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF8B2D56),
@@ -179,7 +220,7 @@ class CalificarPruebaState extends State<CalificarPrueba> {
                                 ),
                               ),
                               child: const Text(
-                                'no Aprobar',
+                                'No Aprobar',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),

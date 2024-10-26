@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/EstudianteCompetenciaAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
@@ -9,7 +8,6 @@ import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/CalificarEstudianteService.dart';
 import 'package:prlll_24_escuela_programacion/Service/ImagenesService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
-import 'package:prlll_24_escuela_programacion/Pages/docente/EstudianteCompetencia.dart';
 
 class CalificarPruebaAdmin extends StatefulWidget {
   final int id;
@@ -32,7 +30,7 @@ class CalificarPruebaAdminState extends State<CalificarPruebaAdmin> {
   final storage = Session();
   String? name;
   Uint8List? _imagenSeleccionada;
-  
+
   @override
   void initState() {
     super.initState();
@@ -79,17 +77,60 @@ class CalificarPruebaAdminState extends State<CalificarPruebaAdmin> {
     try {
       await updateCalificacion(widget.id, aprobado);
 
-      print('idCompetencia: ${widget.idCompetencia}');
+      if (!mounted) return;
 
+      // Muestra el cuadro de diálogo de éxito
+      await _mostrarDialogoCalificacion();
+
+      // Navega a la lista solo después de cerrar el cuadro de diálogo
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => CompetenciaAdminPage(idCompetencia: widget.idCompetencia),
+          builder: (context) =>
+              CompetenciaAdminPage(idCompetencia: widget.idCompetencia),
         ),
       );
     } catch (e) {
       print('Error updating calificacion: $e');
+      // También puedes mostrar un cuadro de diálogo de error aquí si lo deseas.
     }
+  }
+
+  Future<void> _mostrarDialogoCalificacion() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Calificación registrada'),
+          content: const Row(
+            children: [
+              Icon(
+                Icons.check_circle,
+                color: Colors.green,
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'La calificación se ha registrado exitosamente.',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: const Text(
+                'Cerrar',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -116,7 +157,7 @@ class CalificarPruebaAdminState extends State<CalificarPruebaAdmin> {
                           child: _imagenSeleccionada != null
                               ? Image.memory(
                                   _imagenSeleccionada!,
-                                  fit: BoxFit.contain, // Ajusta la imagen al tamaño del contenedor
+                                  fit: BoxFit.contain,
                                 )
                               : const Icon(
                                   Icons.image,
@@ -151,7 +192,7 @@ class CalificarPruebaAdminState extends State<CalificarPruebaAdmin> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                _updateCalificacion(1); // Aceptar
+                                _updateCalificacion(1); // Aprobar
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF16772B),
@@ -161,14 +202,14 @@ class CalificarPruebaAdminState extends State<CalificarPruebaAdmin> {
                                 ),
                               ),
                               child: const Text(
-                                ' Aceptar ',
+                                'Aprobar',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
                             const SizedBox(width: 40),
                             ElevatedButton(
                               onPressed: () {
-                                _updateCalificacion(2); // Reprobar
+                                _updateCalificacion(2); // No aprobar
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF8B2D56),
@@ -178,7 +219,7 @@ class CalificarPruebaAdminState extends State<CalificarPruebaAdmin> {
                                 ),
                               ),
                               child: const Text(
-                                'Reprobar',
+                                'No Aprobar',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
