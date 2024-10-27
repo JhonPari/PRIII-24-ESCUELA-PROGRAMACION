@@ -3,6 +3,7 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEscuela/ReportesEscuelaEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
@@ -27,15 +28,19 @@ class _VistaReportState extends State<VistaReporte> {
   String? name;
 
   // Opción seleccionada para el dropdown
-  String? _selectedReportType;
-  final List<String> _reportTypes = ['Ver Reporte por Puntos', 'Ver Reporte por Fecha'];
+  String? opcionSeleccionada;
+  List<String> opciones = [
+    'Ver Reportes por Puntos',
+    'Ver Reportes por Fechas',
+    'Ver Reporte de Escuelas', // Nueva opción añadida
+  ];
 
   @override
   void initState() {
     super.initState();
     _listaReportes = usuariosService.getReportEstudiantes();
     _loadSession();
-    _selectedReportType = _reportTypes[0]; // Valor predeterminado
+    opcionSeleccionada = opciones[0]; // Valor predeterminado
   }
 
   Future<void> _loadSession() async {
@@ -99,6 +104,26 @@ class _VistaReportState extends State<VistaReporte> {
     html.Url.revokeObjectUrl(url);
   }
 
+  // Método para navegar según la opción seleccionada
+  void _navegar() {
+    if (opcionSeleccionada == 'Ver Reportes por Puntos') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporte()),
+      );
+    } else if (opcionSeleccionada == 'Ver Reportes por Fechas') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
+      );
+    } else if (opcionSeleccionada == 'Ver Reporte de Escuelas') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporteEscuela()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -122,25 +147,19 @@ class _VistaReportState extends State<VistaReporte> {
 
                 // Dropdown para seleccionar el tipo de reporte
                 DropdownButton<String>(
-                  value: _selectedReportType,
-                  items: _reportTypes.map((String type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type),
-                    );
-                  }).toList(),
+                  value: opcionSeleccionada,
                   onChanged: (String? newValue) {
                     setState(() {
-                      _selectedReportType = newValue;
-                      // Redireccionar a la vista con el tipo de reporte seleccionado
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VistaReporteFecha(),
-                        ),
-                      );
+                      opcionSeleccionada = newValue;
                     });
+                    _navegar(); // Navegar al seleccionar una opción
                   },
+                  items: opciones.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 ),
 
                 const SizedBox(height: 20),

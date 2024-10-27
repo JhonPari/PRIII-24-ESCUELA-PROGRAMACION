@@ -3,6 +3,7 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/ReporteFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEscuela/ReportesEscuelaEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
@@ -23,27 +24,40 @@ class VistaReporteFecha extends StatefulWidget {
 class _VistaReportState extends State<VistaReporteFecha> {
   final UsuariosService usuariosService = UsuariosService();
   late Future<List<ReporteEstudianteFecha>> _listaReportes;
+  List<ReporteEstudianteFecha> allReportes = []; // Para almacenar todos los reportes
   final Session storage = Session();
   String? name;
+
+  // Variables para seleccionar las fechas
+  DateTime? startDate;
+  DateTime? endDate;
 
   // Lista de opciones para el menú desplegable
   List<String> opciones = [
     'Ver Reportes por Puntos',
     'Ver Reportes por Fechas',
+    'Ver Reporte de Escuelas',
   ];
   String? opcionSeleccionada;
 
   @override
   void initState() {
     super.initState();
-    _listaReportes = usuariosService.getReportEstudiantesFecha();
     _loadSession();
+    _fetchReportes(); // Cargar reportes al inicio
   }
 
   Future<void> _loadSession() async {
     Map<String, String?> data = await storage.getSession();
     setState(() {
       name = data['name'] ?? 'Sin Nombre';
+    });
+  }
+
+  Future<void> _fetchReportes() async {
+    _listaReportes = usuariosService.getReportEstudiantesFecha().then((reportes) {
+      allReportes = reportes; // Almacenar todos los reportes
+      return reportes;
     });
   }
 
@@ -58,14 +72,13 @@ class _VistaReportState extends State<VistaReporteFecha> {
         reporte.nombre,
         reporte.correo,
         reporte.puntos.toString(),
-        reporte.fechaInicioCompetencia.toString().split(' ')[0] // Formatear la fecha
+        reporte.fechaInicioCompetencia.toString().split(' ')[0], // Formatear la fecha
       ]);
     }
 
     var excelBytes = excel.encode();
     final content = base64Encode(excelBytes!);
-    final anchor = html.AnchorElement(
-        href: "data:application/octet-stream;base64,$content")
+    final anchor = html.AnchorElement(href: "data:application/octet-stream;base64,$content")
       ..setAttribute("download", "ReporteEstudiantes.xlsx")
       ..click();
   }
@@ -84,14 +97,12 @@ class _VistaReportState extends State<VistaReporteFecha> {
                 pw.Table.fromTextArray(
                   context: context,
                   headers: ['Nombres', 'Correo', 'Puntos', 'Fecha de Inicio'],
-                  data: reportes
-                      .map((e) => [
-                            e.nombre,
-                            e.correo,
-                            e.puntos.toString(),
-                            e.fechaInicioCompetencia.toString().split(' ')[0] // Formatear la fecha
-                          ])
-                      .toList(),
+                  data: reportes.map((e) => [
+                    e.nombre,
+                    e.correo,
+                    e.puntos.toString(),
+                    e.fechaInicioCompetencia.toString().split(' ')[0], // Formatear la fecha
+                  ]).toList(),
                 ),
               ],
             ),
@@ -109,7 +120,6 @@ class _VistaReportState extends State<VistaReporteFecha> {
     html.Url.revokeObjectUrl(url);
   }
 
-  // Método para navegar según la opción seleccionada
   void _navegar() {
     if (opcionSeleccionada == 'Ver Reportes por Puntos') {
       Navigator.push(
@@ -121,7 +131,26 @@ class _VistaReportState extends State<VistaReporteFecha> {
         context,
         MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
       );
+    } else if (opcionSeleccionada == 'Ver Reporte de Escuelas') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporteEscuela()),
+      );
     }
+  }
+
+  void _filterByDate() {
+    // Filtrar la lista de reportes
+    setState(() {
+      if (startDate != null && endDate != null) {
+        _listaReportes = Future.value(allReportes.where((reporte) {
+          final fecha = reporte.fechaInicioCompetencia;
+          return fecha.isAfter(startDate!) && fecha.isBefore(endDate!);
+        }).toList());
+      } else {
+        _listaReportes = Future.value(allReportes); // Mostrar todos si no hay rango
+      }
+    });
   }
 
   @override
@@ -136,7 +165,7 @@ class _VistaReportState extends State<VistaReporteFecha> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'REPORTE DE ESTUDIANTES POR PUNTOS',
+                  'REPORTE DE ESTUDIANTES POR FECHAS',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -147,7 +176,7 @@ class _VistaReportState extends State<VistaReporteFecha> {
 
                 // DropdownButton para seleccionar opciones
                 DropdownButton<String>(
-                  hint: const Text('Reporte por Fecha'), // Cambiado aquí
+                  hint: const Text('Seleccione un Reporte'),
                   value: opcionSeleccionada,
                   onChanged: (String? newValue) {
                     setState(() {
@@ -161,6 +190,53 @@ class _VistaReportState extends State<VistaReporteFecha> {
                       child: Text(value),
                     );
                   }).toList(),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Selectores de fecha
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: startDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setState(() {
+                            startDate = date;
+                          });
+                        }
+                      },
+                      child: Text(startDate == null ? 'Seleccionar Fecha Inicio' : 'Inicio: ${startDate!.toLocal()}'.split(' ')[0]),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: endDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setState(() {
+                            endDate = date;
+                          });
+                        }
+                      },
+                      child: Text(endDate == null ? 'Seleccionar Fecha Fin' : 'Fin: ${endDate!.toLocal()}'.split(' ')[0]),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _filterByDate,
+                  child: const Text('Filtrar por Fecha'),
                 ),
 
                 const SizedBox(height: 20),
