@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/CambiarContrasenia.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/ReporteEscuelaEstudiante.dart';
@@ -6,6 +8,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vis
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 import 'dart:convert';
 import 'package:pdf/widgets.dart' as pw;
@@ -69,6 +72,7 @@ class _VistaReporteEscuelaState extends State<VistaReporteEscuela> {
 
     var excelBytes = excel.encode();
     final content = base64Encode(excelBytes!);
+    // ignore: unused_local_variable
     final anchor = html.AnchorElement(
         href: "data:application/octet-stream;base64,$content")
       ..setAttribute("download", "ReporteEscuelas.xlsx")
@@ -106,6 +110,7 @@ class _VistaReporteEscuelaState extends State<VistaReporteEscuela> {
     final pdfBytes = await pdf.save();
     final blob = html.Blob([pdfBytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
+    // ignore: unused_local_variable
     final anchor = html.AnchorElement(href: url)
       ..setAttribute("download", "ReporteEscuelas.pdf")
       ..click();
@@ -148,10 +153,10 @@ class _VistaReporteEscuelaState extends State<VistaReporteEscuela> {
 
               // Campo de búsqueda
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Buscar por Nombre Escuela o Competencia',
                   border: OutlineInputBorder(),
-                  suffixIcon: const Icon(Icons.search),
+                  suffixIcon: Icon(Icons.search),
                 ),
                 onChanged: (value) {
                   setState(() {

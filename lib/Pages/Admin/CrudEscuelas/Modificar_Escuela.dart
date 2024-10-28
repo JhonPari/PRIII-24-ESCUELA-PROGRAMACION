@@ -67,8 +67,8 @@ class _EditEscuelaPageState extends State<EditEscuelaPage> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Modificación exitosa'),
-              content: Row(
-                children: const [
+              content: const Row(
+                children: [
                   Icon(Icons.check_circle, color: Colors.green),
                   SizedBox(width: 10),
                   Text('Escuela actualizada correctamente'),

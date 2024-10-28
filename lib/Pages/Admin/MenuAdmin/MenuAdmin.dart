@@ -1,12 +1,11 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/VerCompetenciasAdmin.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/calificar_pruebaAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ListaPendiente/AceptarDocente.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';

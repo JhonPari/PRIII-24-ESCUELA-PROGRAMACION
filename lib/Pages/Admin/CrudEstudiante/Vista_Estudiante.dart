@@ -81,8 +81,9 @@ class _VistaEstState extends State<VistaEst> {
                       MaterialPageRoute(
                           builder: (context) => const RegistrarEstPage()),
                     );
-                    if (mounted)
+                    if (mounted) {
                       _loadUsuarios(); // Refresca la lista después de registrar un estudiante.
+                    }
                   },
                   icon: const Icon(Icons.person_add, color: Colors.white),
                   label: const Text('Añadir'),
@@ -149,8 +150,9 @@ class _VistaEstState extends State<VistaEst> {
                                             idUsuario: usuario.id!),
                                       ),
                                     );
-                                    if (mounted)
+                                    if (mounted) {
                                       _loadUsuarios(); // Refresca la lista después de modificar.
+                                    }
                                   },
                                   icon: const Icon(Icons.sync,
                                       color: Colors.white),
@@ -234,12 +236,12 @@ class _VistaEstState extends State<VistaEst> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Elimacion Éxitosa'),
-          content: Row(
+          content: const Row(
             children: [
-              const Icon(Icons.check_circle,
+              Icon(Icons.check_circle,
                   color: Colors.green, size: 24), // Icono de éxito
-              const SizedBox(width: 10),
-              const Expanded(
+              SizedBox(width: 10),
+              Expanded(
                   child: Text('El estudiante se eliminó exitosamente.')),
             ],
           ),

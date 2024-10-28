@@ -7,6 +7,7 @@ import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/pages/Login/login.dart';
 
 AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
+  // ignore: unused_local_variable
   TextStyle commonTextStyle =
       const TextStyle(fontSize: 16, color: Colors.black);
 

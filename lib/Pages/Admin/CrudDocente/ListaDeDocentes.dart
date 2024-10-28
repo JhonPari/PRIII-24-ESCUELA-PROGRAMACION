@@ -273,12 +273,12 @@ class _VistaDoceState extends State<VistaDoce> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Elimacion Éxitosa'),
-          content: Row(
+          content: const Row(
             children: [
-              const Icon(Icons.check_circle,
+              Icon(Icons.check_circle,
                   color: Colors.green, size: 24), // Icono de éxito
-              const SizedBox(width: 10),
-              const Expanded(
+              SizedBox(width: 10),
+              Expanded(
                   child: Text('El usuario se eliminó exitosamente.')),
             ],
           ),

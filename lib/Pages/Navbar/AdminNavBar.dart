@@ -1,6 +1,5 @@
 // Asegúrate de importar las demás páginas necesarias
 import 'package:flutter/material.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/EstudianteCompetenciaAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/VerCompetenciasAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/CrearDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';

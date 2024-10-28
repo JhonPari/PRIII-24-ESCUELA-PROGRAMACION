@@ -1,9 +1,10 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api
 
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prlll_24_escuela_programacion/Models/SubirImagen.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Estudiante/EstCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
 import 'package:prlll_24_escuela_programacion/Service/ImagenesService.dart';
@@ -35,7 +36,6 @@ class _EntregarPrueba extends State<EntregarPrueba> {
   }
 
   Future<void> _loadSession() async {
-    // Obtiene el mapa con los datos de la sesión
     Map<String, String?> data = await storage.getSession();
 
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
@@ -43,7 +43,6 @@ class _EntregarPrueba extends State<EntregarPrueba> {
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
-      //if del rol
     } else {
       setState(() {
         name = data['name'] ?? 'Sin Nombre';
@@ -83,65 +82,58 @@ class _EntregarPrueba extends State<EntregarPrueba> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: estNavBar(name ?? '...', storage, context, id),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (_isLoading)
-                const CircularProgressIndicator()
-              else if (_webImage != null)
-                Container(
-                  padding: const EdgeInsets.all(10.0),
-                  color: const Color.fromARGB(153, 243, 243, 243),
-                  width: 350,
-                  height: 200,
-                  child: _webImage != null
-                      ? Image.memory(_webImage!)
-                      : const Icon(
-                          Icons.image,
-                          size: 100,
-                          color: Color.fromARGB(255, 117, 117, 117),
-                        ),
-                ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _pickImage,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  minimumSize: const Size(200, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  'Subir Foto',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+    return Scaffold(
+      appBar: estNavBar(name ?? '...', storage, context, id),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (_isLoading)
+              const CircularProgressIndicator()
+            else if (_webImage != null)
+              Container(
+                padding: const EdgeInsets.all(10.0),
+                color: const Color.fromARGB(153, 243, 243, 243),
+                width: 350,
+                height: 200,
+                child:
+                    Image.memory(_webImage!), // Mostrar la imagen seleccionada
+              ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _pickImage,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                minimumSize: const Size(200, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _webImage == null ? null : _confirmSubmission,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  minimumSize: const Size(200, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  'Confirmar entrega',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+              child: const Text(
+                'Subir Foto',
+                style: TextStyle(
+                  color: Colors.white,
                 ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _webImage == null ? null : _confirmSubmission,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                minimumSize: const Size(200, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Confirmar entrega',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -172,13 +164,44 @@ class _EntregarPrueba extends State<EntregarPrueba> {
 
                 bool guardado = await service.subirImagen(subida);
 
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Cierra el primer diálogo
 
                 if (guardado) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Entrega confirmada")),
+                  // Mostrar el segundo diálogo de éxito
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Entrega Exitosa"),
+                        content: const Row(
+                          children: [
+                            Icon(
+                              Icons.check_circle, // Icono de verificación
+                              color: Colors.green, // Color verde
+                            ),
+                            SizedBox(width: 8),
+                            Text("La entrega fue confirmada."), // Texto
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pop(); // Cierra el diálogo de éxito
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EstCompetenciaPage(), // Redirigir a EstCompetenciaPage
+                                ),
+                              );
+                            },
+                            child: const Text("Aceptar"),
+                          ),
+                        ],
+                      );
+                    },
                   );
-                  Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Error al subir la imagen")),
