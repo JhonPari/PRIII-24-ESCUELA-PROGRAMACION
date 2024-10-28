@@ -7,6 +7,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/registrar
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/RegistrarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/Habilitar/VistaInhabilitados.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ListaPendiente/AceptarDocente.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ListaPendiente/AceptarEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
@@ -15,7 +16,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vis
 import 'package:prlll_24_escuela_programacion/Pages/Login/CambiarContrasenia.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
-// Asegúrate de importar las demás páginas necesarias
+
 
 AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
   TextStyle commonTextStyle =
@@ -208,17 +209,36 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                 context,
                 MaterialPageRoute(builder: (context) => verCompetenciaAdmin()),
               );
-            } 
+            }
           },
           itemBuilder: (BuildContext context) {
             return [
               PopupMenuItem<String>(
                   value: 'Calificar',
                   child: Text('Calificar', style: commonTextStyle)),
-              
             ];
           },
           child: Text('Calificar', style: commonTextStyle),
+        ),
+        const SizedBox(width: 10),
+        // Botón "Inhabilitados"
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'Inhabilitados') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VistaInhabilitados()),
+              );
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<String>(
+                  value: 'Inhabilitados',
+                  child: Text('Inhabilitados', style: commonTextStyle)),
+            ];
+          },
+          child: Text('Inhabilitados', style: commonTextStyle),
         ),
         const SizedBox(width: 25),
         // Botón desplegable de "Cuenta" con el mismo estilo de "Cerrar Sesión"
@@ -233,7 +253,9 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
             } else if (value == 'Cambiar Contraseña') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CambiarContrasenia()), // Página para cambiar contraseña
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const CambiarContrasenia()), // Página para cambiar contraseña
               );
             }
           },

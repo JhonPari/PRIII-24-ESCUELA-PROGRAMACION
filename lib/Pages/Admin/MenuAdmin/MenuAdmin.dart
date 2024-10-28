@@ -3,6 +3,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/VerCompetenc
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/ListaDeDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/Habilitar/VistaInhabilitados.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ListaPendiente/AceptarDocente.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
@@ -201,6 +202,30 @@ class _MenuAdminState extends State<MenuAdmin> {
                         ),
                         child: const Text(
                           'Lista de Escuelas',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const VistaInhabilitados(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8B2D56),
+                          minimumSize: const Size(500, 80),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(21),
+                          ),
+                        ),
+                        child: const Text(
+                          'Lista de Inhabilitados',
                           style: TextStyle(
                             color: Colors.white,
                           ),

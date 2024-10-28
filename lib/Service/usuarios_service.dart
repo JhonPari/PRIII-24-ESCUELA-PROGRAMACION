@@ -19,6 +19,7 @@ class UsuariosService {
       throw Exception("Error al cargar todos los Usuarios");
     }
   }
+
   Future<List<Usuario>> getDocentes() async {
     final url = Uri.parse("$baseUri/Docentes");
     var response = await http.get(url);
@@ -30,6 +31,7 @@ class UsuariosService {
       throw Exception("Error al cargar todos los Usuarios");
     }
   }
+
 //lista verificar Docente
   Future<List<Usuario>> getListaPendienteDocente() async {
     final url = Uri.parse("$baseUri/listaPendienteDocentes");
@@ -42,8 +44,9 @@ class UsuariosService {
       throw Exception("Error al cargar todos los Usuarios");
     }
   }
+
   //lista verificar estudiante
-    Future<List<Usuario>> getListaPendienteEstudiante() async {
+  Future<List<Usuario>> getListaPendienteEstudiante() async {
     final url = Uri.parse("$baseUri/listaPendienteEstudiante");
     var response = await http.get(url);
 
@@ -78,6 +81,8 @@ class UsuariosService {
 
     if (response.statusCode == 201) {
       return Usuario.fromJson(jsonDecode(response.body));
+    } else if (response.statusCode == 409) {
+      throw Exception("El correo ya está en uso. Intente con otro.");
     } else {
       throw Exception("Error al crear un Usuario");
     }
@@ -97,7 +102,7 @@ class UsuariosService {
       throw Exception("Error al actualizar un Usuario");
     }
   }
-  
+
   Future<void> deleteLogic(int id) async {
     final url = Uri.parse("$baseUri/$id");
     // En la API deberías actualizar su estado a 'E'
@@ -109,9 +114,11 @@ class UsuariosService {
       throw Exception("Error al eliminar lógicamente un Usuario");
     }
   }
+
   //para aceptar usuarios
   Future<void> putAceptarSolicitud(int id, Usuario usr) async {
-    final url = Uri.parse("$baseUri/archivarSolicitud/$id"); // Ruta para actualizar la solicitud a "A"
+    final url = Uri.parse(
+        "$baseUri/archivarSolicitud/$id"); // Ruta para actualizar la solicitud a "A"
     var response = await http.put(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -124,19 +131,19 @@ class UsuariosService {
       throw Exception("Error al actualizar la solicitud del Usuario");
     }
   }
-  
 
   // Método para eliminar físicamente un usuario (si lo necesitas más adelante)
-  // Future<Usuario> delete(int id) async {
-  //   final url = Uri.parse("$baseUri/$id");
-  //   var response = await http.delete(url);
-  //
-  //   if (response.statusCode == 200) {
-  //     return Usuario.fromJson(jsonDecode(response.body));
-  //   } else {
-  //     throw Exception("Error al eliminar un Usuario");
-  //   }
-  // }
+  Future<void> deleteFisic(int id) async {
+    final url = Uri.parse("$baseUri/eliminar/$id");
+    var response = await http.delete(url);
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception("Error al eliminar un Usuario");
+    }
+  }
+
   Future<Map<String, dynamic>?> login(String correo, String passw) async {
     final url = Uri.parse("$baseUri/Login");
     var response = await http.post(
@@ -151,49 +158,40 @@ class UsuariosService {
       return null;
     }
   }
+
   Future<List<ReporteEstudiante>> getReportEstudiantes() async {
-  final url = Uri.parse("$baseUri/EstudiantesReporte");
-  var response = await http.get(url);
-  if (response.statusCode == 200) {
-    List<dynamic> jsonData = jsonDecode(response.body);
-    return jsonData.map((json) => ReporteEstudiante.fromJson(json)).toList();
-  } else {
-    throw Exception("Error al cargar todos los Reportes de Estudiantes");
-  }
-}
-Future<List<ReporteEstudianteFecha>> getReportEstudiantesFecha() async {
-  final url = Uri.parse("$baseUri/EstudiantesReporteFecha");
-  var response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    List<dynamic> jsonData = jsonDecode(response.body);
-    return jsonData
-        .map((json) => ReporteEstudianteFecha.fromJson(json))
-        .toList();
-  } else {
-    throw Exception("Error al cargar todos los reportes de estudiantes");
-  }
-}
-Future<List<ReporteEscuelaEstudiante>> getReportesEscuelaEstudiante() async {
-    final response = await http.get(Uri.parse('https://localhost:7096/Usuarios/EscuelasReporte'));
-
+    final url = Uri.parse("$baseUri/EstudiantesReporte");
+    var response = await http.get(url);
     if (response.statusCode == 200) {
-      List<dynamic> jsonData = json.decode(response.body);
-      
-      return jsonData.map((json) => ReporteEscuelaEstudiante.fromJson(json)).toList();
+      List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => ReporteEstudiante.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to load reportes');
+      throw Exception("Error al cargar todos los Reportes de Estudiantes");
     }
   }
 
- Future<bool> recuperarContrasena(String correo) async {
+  Future<List<ReporteEstudianteFecha>> getReportEstudiantesFecha() async {
+    final url = Uri.parse("$baseUri/EstudiantesReporteFecha");
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData
+          .map((json) => ReporteEstudianteFecha.fromJson(json))
+          .toList();
+    } else {
+      throw Exception("Error al cargar todos los reportes de estudiantes");
+    }
+  }
+
+  Future<bool> recuperarContrasena(String correo) async {
     final url = Uri.parse('$baseUri/RecuperarContrasenia');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'correo': correo}),
     );
- 
+
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -201,7 +199,8 @@ Future<List<ReporteEscuelaEstudiante>> getReportesEscuelaEstudiante() async {
     }
   }
 
-  Future<bool> changePassword(String correo, String currentPassword, String newPassword) async {
+  Future<bool> changePassword(
+      String correo, String currentPassword, String newPassword) async {
     final url = Uri.parse('$baseUri/CambiarContrasenia');
     final response = await http.post(
       url,
@@ -219,6 +218,7 @@ Future<List<ReporteEscuelaEstudiante>> getReportesEscuelaEstudiante() async {
       throw Exception(jsonDecode(response.body)['message']);
     }
   }
+
   Future<int> getPoints(int id) async {
     final url = Uri.parse('$baseUri/EstPoints/$id');
     final response = await http.get(url);
@@ -228,6 +228,41 @@ Future<List<ReporteEscuelaEstudiante>> getReportesEscuelaEstudiante() async {
       return data['puntos'];
     } else {
       throw Exception('Error al obtener los puntos');
+    }
+  }
+
+
+
+  //Habilitados
+  
+  Future<List<Usuario>> getUsuariosEstadoE() async {
+    final url = Uri.parse("$baseUri/Inhabilitados");
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Usuario.fromJson(json)).toList();
+    } else {
+      throw Exception("Error al cargar los Usuarios inhabilitados");
+    }
+  }
+  // Método para cambiar el estado de E a A
+  Future<void> cambiarEstadoA(int id) async {
+    final url = Uri.parse("$baseUri/CambiarEstadoA/$id");
+    
+    var response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return; // El estado fue cambiado exitosamente
+    } else if (response.statusCode == 404) {
+      throw Exception("Usuario no encontrado.");
+    } else if (response.statusCode == 400) {
+      throw Exception("El estado es diferente a E.");
+    } else {
+      throw Exception("Error al cambiar el estado del Usuario.");
     }
   }
 }

@@ -150,68 +150,89 @@ class _VerificarEstState extends State<VerificarEst> {
       ),
     );
   }
+Future<void> _actualizarListaUsuarios() async {
+  setState(() {
+    _listaUsuarios = usuariosService.getListaPendienteEstudiante();
+  });
+}
 
-  void mostrarDialogoConfirmacion(BuildContext context, int id) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmar Rechazo de Solicitud'),
-          content:
-              const Text('¿Estás seguro de que deseas rechazar este usuario?'),
-          actions: [
-            TextButton(
-              onPressed: () {
+void mostrarDialogoConfirmacion(BuildContext context, int id) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmar Rechazo de Solicitud'),
+        content: const Text('¿Estás seguro de que deseas rechazar este usuario?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              
                 Navigator.of(context).pop();
-              },
-              child:
-                  const Text('Cancelar', style: TextStyle(color: Colors.black)),
+              try {
+                await usuariosService.deleteFisic(id);
+                _actualizarListaUsuarios(); 
+                _mostrarDialogoExito(
+                  'Rechazo exitoso',
+                  'Usuario rechazado correctamente.',
+                );
+                
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Error al rechazar el usuario.")),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF8E244D),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  Navigator.of(context).pop();
-                  await usuariosService.deleteLogic(id);
-                  _mostrarDialogoExito(
-                      'Rechazado exitosa', 'Usuario Rechazado correctamente.');
-                  setState(() {
-                    _listaUsuarios =
-                        usuariosService.getListaPendienteEstudiante();
-                  });
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text("Error al rechazar el usuario.")),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8E244D),
-              ),
-              child:
-                  const Text('Rechazar', style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        );
-      },
-    );
-  }
+            child: const Text('Rechazar', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      );
+    },
+  );
+}
 
-  void mostrarConfirmacionVerificacion(BuildContext context, int id) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmar aceptación'),
-          content:
-              const Text('¿Estás seguro de que deseas aceptar esta solicitud?'),
-          actions: [
-            TextButton(
-              onPressed: () {
+void mostrarConfirmacionVerificacion(BuildContext context, int id) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmar aceptación'),
+        content: const Text('¿Estás seguro de que deseas aceptar esta solicitud?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              try {
                 Navigator.of(context).pop();
-              },
-              child:
-                  const Text('Cancelar', style: TextStyle(color: Colors.black)),
+                Usuario usuario = await usuariosService.get(id);
+                usuario.solicitud = 'A';
+                await usuariosService.putAceptarSolicitud(id, usuario);
+                _mostrarDialogoExito(
+                  'Aceptación exitosa',
+                  'Solicitud aceptada correctamente.',
+                );
+                _actualizarListaUsuarios(); // Actualiza la lista
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Error al aceptar la solicitud del usuario.")),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4CAF50),
             ),
             ElevatedButton(
               onPressed: () async {

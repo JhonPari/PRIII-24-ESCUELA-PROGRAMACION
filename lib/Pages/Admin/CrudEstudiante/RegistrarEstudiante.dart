@@ -67,7 +67,7 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
       try {
         NewUsuario nuevoUsuario = NewUsuario(
           nombre: _nombreController.text,
-          contrasenia: "prueba",
+          contrasenia: "Estudiante",
           correo: _correoController.text,
           rol: 'E',
           idUsuario: 2,
@@ -108,15 +108,44 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
           },
         );
       } catch (e) {
-        // Manejar el error
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Error al crear el usuario"),
-          ),
+        
+        String errorMessage = "Error al crear el usuario";
+
+        
+        if (e.toString().contains("El correo ya está en uso")) {
+          errorMessage = "El correo ya está en uso. Intente con otro.";
+        }
+
+        // Mostrar cuadro de diálogo de error
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error en el registro'),
+              content: Row(
+                children: [
+                  Icon(Icons.error, color: Colors.red),
+                  const SizedBox(width: 10),
+                  Text(errorMessage),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); 
+                    
+                    _nombreController.clear();
+                    _correoController.clear();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
         );
       }
     } else {
-      // Mostrar cuadro de diálogo de error si los datos no son válidos
+     
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -147,7 +176,7 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: adminNavBar(
-          name ?? '...', storage, context), // Usa el navbar de Admin
+          name ?? '...', storage, context), 
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

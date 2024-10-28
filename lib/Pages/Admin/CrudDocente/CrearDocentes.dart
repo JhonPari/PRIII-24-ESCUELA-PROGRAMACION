@@ -73,7 +73,7 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
           idUsuario: 2,
           solicitud: 'A',
         );
-        Usuario estudiante = await _usuarioService.post(nuevoUsuario);
+       Usuario docente = await _usuarioService.post(nuevoUsuario);
 
         // Mostrar cuadro de diálogo de éxito
         showDialog(
@@ -85,20 +85,19 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
                 children: [
                   Icon(Icons.check_circle, color: Colors.green),
                   SizedBox(width: 10),
-                  Text('Docente registrado correctamente'),
+                  Text('Estudiante registrado correctamente'),
                 ],
               ),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
-                    // Redirigir a VistaDoce
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const VistaDoce()), // Redirigir a VistaDoce
-                    );
+                    
+                    _nombreController.clear();
+                    _correoController.clear();
+                    
+                    Navigator.of(context)
+                        .pop(); 
                   },
                   child: const Text('OK'),
                 ),
@@ -107,15 +106,44 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
           },
         );
       } catch (e) {
-        // Manejar el error
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Error al crear el docente"),
-          ),
+        
+        String errorMessage = "Error al crear el usuario";
+
+        
+        if (e.toString().contains("El correo ya está en uso")) {
+          errorMessage = "El correo ya está en uso. Intente con otro.";
+        }
+
+        // Mostrar cuadro de diálogo de error
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error en el registro'),
+              content: Row(
+                children: [
+                  Icon(Icons.error, color: Colors.red),
+                  const SizedBox(width: 10),
+                  Text(errorMessage),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); 
+                    
+                    _nombreController.clear();
+                    _correoController.clear();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
         );
       }
     } else {
-      // Mostrar cuadro de diálogo de error si los datos no son válidos
+     
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -123,7 +151,7 @@ class _RegistrarDoceState extends State<RegistrarDocePage> {
             title: const Text('Error en el registro'),
             content: const Row(
               children: [
-                Icon(Icons.error, color: Colors.red), // Ícono de error
+                Icon(Icons.error, color: Colors.red),
                 SizedBox(width: 10),
                 Text('Por favor, completa todos los campos correctamente.'),
               ],
