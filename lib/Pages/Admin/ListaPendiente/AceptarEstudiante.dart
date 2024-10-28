@@ -235,7 +235,7 @@ class _VerificarEstState extends State<VerificarEst> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4CAF50),
+                backgroundColor: const Color(0xFF8E244D),
               ),
               child:
                   const Text('Aceptar', style: TextStyle(color: Colors.white)),
