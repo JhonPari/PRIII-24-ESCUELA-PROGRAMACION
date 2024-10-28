@@ -10,7 +10,6 @@ class RegistrarsePage extends StatefulWidget {
   @override
   _RegistroPageState createState() => _RegistroPageState();
 }
-
 class _RegistroPageState extends State<RegistrarsePage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nombreController = TextEditingController();
@@ -18,33 +17,100 @@ class _RegistroPageState extends State<RegistrarsePage> {
   final UsuariosService _usuarioService = UsuariosService();
   String _rolSeleccionado = 'DOCENTE';
 
+  String? validateFullName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor, ingresa tu nombre completo';
+    }
+    final nameRegex =
+        RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
+    if (!nameRegex.hasMatch(value)) {
+      return 'Por favor, ingresa un nombre completo válido (e.g., Juan Pérez)';
+    }
+    return null;
+  }
+
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor, ingresa una dirección de correo electrónico';
+    }
+    final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Por favor, ingresa una dirección de correo electrónico válida';
+    }
+    return null;
+  }
+
   Future<void> crearUsuario(BuildContext context) async {
-    try {
-      NewUsuario nuevoUsuario = NewUsuario(
-        nombre: _nombreController.text,
-        contrasenia: "prueba",
-        correo: _correoController.text,
-        rol: _rolSeleccionado == 'DOCENTE' ? 'D' : 'E',
-        idUsuario: 2,
-        solicitud: 'P',
-      );
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        NewUsuario nuevoUsuario = NewUsuario(
+          nombre: _nombreController.text,
+          contrasenia: "prueba",
+          correo: _correoController.text,
+          rol: _rolSeleccionado == 'DOCENTE' ? 'D' : 'E',
+          idUsuario: 1,
+          solicitud: 'P',
+        );
+        Usuario usu = await _usuarioService.post(nuevoUsuario);
 
-      Usuario estudiante = await _usuarioService.post(nuevoUsuario);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Registro exitoso'),
+              content: Row(
+                children: const [
+                  Icon(Icons.check_circle, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text('Usuario creado con éxito.'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _nombreController.clear();
+                    _correoController.clear();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } catch (e) {
+        String errorMessage = "Error al crear el usuario";
+        if (e.toString().contains("El correo ya está en uso")) {
+          errorMessage = "El correo ya está en uso. Intente con otro.";
+        }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Usuario creado con éxito: ${estudiante.idUsuario}"),
-        ),
-      );
-
-      Navigator.of(context).pop();
-    } catch (e) {
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Error al crear el usuario"),
-        ),
-      );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error en el registro'),
+              content: Row(
+                children: [
+                  const Icon(Icons.error, color: Colors.red),
+                  const SizedBox(width: 10),
+                  Text(errorMessage),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _nombreController.clear();
+                    _correoController.clear();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
@@ -55,8 +121,7 @@ class _RegistroPageState extends State<RegistrarsePage> {
         body: Center(
           child: Container(
             padding: const EdgeInsets.all(16.0),
-            constraints:
-                const BoxConstraints(maxWidth: 600), 
+            constraints: const BoxConstraints(maxWidth: 600),
             child: Form(
               key: _formKey,
               child: Column(
@@ -82,6 +147,7 @@ class _RegistroPageState extends State<RegistrarsePage> {
                       children: [
                         TextFormField(
                           controller: _nombreController,
+                          validator: validateFullName,
                           decoration: InputDecoration(
                             labelText: 'Nombres',
                             border: OutlineInputBorder(
@@ -94,6 +160,7 @@ class _RegistroPageState extends State<RegistrarsePage> {
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _correoController,
+                          validator: validateEmail,
                           decoration: InputDecoration(
                             labelText: 'Correo',
                             border: OutlineInputBorder(
@@ -125,16 +192,13 @@ class _RegistroPageState extends State<RegistrarsePage> {
                               _rolSeleccionado = newValue!;
                             });
                           },
-                          validator: (value) => value == null
-                              ? 'Por favor seleccione un rol'
-                              : null,
+                          validator: (value) =>
+                              value == null ? 'Por favor seleccione un rol' : null,
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton.icon(
                           onPressed: () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              crearUsuario(context);
-                            }
+                            crearUsuario(context);
                           },
                           icon: const Icon(Icons.check, color: Colors.white),
                           label: const Text(
