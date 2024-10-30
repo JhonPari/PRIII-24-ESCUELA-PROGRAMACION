@@ -1,3 +1,4 @@
+
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ class RegistrarsePage extends StatefulWidget {
   @override
   _RegistroPageState createState() => _RegistroPageState();
 }
-
 class _RegistroPageState extends State<RegistrarsePage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nombreController = TextEditingController();
@@ -18,97 +18,101 @@ class _RegistroPageState extends State<RegistrarsePage> {
   final UsuariosService _usuarioService = UsuariosService();
   String _rolSeleccionado = 'DOCENTE';
 
+  String? validateFullName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor, ingresa tu nombre completo';
+    }
+    final nameRegex =
+        RegExp(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ]+([\s-][A-Za-zÁÉÍÓÚÑáéíóúñ]+)+$');
+    if (!nameRegex.hasMatch(value)) {
+      return 'Por favor, ingresa un nombre completo válido (e.g., Juan Pérez)';
+    }
+    return null;
+  }
+
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor, ingresa una dirección de correo electrónico';
+    }
+    final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Por favor, ingresa una dirección de correo electrónico válida';
+    }
+    return null;
+  }
+
   Future<void> crearUsuario(BuildContext context) async {
-    if (_nombreController.text.isEmpty ||
-        _correoController.text.isEmpty ||
-        _rolSeleccionado.isEmpty) {
-      _mostrarDialogoAdvertencia();
-      return;
-    }
-
-    try {
-      NewUsuario nuevoUsuario = NewUsuario(
-        nombre: _nombreController.text,
-        contrasenia: "prueba",
-        correo: _correoController.text,
-        rol: _rolSeleccionado == 'DOCENTE' ? 'D' : 'E',
-        idUsuario: 2,
-        solicitud: 'P',
-      );
-
-      Usuario estudiante = await _usuarioService.post(nuevoUsuario);
-
-      _mostrarDialogoExito(estudiante.idUsuario);
-
-      _nombreController.clear();
-      _correoController.clear();
-      setState(() {
-        _rolSeleccionado = 'DOCENTE';
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Error al crear el usuario"),
-        ),
-      );
-    }
-  }
-
-  void _mostrarDialogoAdvertencia() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Campos incompletos'),
-          content: const Row(
-            children: [
-              Icon(Icons.error, color: Colors.red),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text("Por favor, no deje ningún campo vacío."),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();  // Cierra el diálogo
-              },
-              child: const Text('Cerrar', style: TextStyle(color: Colors.black)),
-            ),
-          ],
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        NewUsuario nuevoUsuario = NewUsuario(
+          nombre: _nombreController.text,
+          contrasenia: "prueba",
+          correo: _correoController.text,
+          rol: _rolSeleccionado == 'DOCENTE' ? 'D' : 'E',
+          idUsuario: 1,
+          solicitud: 'P',
         );
-      },
-    );
-  }
+        Usuario usu = await _usuarioService.post(nuevoUsuario);
 
-  void _mostrarDialogoExito(int idUsuario) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Registro Exitoso'),
-          content: const Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.green),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text("Espere a ser aceptado"),
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Registro exitoso'),
+              content: Row(
+                children: const [
+                  Icon(Icons.check_circle, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text('Usuario creado con éxito.'),
+                ],
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();  // Cierra el diálogo
-                Navigator.of(context).pop();  // Regresa a la pantalla anterior
-              },
-              child: const Text('Cerrar', style: TextStyle(color: Colors.black)),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _nombreController.clear();
+                    _correoController.clear();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
         );
-      },
-    );
+      } catch (e) {
+        String errorMessage = "Error al crear el usuario";
+        if (e.toString().contains("El correo ya está en uso")) {
+          errorMessage = "El correo ya está en uso. Intente con otro.";
+        }
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error en el registro'),
+              content: Row(
+                children: [
+                  const Icon(Icons.error, color: Colors.red),
+                  const SizedBox(width: 10),
+                  Text(errorMessage),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _nombreController.clear();
+                    _correoController.clear();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 
   @override
@@ -144,6 +148,7 @@ class _RegistroPageState extends State<RegistrarsePage> {
                       children: [
                         TextFormField(
                           controller: _nombreController,
+                          validator: validateFullName,
                           decoration: InputDecoration(
                             labelText: 'Nombres',
                             border: OutlineInputBorder(
@@ -156,6 +161,7 @@ class _RegistroPageState extends State<RegistrarsePage> {
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _correoController,
+                          validator: validateEmail,
                           decoration: InputDecoration(
                             labelText: 'Correo',
                             border: OutlineInputBorder(
@@ -193,9 +199,7 @@ class _RegistroPageState extends State<RegistrarsePage> {
                         const SizedBox(height: 20),
                         ElevatedButton.icon(
                           onPressed: () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              crearUsuario(context);
-                            }
+                            crearUsuario(context);
                           },
                           icon: const Icon(Icons.check, color: Colors.white),
                           label: const Text(
