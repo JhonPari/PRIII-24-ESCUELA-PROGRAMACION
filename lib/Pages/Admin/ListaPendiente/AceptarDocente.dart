@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+ // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
@@ -60,7 +60,7 @@ class _VerificarDoceState extends State<VerificarDoce> {
                 alignment: Alignment.centerRight,
               ),
               const SizedBox(height: 15),
-              TablaEst(),
+              Expanded(child: TablaEst()),
             ],
           ),
         ),
@@ -68,206 +68,224 @@ class _VerificarDoceState extends State<VerificarDoce> {
     );
   }
 
-  Expanded TablaEst() {
-    return Expanded(
-      child: FutureBuilder<List<Usuario>>(
-        future: _listaUsuarios,
-        builder: (BuildContext context, AsyncSnapshot<List<Usuario>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-                child: Text('No hay usuarios', style: TextStyle(fontSize: 18)));
-          } else {
-            List<Usuario> usuarios = snapshot.data!;
-            return Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFE0BFC7),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(label: Text('Nombres')),
-                      DataColumn(label: Text('Correo')),
-                      DataColumn(label: Text('Acciones')),
-                    ],
-                    rows: usuarios.map((usuario) {
-                      return DataRow(
-                        cells: [
-                          DataCell(Text(usuario.nombre)),
-                          DataCell(Text(usuario.correo)),
-                          DataCell(
-                            Row(
-                              children: [
-                                const SizedBox(width: 10),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    mostrarConfirmacionVerificacion(
-                                        context, usuario.id!);
-                                  },
-                                  icon: const Icon(Icons.check,
-                                      color: Colors.white),
-                                  label: const Text('Aceptar',
-                                      style: TextStyle(color: Colors.white)),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF4CAF50),
-                                    minimumSize: const Size(100, 30),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    mostrarDialogoConfirmacion(
-                                        context, usuario.id!);
-                                  },
-                                  icon: const Icon(Icons.cancel,
-                                      color: Colors.white),
-                                  label: const Text('Eliminar',
-                                      style: TextStyle(color: Colors.white)),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF8E244D),
-                                    minimumSize: const Size(100, 30),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    }).toList(),
+Widget TablaEst() {
+  return FutureBuilder<List<Usuario>>(
+    future: _listaUsuarios,
+    builder: (BuildContext context, AsyncSnapshot<List<Usuario>> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        return const Center(
+            child: Text('No hay usuarios', style: TextStyle(fontSize: 18)));
+      } else {
+        List<Usuario> usuarios = snapshot.data!;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.0), // Bordes redondeados
+                child: DataTable(
+                  headingRowColor: MaterialStateProperty.resolveWith(
+                    (states) => const Color.fromRGBO(232, 188, 196, 1), // Color del encabezado
                   ),
+                  dataRowColor: MaterialStateProperty.resolveWith(
+                    (states) => const Color.fromRGBO(232, 188, 196, 1), // Color de las filas
+                  ),
+                  columns: const [
+                    DataColumn(
+                      label: Text(
+                        'Nombres',
+                        style: TextStyle(color: Colors.black), // Texto en blanco
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Correo',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Acciones',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ],
+                  rows: usuarios.map((usuario) {
+                    return DataRow(
+                      cells: [
+                        DataCell(Text(usuario.nombre)),
+                        DataCell(Text(usuario.correo)),
+                        DataCell(
+                          constraints.maxWidth < 600
+                              ? Wrap(
+                                  spacing: 8,
+                                  children: [
+                                    _buildActionButton(
+                                        context, usuario.id!, 'Aceptar', Icons.check, Colors.green, true),
+                                    _buildActionButton(
+                                        context, usuario.id!, 'Eliminar', Icons.cancel, Colors.red, false),
+                                  ],
+                                )
+                              : Row(
+                                  children: [
+                                    _buildActionButton(
+                                        context, usuario.id!, 'Aceptar', Icons.check, Colors.green, true),
+                                    const SizedBox(width: 10),
+                                    _buildActionButton(
+                                        context, usuario.id!, 'Eliminar', Icons.cancel, Colors.red, false),
+                                  ],
+                                ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
                 ),
               ),
             );
-          }
-        },
+          },
+        );
+      }
+    },
+  );
+}
+
+
+
+  Widget _buildActionButton(BuildContext context, int id, String label, IconData icon, Color color, bool isAccept) {
+    return ElevatedButton.icon(
+      onPressed: () {
+        if (isAccept) {
+          mostrarConfirmacionVerificacion(context, id);
+        } else {
+          mostrarDialogoConfirmacion(context, id);
+        }
+      },
+      icon: Icon(icon, color: Colors.white),
+      label: Text(label, style: const TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        minimumSize: const Size(100, 30),
       ),
     );
   }
- Future<void> _actualizarListaUsuarios() async {
-  setState(() {
-    _listaUsuarios = usuariosService.getListaPendienteDocente();
-  });
-}
 
-void mostrarDialogoConfirmacion(BuildContext context, int id) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Confirmar Rechazo de Solicitud'),
-        content: const Text('¿Estás seguro de que deseas rechazar este usuario?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              try {
-                await usuariosService.deleteFisic(id);
-                _actualizarListaUsuarios(); // Refresca la lista después de eliminar
-                _mostrarDialogoExito(
-                  'Rechazo exitoso',
-                  'Usuario rechazado correctamente.',
-                );
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Error al rechazar el usuario.")),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF8E244D),
-            ),
-            child: const Text('Rechazar', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      );
-    },
-  );
-}
+  Future<void> _actualizarListaUsuarios() async {
+    setState(() {
+      _listaUsuarios = usuariosService.getListaPendienteDocente();
+    });
+  }
 
-void _mostrarDialogoExito(String title, String message) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(title),
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.green),
-            const SizedBox(width: 10),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _actualizarListaUsuarios(); 
-            },
-            child: const Text('Cerrar'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
-void mostrarConfirmacionVerificacion(BuildContext context, int id) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Confirmar aceptación'),
-        content: const Text('¿Estás seguro de que deseas aceptar esta solicitud?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
+  void mostrarDialogoConfirmacion(BuildContext context, int id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar Rechazo de Solicitud'),
+          content: const Text('¿Estás seguro de que deseas rechazar este usuario?'),
+          actions: [
+            TextButton(
+              onPressed: () {
                 Navigator.of(context).pop();
-                Usuario usuario = await usuariosService.get(id);
-                usuario.solicitud = 'A';
-                await usuariosService.putAceptarSolicitud(id, usuario);
-                _mostrarDialogoExito(
-                  'Aceptación exitosa',
-                  'Solicitud aceptada correctamente.',
-                );
-                _actualizarListaUsuarios(); // Actualiza la lista
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Error al aceptar la solicitud del usuario.")),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4CAF50),
+              },
+              child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
             ),
-            child: const Text('Aceptar', style: TextStyle(color: Colors.white)),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                try {
+                  await usuariosService.deleteFisic(id);
+                  _actualizarListaUsuarios(); 
+                  _mostrarDialogoExito(
+                    'Rechazo exitoso',
+                    'Usuario rechazado correctamente.',
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Error al rechazar el usuario.")),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF8E244D),
+              ),
+              child: const Text('Rechazar', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _mostrarDialogoExito(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green),
+              const SizedBox(width: 10),
+              Expanded(child: Text(message)),
+            ],
           ),
-        ],
-      );
-    },
-  );
-}
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _actualizarListaUsuarios(); 
+              },
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-
-
-}
+  void mostrarConfirmacionVerificacion(BuildContext context, int id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar aceptación'),
+          content: const Text('¿Estás seguro de que deseas aceptar esta solicitud?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  Navigator.of(context).pop();
+                  Usuario usuario = await usuariosService.get(id);
+                  usuario.solicitud = 'A';
+                  await usuariosService.putAceptarSolicitud(id, usuario);
+                  _mostrarDialogoExito(
+                    'Aceptación exitosa',
+                    'Solicitud aceptada correctamente.',
+                  );
+                  _actualizarListaUsuarios();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Error al aceptar la solicitud del usuario.")),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4CAF50),
+              ),
+              child: const Text('Aceptar', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+} 
