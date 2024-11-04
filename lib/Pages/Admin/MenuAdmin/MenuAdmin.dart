@@ -24,7 +24,6 @@ class MenuAdmin extends StatefulWidget {
 class _MenuAdminState extends State<MenuAdmin> {
   final storage = Session();
   String? name;
-  String selectedReportOption = 'Ver Reportes';
 
   @override
   void initState() {
@@ -59,178 +58,73 @@ class _MenuAdminState extends State<MenuAdmin> {
               Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: const EdgeInsets.all(70.0),
+                  padding: const EdgeInsets.all(20.0), // Espaciado
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VerificarDoce(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8B2D56),
-                          minimumSize: const Size(500, 80),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(21),
+                      _buildButton('Lista Pendientes', () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const VerificarDoce(),
                           ),
-                        ),
-                        child: const Text(
-                          'Lista Pendientes',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                        );
+                      }),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => verCompetenciaAdmin(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8B2D56),
-                          minimumSize: const Size(500, 80),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(21),
+                      _buildButton('Calificar', () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => verCompetenciaAdmin(),
                           ),
-                        ),
-                        child: const Text(
-                          'Calificar',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                        );
+                      }),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => VistaReporteFecha(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8B2D56),
-                          minimumSize: const Size(500, 80),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(21),
+                      _buildButton('Reportes', () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VistaReporteFecha(),
                           ),
-                        ),
-                        child: const Text(
-                          'Reportes',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                        );
+                      }),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VistaEst(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8B2D56),
-                          minimumSize: const Size(500, 80),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(21),
+                      _buildButton('Lista de Estudiantes', () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const VistaEst(),
                           ),
-                        ),
-                        child: const Text(
-                          'Lista de Estudiantes',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                        );
+                      }),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VistaDoce(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8B2D56),
-                          minimumSize: const Size(500, 80),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(21),
+                      _buildButton('Lista de Docentes', () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const VistaDoce(),
                           ),
-                        ),
-                        child: const Text(
-                          'Lista de Docentes',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                        );
+                      }),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VistaEscuela(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8B2D56),
-                          minimumSize: const Size(500, 80),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(21),
+                      _buildButton('Lista de Escuelas', () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const VistaEscuela(),
                           ),
-                        ),
-                        child: const Text(
-                          'Lista de Escuelas',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                        );
+                      }),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VistaInhabilitados(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8B2D56),
-                          minimumSize: const Size(500, 80),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(21),
+                      _buildButton('Lista de Inhabilitados', () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const VistaInhabilitados(),
                           ),
-                        ),
-                        child: const Text(
-                          'Lista de Inhabilitados',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -245,6 +139,28 @@ class _MenuAdminState extends State<MenuAdmin> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, VoidCallback onPressed) {
+    return FractionallySizedBox(
+      widthFactor: 0.8, // Ocupa el 80% del ancho disponible
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF8B2D56),
+          minimumSize: const Size(0, 60), // Tamaño mínimo en altura
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(21),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
           ),
         ),
       ),
