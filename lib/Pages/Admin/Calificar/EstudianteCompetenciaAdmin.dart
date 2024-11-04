@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/calificar_pruebaAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
@@ -86,62 +84,64 @@ class _CompetenciaAdminPageState extends State<CompetenciaAdminPage> {
       appBar: adminNavBar(name ?? '...', storage, context), // Uso del navbar personalizado
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DropdownButton<String>(
-                  value: selectedFilter,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedFilter = newValue!;
-                      _filterEstudiantes();
-                    });
-                  },
-                  items: filters.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: TextField(
-                      controller: searchController,
-                      onChanged: (value) {
+        child: SingleChildScrollView( // Asegura que el contenido pueda desplazarse
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DropdownButton<String>(
+                    value: selectedFilter,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedFilter = newValue!;
                         _filterEstudiantes();
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Nombres, Apellidos o Correos',
-                        prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                      });
+                    },
+                    items: filters.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: TextField(
+                        controller: searchController,
+                        onChanged: (value) {
+                          _filterEstudiantes();
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Nombres, Apellidos o Correos',
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _filterEstudiantes,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF8E244D),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: _filterEstudiantes,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF8E244D),
+                    ),
+                    child: const Text('Buscar', style: TextStyle(color: Colors.white)),
                   ),
-                  child: const Text('Buscar', style: TextStyle(color: Colors.white)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: Container(
+                ],
+              ),
+              const SizedBox(height: 20),
+              Container(
                 color: Colors.pink[50],
                 child: isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
+                        shrinkWrap: true, // Permite que la lista se ajuste al espacio disponible
+                        physics: NeverScrollableScrollPhysics(), // Desactiva el desplazamiento de la lista
                         itemCount: filteredEstudiantes.length,
                         itemBuilder: (context, index) {
                           final estudiante = filteredEstudiantes[index];
@@ -149,8 +149,8 @@ class _CompetenciaAdminPageState extends State<CompetenciaAdminPage> {
                         },
                       ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
