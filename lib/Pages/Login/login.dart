@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, unused_element, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/MenuAdmin/MenuAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/MenuDocente.dart';
@@ -50,7 +48,6 @@ class _LoginState extends State<LoginPage> {
       await storage.saveSession(id, name, role);
       redireccionRoles(usuario['role']);
     } else {
-      // Mostrar diálogo de error si el inicio de sesión falla
       _mostrarDialogoError();
     }
   }
@@ -111,123 +108,139 @@ class _LoginState extends State<LoginPage> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Image.asset(
-                    'assets/images/logo_univalle.png',
-                    height: 300,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF8B2D56),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          'LOGIN',
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: _correoController,
-                          decoration: InputDecoration(
-                            labelText: 'Correo:',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                bool isLargeScreen = constraints.maxWidth > 600;
+                return isLargeScreen
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Image.asset(
+                              'assets/images/logo_univalle.png',
+                              height: 300,
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: _passwController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Contraseña:',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                          const SizedBox(width: 10),
+                          Flexible(child: _buildLoginContainer()),
+                        ],
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/logo_univalle.png',
+                            height: 200,
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: hacerLogin,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: const Text(
-                            'Iniciar Sesión',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RecuperarContrasenaPage()),
-                                );
-                              },
-                              child: const Text(
-                                'Recuperar contraseña',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RegistrarsePage()),
-                                );
-                              },
-                              child: const Text(
-                                'Registrarse',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                          const SizedBox(height: 20),
+                          _buildLoginContainer(),
+                        ],
+                      );
+              },
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoginContainer() {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF8B2D56),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            'LOGIN',
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextField(
+            controller: _correoController,
+            decoration: InputDecoration(
+              labelText: 'Correo:',
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextField(
+            controller: _passwController,
+            obscureText: true,
+            decoration: InputDecoration(
+              labelText: 'Contraseña:',
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: hacerLogin,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text(
+              'Iniciar Sesión',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RecuperarContrasenaPage()),
+                  );
+                },
+                child: const Text(
+                  'Recuperar contraseña',
+                  style: TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegistrarsePage()),
+                  );
+                },
+                child: const Text(
+                  'Registrarse',
+                  style: TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

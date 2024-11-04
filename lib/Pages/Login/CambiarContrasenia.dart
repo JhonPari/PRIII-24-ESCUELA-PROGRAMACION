@@ -40,7 +40,7 @@ class _CambiarContraseniaPageState extends State<CambiarContrasenia> {
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Datos invalidos")),
+          const SnackBar(content: Text("Datos inválidos")),
         );
       } finally {
         setState(() {
@@ -53,116 +53,118 @@ class _CambiarContraseniaPageState extends State<CambiarContrasenia> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(''),
-      ),
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 700),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE0BFC7),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Cambiar Contraseña',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Color.fromARGB(255, 139, 45, 86),
-                      fontWeight: FontWeight.bold,
-                    ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              double width = constraints.maxWidth < 600 ? constraints.maxWidth : 600;
+              return Center(
+                child: Container(
+                  width: width,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE0BFC7),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _correoController,
-                    decoration: InputDecoration(
-                      labelText: 'Correo',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingresa tu correo';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _currentPasswordController,
-                    decoration: InputDecoration(
-                      labelText: 'Contraseña Actual',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingresa tu contraseña actual';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _newPasswordController,
-                    decoration: InputDecoration(
-                      labelText: 'Nueva Contraseña',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingresa tu nueva contraseña';
-                      } else if (value.length < 8 ||
-                          !value.contains(RegExp(r'[A-Z]')) ||
-                          !value.contains(RegExp(r'[0-9]')) ||
-                          !value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                        return 'La nueva contraseña debe tener al menos 8 caracteres, incluyendo un número, una letra mayúscula y un signo especial';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  _isLoading
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: _changePassword,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromRGBO(132, 41, 76, 100),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 100, vertical: 15),
-                            shape: RoundedRectangleBorder(
+                  padding: const EdgeInsets.all(20),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Cambiar Contraseña',
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Color.fromARGB(255, 139, 45, 86),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _correoController,
+                          decoration: InputDecoration(
+                            labelText: 'Correo',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: const Text(
-                            'Cambiar Contraseña',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingresa tu correo';
+                            }
+                            return null;
+                          },
                         ),
-                ],
-              ),
-            ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _currentPasswordController,
+                          decoration: InputDecoration(
+                            labelText: 'Contraseña Actual',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingresa tu contraseña actual';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _newPasswordController,
+                          decoration: InputDecoration(
+                            labelText: 'Nueva Contraseña',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingresa tu nueva contraseña';
+                            } else if (value.length < 8 ||
+                                !value.contains(RegExp(r'[A-Z]')) ||
+                                !value.contains(RegExp(r'[0-9]')) ||
+                                !value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                              return 'La nueva contraseña debe tener al menos 8 caracteres, incluyendo un número, una letra mayúscula y un signo especial';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        _isLoading
+                            ? const CircularProgressIndicator()
+                            : ElevatedButton(
+                                onPressed: _changePassword,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color.fromRGBO(132, 41, 76, 100),
+                                  padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Cambiar Contraseña',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
