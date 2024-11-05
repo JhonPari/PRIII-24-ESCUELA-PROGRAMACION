@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/Modificar_Escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/registrar_escuela.dart';
@@ -54,6 +52,8 @@ class _VistaEscuelaState extends State<VistaEscuela> {
 
   @override
   Widget build(BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 600;
+
     return MaterialApp(
       home: Scaffold(
         appBar: adminNavBar(name ?? '...', storage, context),
@@ -73,7 +73,6 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              // Botón Añadir
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton.icon(
@@ -82,7 +81,7 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            const RegistrarEscuelaPage(), // Redirige a la página de registro
+                            const RegistrarEscuelaPage(),
                       ),
                     );
                     _loadEscuelas();
@@ -112,80 +111,83 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                       );
                     } else {
                       List<Escuela> escuelas = snapshot.data!;
-                      return ListView.separated(
-                        itemCount: escuelas.length,
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemBuilder: (context, index) {
-                          Escuela escuela = escuelas[index];
-                          return Align(
-                            alignment: Alignment.center,
-                            child: SizedBox(
-                              width: 400,
-                              child: Card(
-                                color: const Color(0xFFB1778E),
-                                elevation: 4.0,
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Container(
-                                  height: 140,
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(escuela.nombre,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black)),
-                                      const SizedBox(height: 8.0),
-                                      Text(escuela.descripcion,
-                                          style: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 72, 6, 6))),
-                                      const Spacer(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                      return LayoutBuilder(
+                        builder: (context, constraints) {
+                          return ListView.separated(
+                            itemCount: escuelas.length,
+                            separatorBuilder: (context, index) => const Divider(),
+                            itemBuilder: (context, index) {
+                              Escuela escuela = escuelas[index];
+                              return Align(
+                                alignment: Alignment.center,
+                                child: SizedBox(
+                                  width: isSmallScreen ? double.infinity : 400,
+                                  child: Card(
+                                    color: const Color(0xFFB1778E),
+                                    elevation: 4.0,
+                                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Container(
+                                      height: 140,
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          TextButton(
-                                            onPressed: () {
-                                              _confirmDelete(context, escuela);
-                                            },
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: Colors.black,
-                                              side: const BorderSide(
-                                                  color: Colors.black),
-                                            ),
-                                            child: const Text('Eliminar'),
-                                          ),
-                                          const SizedBox(width: 8.0),
-                                          TextButton(
-                                            onPressed: () async {
-                                              await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditEscuelaPage(
-                                                          idescuela:
-                                                              escuela.id),
+                                          Text(escuela.nombre,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black)),
+                                          const SizedBox(height: 8.0),
+                                          Text(escuela.descripcion,
+                                              style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 72, 6, 6))),
+                                          const Spacer(),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  _confirmDelete(context, escuela);
+                                                },
+                                                style: TextButton.styleFrom(
+                                                  foregroundColor: Colors.black,
+                                                  side: const BorderSide(
+                                                      color: Colors.black),
                                                 ),
-                                              );
-                                              _loadEscuelas();
-                                            },
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: Colors.white,
-                                              side: const BorderSide(
-                                                  color: Colors.black),
-                                            ),
-                                            child: const Text('Modificar'),
+                                                child: const Text('Eliminar'),
+                                              ),
+                                              const SizedBox(width: 8.0),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  await Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditEscuelaPage(
+                                                              idescuela:
+                                                                  escuela.id),
+                                                    ),
+                                                  );
+                                                  _loadEscuelas();
+                                                },
+                                                style: TextButton.styleFrom(
+                                                  foregroundColor: Colors.white,
+                                                  side: const BorderSide(
+                                                      color: Colors.black),
+                                                ),
+                                                child: const Text('Modificar'),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           );
                         },
                       );
@@ -205,7 +207,6 @@ class _VistaEscuelaState extends State<VistaEscuela> {
       await escuelaService.deleteLogic(id);
       _loadEscuelas();
 
-      // Mostrar diálogo de éxito
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -213,7 +214,7 @@ class _VistaEscuelaState extends State<VistaEscuela> {
             title: const Text('Eliminación exitosa'),
             content: const Row(
               children: [
-                Icon(Icons.check_circle, color: Colors.green), // Ícono de verificación
+                Icon(Icons.check_circle, color: Colors.green),
                 SizedBox(width: 10),
                 Expanded(child: Text('La escuela se eliminó correctamente.')),
               ],
@@ -221,7 +222,7 @@ class _VistaEscuelaState extends State<VistaEscuela> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Cerrar el diálogo
+                  Navigator.of(context).pop();
                 },
                 child: const Text('OK'),
               ),
@@ -256,7 +257,7 @@ class _VistaEscuelaState extends State<VistaEscuela> {
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
+                Navigator.of(context).pop();
               },
             ),
             ElevatedButton(
@@ -265,8 +266,8 @@ class _VistaEscuelaState extends State<VistaEscuela> {
                 backgroundColor: const Color(0xFF8E244D),
               ),
               onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo de confirmación
-                _deleteEscuela(escuela.id); // Llama al método de eliminación
+                Navigator.of(context).pop();
+                _deleteEscuela(escuela.id);
               },
             ),
           ],
