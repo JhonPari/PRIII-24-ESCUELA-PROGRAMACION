@@ -52,7 +52,7 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
               case 'competencias':
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => verCompetenciaDoce()),
+                  MaterialPageRoute(builder: (context) => VerCompetenciaDoce()),
                 );
                 break;
             }
@@ -118,10 +118,12 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
                 context,
                 MaterialPageRoute(builder: (context) => const LoginPage()),
               );
-            }  else if (value == 'Cambiar Contraseña') {
+            } else if (value == 'Cambiar Contraseña') {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CambiarContrasenia()), // Página para cambiar contraseña
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const CambiarContrasenia()), // Página para cambiar contraseña
               );
             }
           },
@@ -129,7 +131,8 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
             onPressed:
                 null, // Hacemos el botón desplegable no clickeable directamente
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Fondo negro
+              backgroundColor:
+                  const Color.fromARGB(255, 255, 255, 255), // Fondo negro
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5), // Bordes redondeados
               ),

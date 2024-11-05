@@ -50,7 +50,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
         reporte.nombre,
         reporte.correo,
         reporte.puntos.toString(),
-        reporte.fechaInicioCompetencia.toString().split(' ')[0] // Formatear la fecha
+        reporte.fechaInicioCompetencia.toString().split(' ')[0]
       ]);
     }
 
@@ -81,7 +81,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
                             e.nombre,
                             e.correo,
                             e.puntos.toString(),
-                            e.fechaInicioCompetencia.toString().split(' ')[0] // Formatear la fecha
+                            e.fechaInicioCompetencia.toString().split(' ')[0]
                           ])
                       .toList(),
                 ),
@@ -91,7 +91,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
         },
       ),
     );
-//hola
+
     final pdfBytes = await pdf.save();
     final blob = html.Blob([pdfBytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
@@ -106,60 +106,73 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
     return MaterialApp(
       home: Scaffold(
         appBar: docenteNavBar(name ?? '...', storage, context),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'REPORTE DE ESTUDIANTES POR PUNTOS',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF8E244D),
-                  ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'REPORTE DE ESTUDIANTES POR PUNTOS',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF8E244D),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildExportButtons(constraints.maxWidth), // Ajusta según el ancho
+                    const SizedBox(height: 20),
+                    Expanded(child: _buildReportTable(constraints.maxWidth)), // Tabla responsive
+                  ],
                 ),
-                const SizedBox(height: 20),
-                _buildExportButtons(),
-                const SizedBox(height: 20),
-                Expanded(child: _buildReportTable()),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildExportButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton.icon(
-          onPressed: () => _listaReportes.then((reportes) => _exportToExcel(reportes)),
-          icon: const Icon(Icons.download, color: Colors.white),
-          label: const Text('Exportar a Excel'),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.green,
-          ),
-        ),
-        const SizedBox(width: 20),
-        ElevatedButton.icon(
-          onPressed: () => _listaReportes.then((reportes) => _exportToPdf(reportes)),
-          icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
-          label: const Text('Exportar a PDF'),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.red,
-          ),
-        ),
-      ],
-    );
+  Widget _buildExportButtons(double maxWidth) {
+    // Si el ancho es menor a 600px, cambiar a una columna
+    return maxWidth < 600
+        ? Column(
+            children: _exportButtons(),
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _exportButtons(),
+          );
   }
 
-  Widget _buildReportTable() {
+  List<Widget> _exportButtons() {
+    return [
+      ElevatedButton.icon(
+        onPressed: () => _listaReportes.then((reportes) => _exportToExcel(reportes)),
+        icon: const Icon(Icons.download, color: Colors.white),
+        label: const Text('Exportar a Excel'),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.green,
+        ),
+      ),
+      const SizedBox(width: 20),
+      ElevatedButton.icon(
+        onPressed: () => _listaReportes.then((reportes) => _exportToPdf(reportes)),
+        icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
+        label: const Text('Exportar a PDF'),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.red,
+        ),
+      ),
+    ];
+  }
+
+  Widget _buildReportTable(double maxWidth) {
     return FutureBuilder<List<ReporteEstudianteFecha>>(
       future: _listaReportes,
       builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudianteFecha>> snapshot) {
@@ -174,6 +187,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
         } else {
           List<ReporteEstudianteFecha> reportes = snapshot.data!;
           return Container(
+            width: maxWidth < 600 ? double.infinity : null,
             decoration: BoxDecoration(
               color: const Color(0xFFE0BFC7),
               borderRadius: BorderRadius.circular(8),
@@ -193,7 +207,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
                       DataCell(Text(reporte.nombre)),
                       DataCell(Text(reporte.correo)),
                       DataCell(Text(reporte.puntos.toString())),
-                      DataCell(Text(reporte.fechaInicioCompetencia.toString().split(' ')[0])), // Formatear la fecha
+                      DataCell(Text(reporte.fechaInicioCompetencia.toString().split(' ')[0])),
                     ],
                   );
                 }).toList(),

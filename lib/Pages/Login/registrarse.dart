@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 
@@ -70,7 +71,11 @@ class _RegistroPageState extends State<RegistrarsePage> {
                     Navigator.of(context).pop();
                     _nombreController.clear();
                     _correoController.clear();
-                    Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    );
                   },
                   child: const Text('OK'),
                 ),
@@ -121,7 +126,9 @@ class _RegistroPageState extends State<RegistrarsePage> {
           child: SingleChildScrollView(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                double maxWidth = constraints.maxWidth > 600 ? 600 : constraints.maxWidth * 0.9;
+                double maxWidth = constraints.maxWidth > 600
+                    ? 600
+                    : constraints.maxWidth * 0.9;
                 return Container(
                   padding: const EdgeInsets.all(16.0),
                   constraints: BoxConstraints(maxWidth: maxWidth),
@@ -184,7 +191,8 @@ class _RegistroPageState extends State<RegistrarsePage> {
                                   filled: true,
                                   fillColor: const Color(0xFFF5E0E5),
                                 ),
-                                items: ['DOCENTE', 'ESTUDIANTE'].map((String value) {
+                                items: ['DOCENTE', 'ESTUDIANTE']
+                                    .map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text(value),
@@ -195,15 +203,17 @@ class _RegistroPageState extends State<RegistrarsePage> {
                                     _rolSeleccionado = newValue!;
                                   });
                                 },
-                                validator: (value) =>
-                                    value == null ? 'Por favor seleccione un rol' : null,
+                                validator: (value) => value == null
+                                    ? 'Por favor seleccione un rol'
+                                    : null,
                               ),
                               const SizedBox(height: 20),
                               ElevatedButton.icon(
                                 onPressed: () {
                                   crearUsuario(context);
                                 },
-                                icon: const Icon(Icons.check, color: Colors.white),
+                                icon: const Icon(Icons.check,
+                                    color: Colors.white),
                                 label: const Text(
                                   'Aceptar',
                                   style: TextStyle(color: Colors.white),
@@ -216,7 +226,12 @@ class _RegistroPageState extends State<RegistrarsePage> {
                               const SizedBox(height: 10),
                               ElevatedButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginPage()),
+                                  );
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.grey,

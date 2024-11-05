@@ -80,7 +80,7 @@ class _MenuDoceState extends State<MenuDoce> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => verCompetenciaDocePage(),
+                      builder: (context) => VerCompetenciaDocePage(),
                     ),
                   );
                 },

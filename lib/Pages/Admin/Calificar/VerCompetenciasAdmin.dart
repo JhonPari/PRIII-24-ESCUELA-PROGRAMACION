@@ -5,15 +5,13 @@ import 'package:prlll_24_escuela_programacion/Service/competenciaDoceService.dar
 import 'package:prlll_24_escuela_programacion/models/Competencia.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
-void main() {
-  runApp(verCompetenciaAdminPage());
-}
-
 class verCompetenciaAdminPage extends StatelessWidget {
+  const verCompetenciaAdminPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: verCompetenciaAdmin(),
+      home: const verCompetenciaAdmin(),
       theme: ThemeData(
         primaryColor: const Color(0xFF8E244D),
         buttonTheme: ButtonThemeData(
@@ -28,6 +26,8 @@ class verCompetenciaAdminPage extends StatelessWidget {
 }
 
 class verCompetenciaAdmin extends StatefulWidget {
+  const verCompetenciaAdmin({super.key});
+
   @override
   _verCompetenciaAdminState createState() => _verCompetenciaAdminState();
 }
@@ -66,57 +66,45 @@ class _verCompetenciaAdminState extends State<verCompetenciaAdmin> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No hay competencias disponibles.'));
+            return const Center(
+                child: Text('No hay competencias disponibles.'));
           }
 
           List<Competencia> competencias = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                bool isLargeScreen = constraints.maxWidth > 600;
-                return isLargeScreen
-                    ? GridView.count(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1.5,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        children: competencias.map((competencia) {
-                          return CompetenciaCard(
-                            id: competencia.id,
-                            titulo: competencia.titulo ?? 'Sin título',
-                            descripcion:
-                                competencia.descripcion ?? 'No hay una descripción',
-                            fechaInicio: competencia.fechaInicio != null
-                                ? '${competencia.fechaInicio!.day}/${competencia.fechaInicio!.month}/${competencia.fechaInicio!.year}'
-                                : 'N/A',
-                            fechaFin: competencia.fechaFin != null
-                                ? '${competencia.fechaFin!.day}/${competencia.fechaFin!.month}/${competencia.fechaFin!.year}'
-                                : 'N/A',
-                            estado: 'En Curso',
-                          );
-                        }).toList(),
-                      )
-                    : ListView.builder(
-                        itemCount: competencias.length,
-                        itemBuilder: (context, index) {
-                          return CompetenciaCard(
-                            id: competencias[index].id,
-                            titulo: competencias[index].titulo ?? 'Sin título',
-                            descripcion:
-                                competencias[index].descripcion ?? 'No hay una descripción',
-                            fechaInicio: competencias[index].fechaInicio != null
-                                ? '${competencias[index].fechaInicio!.day}/${competencias[index].fechaInicio!.month}/${competencias[index].fechaInicio!.year}'
-                                : 'N/A',
-                            fechaFin: competencias[index].fechaFin != null
-                                ? '${competencias[index].fechaFin!.day}/${competencias[index].fechaFin!.month}/${competencias[index].fechaFin!.year}'
-                                : 'N/A',
-                            estado: 'En Curso',
-                          );
-                        },
-                      );
-              },
-            ),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              int crossAxisCount = constraints.maxWidth > 1400
+                  ? 3
+                  : constraints.maxWidth > 800
+                      ? 2
+                      : 1;
+              return GridView.builder(
+                padding: const EdgeInsets.all(16.0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1.5,
+                ),
+                itemCount: competencias.length,
+                itemBuilder: (context, index) {
+                  var competencia = competencias[index];
+                  return CompetenciaCard(
+                    id: competencia.id,
+                    titulo: competencia.titulo ?? 'Sin título',
+                    descripcion:
+                        competencia.descripcion ?? 'No hay una descripción',
+                    fechaInicio: competencia.fechaInicio != null
+                        ? '${competencia.fechaInicio!.day}/${competencia.fechaInicio!.month}/${competencia.fechaInicio!.year}'
+                        : 'N/A',
+                    fechaFin: competencia.fechaFin != null
+                        ? '${competencia.fechaFin!.day}/${competencia.fechaFin!.month}/${competencia.fechaFin!.year}'
+                        : 'N/A',
+                    estado: 'En Curso',
+                  );
+                },
+              );
+            },
           );
         },
       ),
@@ -133,6 +121,7 @@ class CompetenciaCard extends StatelessWidget {
   final String estado;
 
   const CompetenciaCard({
+    super.key,
     required this.id,
     required this.titulo,
     required this.descripcion,
@@ -160,7 +149,8 @@ class CompetenciaCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(titulo,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              style:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Text('Descripción: $descripcion'),
           Text('Fecha de Inicio: $fechaInicio'),
@@ -174,13 +164,15 @@ class CompetenciaCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CompetenciaAdminPage(idCompetencia: id)),
+                      builder: (context) =>
+                          CompetenciaAdminPage(idCompetencia: id)),
                 );
               },
-              child: const Text('Calificar', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8E244D),
               ),
+              child: const Text('Calificar',
+                  style: TextStyle(color: Colors.white)),
             ),
           ),
         ],

@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, avoid_print, sort_child_properties_last
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/competenciaDoceService.dart';
@@ -7,16 +5,13 @@ import 'package:prlll_24_escuela_programacion/models/Competencia.dart';
 import 'package:prlll_24_escuela_programacion/pages/docente/EstudianteCompetencia.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
+class VerCompetenciaDocePage extends StatelessWidget {
+  const VerCompetenciaDocePage({super.key});
 
-void main() {
-  runApp(verCompetenciaDocePage());
-}
-
-class verCompetenciaDocePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: verCompetenciaDoce(),
+      home: const VerCompetenciaDoce(),
       theme: ThemeData(
         primaryColor: const Color(0xFF8E244D),
         buttonTheme: ButtonThemeData(
@@ -30,12 +25,14 @@ class verCompetenciaDocePage extends StatelessWidget {
   }
 }
 
-class verCompetenciaDoce extends StatefulWidget {
+class VerCompetenciaDoce extends StatefulWidget {
+  const VerCompetenciaDoce({super.key});
+
   @override
-  _verCompetenciaDoceState createState() => _verCompetenciaDoceState();
+  VerCompetenciaDoceState createState() => VerCompetenciaDoceState();
 }
 
-class _verCompetenciaDoceState extends State<verCompetenciaDoce> {
+class VerCompetenciaDoceState extends State<VerCompetenciaDoce> {
   final CompetenciaDoceService competenciaService = CompetenciaDoceService();
   final Session storage = Session();
   String? name;
@@ -60,7 +57,7 @@ class _verCompetenciaDoceState extends State<verCompetenciaDoce> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: docenteNavBar (name ?? '...', storage, context), // Uso del navbar existente
+      appBar: docenteNavBar(name ?? '...', storage, context),
       body: FutureBuilder<List<Competencia>>(
         future: competenciaService.getAll(),
         builder: (context, snapshot) {
@@ -69,30 +66,45 @@ class _verCompetenciaDoceState extends State<verCompetenciaDoce> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No hay competencias disponibles.'));
+            return const Center(
+                child: Text('No hay competencias disponibles.'));
           }
 
           List<Competencia> competencias = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: competencias.map((competencia) {
-                return CompetenciaCard(
-                  id: competencia.id,
-                  titulo: competencia.titulo ?? 'Sin título',
-                  descripcion:
-                      competencia.descripcion ?? 'No hay una descripcion',
-                  fechaInicio: competencia.fechaInicio != null
-                      ? '${competencia.fechaInicio!.day}/${competencia.fechaInicio!.month}/${competencia.fechaInicio!.year}'
-                      : 'N/A',
-                  fechaFin: competencia.fechaFin != null
-                      ? '${competencia.fechaFin!.day}/${competencia.fechaFin!.month}/${competencia.fechaFin!.year}'
-                      : 'N/A',
-                  estado: 'En Curso', // Ajusta según tu lógica
-                );
-              }).toList(),
-            ),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              int crossAxisCount = constraints.maxWidth > 1400
+                  ? 3
+                  : constraints.maxWidth > 800
+                      ? 2
+                      : 1;
+              return GridView.builder(
+                padding: const EdgeInsets.all(16.0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1.5,
+                ),
+                itemCount: competencias.length,
+                itemBuilder: (context, index) {
+                  var competencia = competencias[index];
+                  return CompetenciaCard(
+                    id: competencia.id,
+                    titulo: competencia.titulo ?? 'Sin título',
+                    descripcion:
+                        competencia.descripcion ?? 'No hay una descripción',
+                    fechaInicio: competencia.fechaInicio != null
+                        ? '${competencia.fechaInicio!.day}/${competencia.fechaInicio!.month}/${competencia.fechaInicio!.year}'
+                        : 'N/A',
+                    fechaFin: competencia.fechaFin != null
+                        ? '${competencia.fechaFin!.day}/${competencia.fechaFin!.month}/${competencia.fechaFin!.year}'
+                        : 'N/A',
+                    estado: 'En Curso',
+                  );
+                },
+              );
+            },
           );
         },
       ),
@@ -109,6 +121,7 @@ class CompetenciaCard extends StatelessWidget {
   final String estado;
 
   const CompetenciaCard({
+    super.key,
     required this.id,
     required this.titulo,
     required this.descripcion,
@@ -120,8 +133,6 @@ class CompetenciaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 350,
-      height: 250,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -138,9 +149,10 @@ class CompetenciaCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(titulo,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              style:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          Text('Descripcion: $descripcion'),
+          Text('Descripción: $descripcion'),
           Text('Fecha de Inicio: $fechaInicio'),
           Text('Fecha de Finalización: $fechaFin'),
           Text('Estado: $estado'),
@@ -155,10 +167,11 @@ class CompetenciaCard extends StatelessWidget {
                       builder: (context) => CompetenciaPage(idCompetencia: id)),
                 );
               },
-              child: const Text('Calificar', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8E244D),
               ),
+              child: const Text('Calificar',
+                  style: TextStyle(color: Colors.white)),
             ),
           ),
         ],

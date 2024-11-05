@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
@@ -80,7 +79,6 @@ class CalificarPruebaState extends State<CalificarPrueba> {
 
       if (!mounted) return;
 
-      // Muestra el cuadro de diálogo de éxito o falla
       _mostrarDialogoCalificacion(aprobado == 1);
 
       Navigator.pushReplacement(
@@ -100,7 +98,8 @@ class CalificarPruebaState extends State<CalificarPrueba> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(esExitoso ? 'Calificación exitosa' : 'Calificación fallida'),
+          title:
+              Text(esExitoso ? 'Calificación exitosa' : 'Calificación fallida'),
           content: Row(
             children: [
               Icon(
@@ -139,102 +138,120 @@ class CalificarPruebaState extends State<CalificarPrueba> {
     return MaterialApp(
       home: Scaffold(
         appBar: docenteNavBar(name ?? '...', storage, context),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 500,
-                          height: 350,
-                          color: const Color.fromARGB(153, 243, 243, 243),
-                          child: _imagenSeleccionada != null
-                              ? Image.memory(
-                                  _imagenSeleccionada!,
-                                  fit: BoxFit.contain,
-                                )
-                              : const Icon(
-                                  Icons.image,
-                                  size: 100,
-                                  color: Color.fromARGB(255, 115, 115, 115),
-                                ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 40),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          competenciaTitulo ?? 'Cargando...',
-                          style: const TextStyle(
-                              fontSize: 36, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          estudianteNombre ?? 'Cargando...',
-                          style: const TextStyle(
-                              fontSize: 24,
-                              color: Color.fromARGB(255, 227, 227, 227)),
-                        ),
-                        const SizedBox(height: 30),
-                        const Text("Participación"),
-                        const SizedBox(height: 10),
-                        const SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                _updateCalificacion(1); // Aprobar
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF16772B),
-                                minimumSize: const Size(60, 40),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: const Text(
-                                'Aprobar',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            const SizedBox(width: 40),
-                            ElevatedButton(
-                              onPressed: () {
-                                _updateCalificacion(2); // No aprobar
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF8B2D56),
-                                minimumSize: const Size(60, 40),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: const Text(
-                                'No Aprobar',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            bool isMobile = constraints.maxWidth < 1020;
+
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: isMobile
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _buildContent(isMobile),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _buildContent(isMobile),
+                      ),
+              ),
+            );
+          },
         ),
       ),
     );
+  }
+
+  List<Widget> _buildContent(bool isMobile) {
+    return [
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: isMobile ? 300 : 500,
+            height: isMobile ? 200 : 350,
+            color: const Color.fromARGB(153, 243, 243, 243),
+            child: _imagenSeleccionada != null
+                ? Image.memory(
+                    _imagenSeleccionada!,
+                    fit: BoxFit.contain,
+                  )
+                : const Icon(
+                    Icons.image,
+                    size: 100,
+                    color: Color.fromARGB(255, 115, 115, 115),
+                  ),
+          ),
+        ],
+      ),
+      const SizedBox(width: 40, height: 20),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            competenciaTitulo ?? 'Cargando...',
+            style: TextStyle(
+                fontSize: isMobile ? 24 : 36, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            estudianteNombre ?? 'Cargando...',
+            style: TextStyle(
+                fontSize: isMobile ? 18 : 24,
+                color: const Color.fromARGB(255, 227, 227, 227)),
+          ),
+          const SizedBox(height: 30),
+          const Text("Participación"),
+          const SizedBox(height: 10),
+          const SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  _updateCalificacion(1);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF16772B),
+                  minimumSize:
+                      isMobile ? const Size(100, 40) : const Size(120, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Aprobar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isMobile ? 16 : 18,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 40),
+              ElevatedButton(
+                onPressed: () {
+                  _updateCalificacion(2);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B2D56),
+                  minimumSize:
+                      isMobile ? const Size(100, 40) : const Size(120, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'No Aprobar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isMobile ? 16 : 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ];
   }
 }
