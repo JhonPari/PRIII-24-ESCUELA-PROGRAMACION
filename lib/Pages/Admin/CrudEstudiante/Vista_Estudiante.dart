@@ -47,7 +47,7 @@ class _VistaEstState extends State<VistaEst> {
     try {
       await usuariosService.deleteLogic(id);
       _loadUsuarios();
-      mostrarDialogoExito(); // Mostrar diálogo de éxito tras la eliminación
+      _showSuccessDialog();
     } catch (e) {
       print('Error al eliminar el estudiante: $e');
     }
@@ -82,7 +82,7 @@ class _VistaEstState extends State<VistaEst> {
                           builder: (context) => const RegistrarEstPage()),
                     );
                     if (mounted) {
-                      _loadUsuarios(); // Refresca la lista después de registrar un estudiante.
+                      _loadUsuarios();
                     }
                   },
                   icon: const Icon(Icons.person_add, color: Colors.white),
@@ -94,7 +94,7 @@ class _VistaEstState extends State<VistaEst> {
                 ),
               ),
               const SizedBox(height: 15),
-              Expanded(child: TablaEst()),
+              Expanded(child: _buildStudentTable()),
             ],
           ),
         ),
@@ -102,98 +102,96 @@ class _VistaEstState extends State<VistaEst> {
     );
   }
 
-  Expanded TablaEst() {
-    return Expanded(
-      child: FutureBuilder<List<Usuario>>(
-        future: _listaUsuarios,
-        builder: (BuildContext context, AsyncSnapshot<List<Usuario>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-                child: Text('No hay usuarios', style: TextStyle(fontSize: 18)));
-          } else {
-            List<Usuario> usuarios = snapshot.data!;
-            return Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFE0BFC7),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(label: Text('Nombres')),
-                      DataColumn(label: Text('Correo')),
-                      DataColumn(label: Text('Puntos')),
-                      DataColumn(label: Text('Acciones')),
-                    ],
-                    rows: usuarios.map((usuario) {
-                      return DataRow(
-                        cells: [
-                          DataCell(Text(usuario.nombre)),
-                          DataCell(Text(usuario.correo)),
-                          const DataCell(Text("0")),
-                          DataCell(
-                            Row(
-                              children: [
-                                ElevatedButton.icon(
-                                  onPressed: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditarEstPage(
-                                            idUsuario: usuario.id!),
-                                      ),
-                                    );
-                                    if (mounted) {
-                                      _loadUsuarios(); // Refresca la lista después de modificar.
-                                    }
-                                  },
-                                  icon: const Icon(Icons.sync,
-                                      color: Colors.white),
-                                  label: const Text('Modificar',
-                                      style: TextStyle(color: Colors.white)),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey,
-                                    minimumSize: const Size(100, 30),
+Widget _buildStudentTable() {
+  return FutureBuilder<List<Usuario>>(
+    future: _listaUsuarios,
+    builder: (BuildContext context, AsyncSnapshot<List<Usuario>> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        return const Center(
+            child: Text('No hay usuarios', style: TextStyle(fontSize: 18)));
+      } else {
+        List<Usuario> usuarios = snapshot.data!;
+        return Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFE0BFC7),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                columns: const [
+                  DataColumn(label: Text('Nombres')),
+                  DataColumn(label: Text('Correo')),
+                  DataColumn(label: Text('Puntos')),
+                  DataColumn(label: Text('Acciones')),
+                ],
+                rows: usuarios.map((usuario) {
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(usuario.nombre)),
+                      DataCell(Text(usuario.correo)),
+                      const DataCell(Text("0")),
+                      DataCell(
+                        Row(
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditarEstPage(idUsuario: usuario.id!),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    mostrarDialogoConfirmacion(usuario.id!);
-                                  },
-                                  icon: const Icon(Icons.cancel,
-                                      color: Colors.white),
-                                  label: const Text('Eliminar',
-                                      style: TextStyle(color: Colors.white)),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF8E244D),
-                                    minimumSize: const Size(100, 30),
-                                  ),
-                                ),
-                              ],
+                                );
+                                if (mounted) {
+                                  _loadUsuarios();
+                                }
+                              },
+                              icon: const Icon(Icons.sync, color: Colors.white),
+                              label: const Text('Modificar',
+                                  style: TextStyle(color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey,
+                                minimumSize: const Size(100, 30),
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                ),
+                            const SizedBox(width: 10),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                _showDeleteConfirmationDialog(usuario.id!);
+                              },
+                              icon: const Icon(Icons.cancel,
+                                  color: Colors.white),
+                              label: const Text('Eliminar',
+                                  style: TextStyle(color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF8E244D),
+                                minimumSize: const Size(100, 30),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
               ),
-            );
-          }
-        },
-      ),
-    );
-  }
+            ),
+          ),
+        );
+      }
+    },
+  );
+}
 
-  void mostrarDialogoConfirmacion(int id) {
+
+  void _showDeleteConfirmationDialog(int id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -230,25 +228,23 @@ class _VistaEstState extends State<VistaEst> {
     );
   }
 
-  void mostrarDialogoExito() {
+  void _showSuccessDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Elimacion Éxitosa'),
+          title: const Text('Eliminación Exitosa'),
           content: const Row(
             children: [
-              Icon(Icons.check_circle,
-                  color: Colors.green, size: 24), // Icono de éxito
+              Icon(Icons.check_circle, color: Colors.green, size: 24),
               SizedBox(width: 10),
-              Expanded(
-                  child: Text('El estudiante se eliminó exitosamente.')),
+              Expanded(child: Text('El estudiante se eliminó exitosamente.')),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.of(context).pop();
               },
               child: const Text('Aceptar'),
             ),

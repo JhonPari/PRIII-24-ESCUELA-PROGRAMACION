@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/CrearDocentes.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/EditarDocentes.dart';
@@ -38,8 +36,7 @@ class _VistaDoceState extends State<VistaDoce> {
     Map<String, String?> data = await storage.getSession();
 
     if (data['id'] == null || data['name'] == null || data['role'] == null) {
-      Navigator.pushReplacementNamed(
-          context, '/login'); // Redirige a login si no hay sesión
+      Navigator.pushReplacementNamed(context, '/login'); // Redirige a login si no hay sesión
     } else {
       setState(() {
         name = data['name'] ?? 'Sin Nombre'; // Establece el nombre del usuario
@@ -54,6 +51,7 @@ class _VistaDoceState extends State<VistaDoce> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
             const Text(
@@ -82,6 +80,8 @@ class _VistaDoceState extends State<VistaDoce> {
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.grey,
+                  minimumSize: const Size(80, 30), // Tamaño mínimo del botón
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0), // Espaciado interno
                 ),
               ),
             ),
@@ -98,11 +98,9 @@ class _VistaDoceState extends State<VistaDoce> {
       future: _listaUsuarios, // Espera a que se carguen los usuarios
       builder: (BuildContext context, AsyncSnapshot<List<Usuario>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: CircularProgressIndicator()); // Muestra indicador de carga
+          return const Center(child: CircularProgressIndicator()); // Muestra indicador de carga
         } else if (snapshot.hasError) {
-          return Center(
-              child: Text('Error: ${snapshot.error}')); // Manejo de errores
+          return Center(child: Text('Error: ${snapshot.error}')); // Manejo de errores
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(
             child: Text(
@@ -113,8 +111,9 @@ class _VistaDoceState extends State<VistaDoce> {
         } else {
           List<Usuario> usuarios = snapshot.data!;
           return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: _calculateGridColumns(context), // Calcula el número de columnas
               childAspectRatio: 3 / 2,
               crossAxisSpacing: 16.0,
               mainAxisSpacing: 16.0,
@@ -162,8 +161,7 @@ class _VistaDoceState extends State<VistaDoce> {
                               // Verifica si se ha actualizado el usuario
                               if (result == true) {
                                 setState(() {
-                                  _listaUsuarios =
-                                      usuariosService.getDocentes();
+                                  _listaUsuarios = usuariosService.getDocentes();
                                 });
                               }
                             },
@@ -174,7 +172,8 @@ class _VistaDoceState extends State<VistaDoce> {
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.grey,
-                              minimumSize: const Size(100, 30),
+                              minimumSize: const Size(80, 30), // Tamaño mínimo del botón
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0), // Espaciado interno
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -189,7 +188,8 @@ class _VistaDoceState extends State<VistaDoce> {
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF8E244D),
-                              minimumSize: const Size(100, 30),
+                              minimumSize: const Size(80, 30), // Tamaño mínimo del botón
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0), // Espaciado interno
                             ),
                           ),
                         ],
@@ -205,6 +205,18 @@ class _VistaDoceState extends State<VistaDoce> {
     );
   }
 
+  int _calculateGridColumns(BuildContext context) {
+    // Calcula el número de columnas basado en el ancho de la pantalla
+    double width = MediaQuery.of(context).size.width;
+    if (width < 600) {
+      return 1; // Pantallas pequeñas (móviles)
+    } else if (width < 900) {
+      return 2; // Pantallas medianas (tabletas)
+    } else {
+      return 3; // Pantallas grandes (computadoras)
+    }
+  }
+
   void mostrarDialogoConfirmacion(int id) {
     showDialog(
       context: context,
@@ -215,9 +227,7 @@ class _VistaDoceState extends State<VistaDoce> {
             children: [
               Icon(Icons.warning, color: Colors.red),
               SizedBox(width: 10),
-              Expanded(
-                  child: Text(
-                      '¿Estás seguro de que deseas eliminar este usuario?')),
+              Expanded(child: Text('¿Estás seguro de que deseas eliminar este usuario?')),
             ],
           ),
           actions: [
@@ -235,15 +245,13 @@ class _VistaDoceState extends State<VistaDoce> {
                 try {
                   Navigator.of(context).pop(); // Cierra el diálogo
 
-                  await usuariosService
-                      .deleteLogic(id); // Lógica de eliminación
+                  await usuariosService.deleteLogic(id); // Lógica de eliminación
 
                   // Mostrar el diálogo de éxito
                   mostrarDialogoExito(); // Llama al diálogo de éxito
 
                   setState(() {
-                    _listaUsuarios =
-                        usuariosService.getDocentes(); // Actualiza la lista
+                    _listaUsuarios = usuariosService.getDocentes(); // Actualiza la lista
                   });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -272,14 +280,12 @@ class _VistaDoceState extends State<VistaDoce> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Elimacion Éxitosa'),
+          title: const Text('Éxito'),
           content: const Row(
             children: [
-              Icon(Icons.check_circle,
-                  color: Colors.green, size: 24), // Icono de éxito
+              Icon(Icons.check_circle, color: Colors.green),
               SizedBox(width: 10),
-              Expanded(
-                  child: Text('El usuario se eliminó exitosamente.')),
+              Expanded(child: Text('El usuario ha sido eliminado exitosamente.')),
             ],
           ),
           actions: [
