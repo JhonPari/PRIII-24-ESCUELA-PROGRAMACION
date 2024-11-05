@@ -91,7 +91,6 @@ class _RegistrarEstState extends State<RegistrarEstPage> {
                     Navigator.of(context).pop();
                     _nombreController.clear();
                     _correoController.clear();
-                    Navigator.of(context).pop();
                   },
                   child: const Text('OK'),
                 ),
