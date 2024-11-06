@@ -11,10 +11,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginState createState() => _LoginState();
+  LoginState createState() => LoginState();
 }
 
-class _LoginState extends State<LoginPage> {
+class LoginState extends State<LoginPage> {
   final TextEditingController _correoController = TextEditingController();
   final TextEditingController _passwController = TextEditingController();
   final UsuariosService _usuarioService = UsuariosService();

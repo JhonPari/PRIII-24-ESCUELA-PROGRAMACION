@@ -259,6 +259,7 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                 value: 'Cerrar Sesión',
                 child: Text('Cerrar Sesión'),
               ),
+              
               const PopupMenuItem<String>(
                 value: 'Cambiar Contraseña',
                 child: Text('Cambiar Contraseña'),

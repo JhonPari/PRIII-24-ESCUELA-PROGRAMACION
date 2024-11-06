@@ -198,47 +198,55 @@ class _VistaReportState extends State<VistaReporteFecha> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: startDate ?? DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        );
-                        if (date != null) {
-                          setState(() {
-                            startDate = date;
-                          });
-                        }
-                      },
-                      child: Text(startDate == null ? 'Seleccionar Fecha Inicio' : 'Inicio: ${startDate!.toLocal()}'.split(' ')[0]),
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: endDate ?? DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        );
-                        if (date != null) {
-                          setState(() {
-                            endDate = date;
-                          });
-                        }
-                      },
-                      child: Text(endDate == null ? 'Seleccionar Fecha Fin' : 'Fin: ${endDate!.toLocal()}'.split(' ')[0]),
-                    ),
+ElevatedButton(
+  onPressed: () async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: startDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (date != null) {
+      setState(() {
+        startDate = date;
+      });
+    }
+  },
+  child: Text(startDate == null ? 'Seleccionar Fecha Inicio' : 'Inicio: ${startDate!.toLocal()}'.split(' ')[0]),
+  style: ElevatedButton.styleFrom(
+    foregroundColor: Colors.white, backgroundColor: const Color(0xFF8E244D), // Color blanco para el texto
+  ),
+),
+ElevatedButton(
+  onPressed: () async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: endDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (date != null) {
+      setState(() {
+        endDate = date;
+      });
+    }
+  },
+  child: Text(endDate == null ? 'Seleccionar Fecha Fin' : 'Fin: ${endDate!.toLocal()}'.split(' ')[0]),
+  style: ElevatedButton.styleFrom(
+    foregroundColor: Colors.white, backgroundColor: const Color(0xFF8E244D), // Color blanco para el texto
+  ),
+),
                   ],
                 ),
 
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _filterByDate,
-                  child: const Text('Filtrar por Fecha'),
+                 onPressed: _filterByDate,
+                 child: const Text('Filtrar por Fecha'),
+                 style: ElevatedButton.styleFrom(
+                 foregroundColor: Colors.white, backgroundColor: const Color(0xFF8E244D), // Color blanco para el texto
+                  ),
                 ),
-
                 const SizedBox(height: 20),
                 _buildExportButtons(),
                 const SizedBox(height: 20),

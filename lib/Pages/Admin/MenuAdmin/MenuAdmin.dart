@@ -5,7 +5,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_esc
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEstudiante/Vista_Estudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/Habilitar/VistaInhabilitados.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ListaPendiente/AceptarDocente.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -76,7 +76,7 @@ class _MenuAdminState extends State<MenuAdmin> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => verCompetenciaAdmin(),
+                            builder: (context) => const verCompetenciaAdmin(),
                           ),
                         );
                       }),
@@ -85,7 +85,7 @@ class _MenuAdminState extends State<MenuAdmin> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => VistaReporteFecha(),
+                            builder: (context) => const VistaReporte(),
                           ),
                         );
                       }),

@@ -139,11 +139,6 @@ class _VistaDoceState extends State<VistaDoce> {
                           fontSize: 18,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Descripción',
-                        style: TextStyle(fontSize: 14),
-                      ),
                       const Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
