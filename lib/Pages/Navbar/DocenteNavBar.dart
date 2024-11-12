@@ -13,6 +13,7 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
       const TextStyle(fontSize: 16, color: Colors.black);
 
   return AppBar(
+    automaticallyImplyLeading: false,
     backgroundColor: const Color(0xFF8B2D56),
     title: Row(
       children: [
@@ -21,8 +22,7 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      const MenuDoce()), // Navegar a la página MenuDoce
+                  builder: (context) => const MenuDoce()), // Navegar a la página MenuDoce
             );
           },
           child: const CircleAvatar(
@@ -48,13 +48,11 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
         // Competencias
         PopupMenuButton<String>(
           onSelected: (value) {
-            switch (value) {
-              case 'competencias':
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => VerCompetenciaDoce()),
-                );
-                break;
+            if (value == 'competencias') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VerCompetenciaDoce()),
+              );
             }
           },
           itemBuilder: (BuildContext context) {
@@ -109,7 +107,7 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
           ),
         ),
         const SizedBox(width: 25),
-        // Botón desplegable de "Cuenta" con el mismo estilo de "Cerrar Sesión"
+        // Botón desplegable de "Cuenta"
         PopupMenuButton<String>(
           onSelected: (value) async {
             if (value == 'Cerrar Sesión') {
@@ -122,25 +120,23 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        const CambiarContrasenia()), // Página para cambiar contraseña
+                    builder: (context) => const CambiarContrasenia()),
               );
             }
           },
           child: ElevatedButton(
-            onPressed:
-                null, // Hacemos el botón desplegable no clickeable directamente
+            onPressed: null, // Hacemos el botón desplegable no clickeable directamente
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  const Color.fromARGB(255, 255, 255, 255), // Fondo negro
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5), // Bordes redondeados
+                borderRadius: BorderRadius.circular(5),
               ),
             ),
             child: const Text(
               'Cuenta',
               style: TextStyle(
-                  color: Colors.white, fontSize: 16), // Texto en blanco
+                  color: Colors.white, fontSize: 14
+                  ), // Texto en blanco
             ),
           ),
           itemBuilder: (BuildContext context) {

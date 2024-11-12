@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/EstCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/est_navbar.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
@@ -56,7 +57,7 @@ class _MenuEstState extends State<MenuEst> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: estNavBar(name ?? '...', storage, context, id),
+        appBar: NavBarMenus(name ?? '...', storage, context),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

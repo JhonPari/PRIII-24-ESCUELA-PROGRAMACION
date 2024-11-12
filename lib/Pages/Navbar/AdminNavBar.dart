@@ -1,4 +1,3 @@
-// Asegúrate de importar las demás páginas necesarias
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/VerCompetenciasAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudDocente/CrearDocentes.dart';
@@ -15,259 +14,312 @@ import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vis
 import 'package:prlll_24_escuela_programacion/Pages/Login/CambiarContrasenia.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
-// Asegúrate de importar las demás páginas necesarias
 
 AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
   TextStyle commonTextStyle =
       const TextStyle(fontSize: 16, color: Colors.black);
 
   return AppBar(
+    automaticallyImplyLeading: false,
     backgroundColor: const Color(0xFF8B2D56),
-    title: Row(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const MenuAdmin()),
-            );
-          },
-          child: const CircleAvatar(
-            backgroundImage: AssetImage('assets/images/logo_univalle.png'),
-            radius: 20,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    title: LayoutBuilder(
+      builder: (context, constraints) {
+        bool isSmallScreen = constraints.maxWidth < 800;
+
+        return Row(
           children: [
-            Text(
-              nombre,
-              style: commonTextStyle.copyWith(color: Colors.white38),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MenuAdmin()),
+                );
+              },
+              child: const CircleAvatar(
+                backgroundImage: AssetImage('assets/images/logo_univalle.png'),
+                radius: 20,
+              ),
             ),
-            const Text(
-              'Admin Univalle',
-              style: TextStyle(color: Colors.white54, fontSize: 16),
+            const SizedBox(width: 10),
+            if (!isSmallScreen)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(nombre,
+                      style: commonTextStyle.copyWith(color: Colors.white38)),
+                  const Text(
+                    'Admin Univalle',
+                    style: TextStyle(color: Colors.white54, fontSize: 16),
+                  ),
+                ],
+              ),
+            const Spacer(),
+            if (!isSmallScreen)
+              Row(
+                children: [
+                  // Reportes
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'ver_puntos') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const VistaReporte()));
+                      } else if (value == 'ver_fecha') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const VistaReporteFecha()));
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                          value: 'ver_puntos',
+                          child: Text('Ver Puntos', style: commonTextStyle)),
+                      PopupMenuItem(
+                          value: 'ver_fecha',
+                          child: Text('Ver Fecha', style: commonTextStyle)),
+                    ],
+                    child: Text('Reportes', style: commonTextStyle),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // Escuelas
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'lista_escuelas') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const VistaEscuela()));
+                      } else if (value == 'agregar_escuela') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const RegistrarEscuela()));
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                          value: 'lista_escuelas',
+                          child:
+                              Text('Lista Escuelas', style: commonTextStyle)),
+                      PopupMenuItem(
+                          value: 'agregar_escuela',
+                          child:
+                              Text('Agregar Escuelas', style: commonTextStyle)),
+                    ],
+                    child: Text('Escuelas', style: commonTextStyle),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // Estudiantes
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'lista_estudiantes') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const VistaEst()));
+                      } else if (value == 'agregar_estudiante') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const RegistrarEstPage()));
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                          value: 'lista_estudiantes',
+                          child: Text('Lista Estudiantes',
+                              style: commonTextStyle)),
+                      PopupMenuItem(
+                          value: 'agregar_estudiante',
+                          child: Text('Agregar Estudiante',
+                              style: commonTextStyle)),
+                    ],
+                    child: Text('Estudiantes', style: commonTextStyle),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // Docentes
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'lista_docentes') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const VistaDoce()));
+                      } else if (value == 'agregar_docente') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const RegistrarDocePage()));
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                          value: 'lista_docentes',
+                          child:
+                              Text('Lista Docentes', style: commonTextStyle)),
+                      PopupMenuItem(
+                          value: 'agregar_docente',
+                          child:
+                              Text('Agregar Docente', style: commonTextStyle)),
+                    ],
+                    child: Text('Docentes', style: commonTextStyle),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // Listas Pendientes
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'lista_pendiente_docente') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const VerificarDoce()));
+                      } else if (value == 'lista_pendiente_estudiante') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const VerificarEst()));
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                          value: 'lista_pendiente_docente',
+                          child: Text('Lista Pendiente Docente',
+                              style: commonTextStyle)),
+                      PopupMenuItem(
+                          value: 'lista_pendiente_estudiante',
+                          child: Text('Lista Pendiente Estudiante',
+                              style: commonTextStyle)),
+                    ],
+                    child: Text('Listas Pendientes', style: commonTextStyle),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // Calificar
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'Calificar') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => verCompetenciaAdmin()));
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                          value: 'Calificar',
+                          child: Text('Calificar', style: commonTextStyle)),
+                    ],
+                    child: Text('Calificar', style: commonTextStyle),
+                  ),
+                  const SizedBox(width: 25),
+                ],
+              )
+            else
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'reportes') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VistaReporte()),
+                    );
+                  } else if (value == 'escuelas') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VistaEscuela()),
+                    );
+                  } else if (value == 'estudiantes') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const VistaEst()),
+                    );
+                  } else if (value == 'docentes') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VistaDoce()),
+                    );
+                  } else if (value == 'pendientes') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VerificarDoce()),
+                    );
+                  } else if (value == 'calificar') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => verCompetenciaAdmin()),
+                    );
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                      value: 'reportes', child: Text('Reportes')),
+                  const PopupMenuItem(
+                      value: 'escuelas', child: Text('Escuelas')),
+                  const PopupMenuItem(
+                      value: 'estudiantes', child: Text('Estudiantes')),
+                  const PopupMenuItem(
+                      value: 'docentes', child: Text('Docentes')),
+                  const PopupMenuItem(
+                      value: 'pendientes', child: Text('Listas Pendientes')),
+                  const PopupMenuItem(
+                      value: 'calificar', child: Text('Calificar')),
+                ],
+                child: const Icon(Icons.menu, color: Colors.white),
+              ),
+            const SizedBox(width: 10),
+
+            // Botón "Cuenta"
+            PopupMenuButton<String>(
+              onSelected: (value) async {
+                if (value == 'Cerrar Sesión') {
+                  await sesion.removeSession();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()));
+                } else if (value == 'Cambiar Contraseña') {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CambiarContrasenia()));
+                }
+              },
+              child: ElevatedButton(
+                onPressed: null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text('Cuenta',
+                    style: TextStyle(fontSize: 16, color: Colors.black)),
+              ),
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                    value: 'Cambiar Contraseña',
+                    child: Text('Cambiar Contraseña')),
+                const PopupMenuItem(
+                    value: 'Cerrar Sesión', child: Text('Cerrar Sesión')),
+              ],
             ),
           ],
-        ),
-        const Spacer(),
-        // Botón "Reportes"
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'ver_puntos') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const VistaReporte()),
-              );
-            } else if (value == 'ver_fecha') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const VistaReporteFecha()),
-              );
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem<String>(
-                  value: 'ver_puntos',
-                  child: Text('Ver Puntos', style: commonTextStyle)),
-              PopupMenuItem<String>(
-                  value: 'ver_fecha',
-                  child: Text('Ver Fecha', style: commonTextStyle)),
-            ];
-          },
-          child: Text('Reportes', style: commonTextStyle),
-        ),
-        const SizedBox(width: 10),
-        // Botón "Escuelas"
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'lista_escuelas') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const VistaEscuela()),
-              );
-            } else if (value == 'agregar_escuela') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const RegistrarEscuela()),
-              );
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem<String>(
-                  value: 'lista_escuelas',
-                  child: Text('Lista Escuelas', style: commonTextStyle)),
-              PopupMenuItem<String>(
-                  value: 'agregar_escuela',
-                  child: Text('Agregar Escuelas', style: commonTextStyle)),
-            ];
-          },
-          child: Text('Escuelas', style: commonTextStyle),
-        ),
-        const SizedBox(width: 10),
-        // Botón "Estudiantes"
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'lista_estudiantes') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const VistaEst()),
-              );
-            } else if (value == 'agregar_estudiante') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const RegistrarEstPage()),
-              );
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem<String>(
-                  value: 'lista_estudiantes',
-                  child: Text('Lista Estudiantes', style: commonTextStyle)),
-              PopupMenuItem<String>(
-                  value: 'agregar_estudiante',
-                  child: Text('Agregar Estudiante', style: commonTextStyle)),
-            ];
-          },
-          child: Text('Estudiantes', style: commonTextStyle),
-        ),
-        const SizedBox(width: 10),
-        // Botón "Docentes"
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'lista_docentes') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const VistaDoce()),
-              );
-            } else if (value == 'agregar_docente') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const RegistrarDocePage()),
-              );
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem<String>(
-                  value: 'lista_docentes',
-                  child: Text('Lista Docentes', style: commonTextStyle)),
-              PopupMenuItem<String>(
-                  value: 'agregar_docente',
-                  child: Text('Agregar Docente', style: commonTextStyle)),
-            ];
-          },
-          child: Text('Docentes', style: commonTextStyle),
-        ),
-        const SizedBox(width: 10),
-        // Botón "Listas Pendientes"
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'lista_pendiente_docente') {
-              // Reemplaza con la ruta de la página que muestra la lista pendiente de docentes
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const VerificarDoce()),
-              );
-            } else if (value == 'lista_pendiente_estudiante') {
-              // Reemplaza con la ruta de la página que muestra la lista pendiente de estudiantes
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const VerificarEst()),
-              );
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem<String>(
-                  value: 'lista_pendiente_docente',
-                  child:
-                      Text('Lista Pendiente Docente', style: commonTextStyle)),
-              PopupMenuItem<String>(
-                  value: 'lista_pendiente_estudiante',
-                  child: Text('Lista Pendiente Estudiante',
-                      style: commonTextStyle)),
-            ];
-          },
-          child: Text('Listas Pendientes', style: commonTextStyle),
-        ),
-        const SizedBox(width: 10),
-        // Botón "Calificar"
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'Calificar') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => verCompetenciaAdmin()),
-              );
-            } 
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem<String>(
-                  value: 'Calificar',
-                  child: Text('Calificar', style: commonTextStyle)),
-              
-            ];
-          },
-          child: Text('Calificar', style: commonTextStyle),
-        ),
-        const SizedBox(width: 25),
-        // Botón desplegable de "Cuenta" con el mismo estilo de "Cerrar Sesión"
-        PopupMenuButton<String>(
-          onSelected: (value) async {
-            if (value == 'Cerrar Sesión') {
-              await sesion.removeSession();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            } else if (value == 'Cambiar Contraseña') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CambiarContrasenia()), // Página para cambiar contraseña
-              );
-            }
-          },
-          child: ElevatedButton(
-            onPressed:
-                null, // Hacemos el botón desplegable no clickeable directamente
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  const Color.fromARGB(255, 255, 255, 255), // Fondo negro
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5), // Bordes redondeados
-              ),
-            ),
-            child: const Text(
-              'Cuenta',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 16), // Texto en blanco
-            ),
-          ),
-          itemBuilder: (BuildContext context) {
-            return [
-              const PopupMenuItem<String>(
-                value: 'Cerrar Sesión',
-                child: Text('Cerrar Sesión'),
-              ),
-              
-              const PopupMenuItem<String>(
-                value: 'Cambiar Contraseña',
-                child: Text('Cambiar Contraseña'),
-              ),
-            ];
-          },
-        ),
-      ],
+        );
+      },
     ),
   );
 }
