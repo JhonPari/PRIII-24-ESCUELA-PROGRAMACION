@@ -3,6 +3,8 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEscuela/ReportesEscuelaEstudiante.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -25,11 +27,20 @@ class _VistaReportState extends State<VistaDoceReporte> {
   final Session storage = Session();
   String? name;
 
+  // Opción seleccionada para el dropdown
+  String? opcionSeleccionada;
+  List<String> opciones = [
+    'Ver Reportes por Puntos',
+    'Ver Reportes por Fechas',
+    'Ver Reporte de Escuelas', // Nueva opción añadida
+  ];
+
   @override
   void initState() {
     super.initState();
     _listaReportes = usuariosService.getReportEstudiantes();
     _loadSession();
+    opcionSeleccionada = opciones[0]; // Valor predeterminado
   }
 
   Future<void> _loadSession() async {
@@ -46,7 +57,8 @@ class _VistaReportState extends State<VistaDoceReporte> {
     sheet.appendRow(['Nombres', 'Correo', 'Puntos']);
 
     for (var reporte in reportes) {
-      sheet.appendRow([reporte.nombre, reporte.correo, reporte.puntos.toString()]);
+      sheet.appendRow(
+          [reporte.nombre, reporte.correo, reporte.puntos.toString()]);
     }
 
     var excelBytes = excel.encode();
@@ -66,7 +78,8 @@ class _VistaReportState extends State<VistaDoceReporte> {
           return pw.Center(
             child: pw.Column(
               children: [
-                pw.Text('Reporte de Estudiantes', style: const pw.TextStyle(fontSize: 24)),
+                pw.Text('Reporte de Estudiantes',
+                    style: const pw.TextStyle(fontSize: 24)),
                 pw.SizedBox(height: 20),
                 pw.Table.fromTextArray(
                   context: context,
@@ -91,66 +104,99 @@ class _VistaReportState extends State<VistaDoceReporte> {
     html.Url.revokeObjectUrl(url);
   }
 
+  // Método para navegar según la opción seleccionada
+  void _navegar() {
+    if (opcionSeleccionada == 'Ver Reportes por Puntos') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaDoceReporte()),
+      );
+    } else if (opcionSeleccionada == 'Ver Reportes por Fechas') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
+      );
+    } else if (opcionSeleccionada == 'Ver Reporte de Escuelas') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporteEscuela()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: docenteNavBar(name ?? '...', storage, context),
-        body: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            bool isSmallScreen = constraints.maxWidth < 600;
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'REPORTE DE ESTUDIANTES POR PUNTOS',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF8E244D),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildExportButtons(isSmallScreen),
-                    const SizedBox(height: 20),
-                    Expanded(child: _buildReportTable()),
-                  ],
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'REPORTE DE ESTUDIANTES',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF8E244D),
+                  ),
                 ),
-              ),
-            );
-          },
+                const SizedBox(height: 20),
+
+                // Dropdown para seleccionar el tipo de reporte
+                DropdownButton<String>(
+                  value: opcionSeleccionada,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      opcionSeleccionada = newValue;
+                    });
+                    _navegar(); // Navegar al seleccionar una opción
+                  },
+                  items: opciones.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+
+                const SizedBox(height: 20),
+                _buildExportButtons(),
+                const SizedBox(height: 20),
+                Expanded(child: _buildReportTable()),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildExportButtons(bool isSmallScreen) {
+  Widget _buildExportButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton.icon(
-          onPressed: () => _listaReportes.then((reportes) => _exportToExcel(reportes)),
+          onPressed: () =>
+              _listaReportes.then((reportes) => _exportToExcel(reportes)),
           icon: const Icon(Icons.download, color: Colors.white),
-          label: Text(isSmallScreen ? '' : 'Exportar a Excel'),
+          label: const Text('Exportar a Excel'),
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: Colors.green,
-            padding: isSmallScreen ? const EdgeInsets.symmetric(horizontal: 10) : null,
           ),
         ),
         const SizedBox(width: 20),
         ElevatedButton.icon(
-          onPressed: () => _listaReportes.then((reportes) => _exportToPdf(reportes)),
+          onPressed: () =>
+              _listaReportes.then((reportes) => _exportToPdf(reportes)),
           icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
-          label: Text(isSmallScreen ? '' : 'Exportar a PDF'),
+          label: const Text('Exportar a PDF'),
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: Colors.red,
-            padding: isSmallScreen ? const EdgeInsets.symmetric(horizontal: 10) : null,
           ),
         ),
       ],
@@ -160,7 +206,8 @@ class _VistaReportState extends State<VistaDoceReporte> {
   Widget _buildReportTable() {
     return FutureBuilder<List<ReporteEstudiante>>(
       future: _listaReportes,
-      builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudiante>> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<List<ReporteEstudiante>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
@@ -178,24 +225,21 @@ class _VistaReportState extends State<VistaDoceReporte> {
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: const [
-                    DataColumn(label: Text('Nombres')),
-                    DataColumn(label: Text('Correo')),
-                    DataColumn(label: Text('Puntos')),
-                  ],
-                  rows: reportes.map((reporte) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(reporte.nombre)),
-                        DataCell(Text(reporte.correo)),
-                        DataCell(Text(reporte.puntos.toString())),
-                      ],
-                    );
-                  }).toList(),
-                ),
+              child: DataTable(
+                columns: const [
+                  DataColumn(label: Text('Nombres')),
+                  DataColumn(label: Text('Correo')),
+                  DataColumn(label: Text('Puntos')),
+                ],
+                rows: reportes.map((reporte) {
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(reporte.nombre)),
+                      DataCell(Text(reporte.correo)),
+                      DataCell(Text(reporte.puntos.toString())),
+                    ],
+                  );
+                }).toList(),
               ),
             ),
           );

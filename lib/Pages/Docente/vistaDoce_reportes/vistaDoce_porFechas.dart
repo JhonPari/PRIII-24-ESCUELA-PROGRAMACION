@@ -3,6 +3,8 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/ReporteFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEscuela/ReportesEscuelaEstudiante.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -20,22 +22,44 @@ class VistaDoceReporteFecha extends StatefulWidget {
 }
 
 class _VistaReportState extends State<VistaDoceReporteFecha> {
-  UsuariosService usuariosService = UsuariosService();
+  final UsuariosService usuariosService = UsuariosService();
   late Future<List<ReporteEstudianteFecha>> _listaReportes;
+  List<ReporteEstudianteFecha> allReportes =
+      []; // Para almacenar todos los reportes
   final Session storage = Session();
   String? name;
+
+  // Variables para seleccionar las fechas
+  DateTime? startDate;
+  DateTime? endDate;
+
+  // Lista de opciones para el menú desplegable
+  List<String> opciones = [
+    'Ver Reportes por Puntos',
+    'Ver Reportes por Fechas',
+    'Ver Reporte de Escuelas',
+  ];
+  String? opcionSeleccionada;
 
   @override
   void initState() {
     super.initState();
-    _listaReportes = usuariosService.getReportEstudiantesFecha();
     _loadSession();
+    _fetchReportes(); // Cargar reportes al inicio
   }
 
   Future<void> _loadSession() async {
     Map<String, String?> data = await storage.getSession();
     setState(() {
       name = data['name'] ?? 'Sin Nombre';
+    });
+  }
+
+  Future<void> _fetchReportes() async {
+    _listaReportes =
+        usuariosService.getReportEstudiantesFecha().then((reportes) {
+      allReportes = reportes; // Almacenar todos los reportes
+      return reportes;
     });
   }
 
@@ -50,7 +74,9 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
         reporte.nombre,
         reporte.correo,
         reporte.puntos.toString(),
-        reporte.fechaInicioCompetencia.toString().split(' ')[0]
+        reporte.fechaInicioCompetencia
+            .toString()
+            .split(' ')[0], // Formatear la fecha
       ]);
     }
 
@@ -71,7 +97,8 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
           return pw.Center(
             child: pw.Column(
               children: [
-                pw.Text('Reporte de Estudiantes', style: const pw.TextStyle(fontSize: 24)),
+                pw.Text('Reporte de Estudiantes',
+                    style: const pw.TextStyle(fontSize: 24)),
                 pw.SizedBox(height: 20),
                 pw.Table.fromTextArray(
                   context: context,
@@ -81,7 +108,9 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
                             e.nombre,
                             e.correo,
                             e.puntos.toString(),
-                            e.fechaInicioCompetencia.toString().split(' ')[0]
+                            e.fechaInicioCompetencia
+                                .toString()
+                                .split(' ')[0], // Formatear la fecha
                           ])
                       .toList(),
                 ),
@@ -101,81 +130,190 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
     html.Url.revokeObjectUrl(url);
   }
 
+  void _navegar() {
+    if (opcionSeleccionada == 'Ver Reportes por Puntos') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporte()),
+      );
+    } else if (opcionSeleccionada == 'Ver Reportes por Fechas') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaDoceReporteFecha()),
+      );
+    } else if (opcionSeleccionada == 'Ver Reporte de Escuelas') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VistaReporteEscuela()),
+      );
+    }
+  }
+
+  void _filterByDate() {
+    // Filtrar la lista de reportes
+    setState(() {
+      if (startDate != null && endDate != null) {
+        _listaReportes = Future.value(allReportes.where((reporte) {
+          final fecha = reporte.fechaInicioCompetencia;
+          return fecha.isAfter(startDate!) && fecha.isBefore(endDate!);
+        }).toList());
+      } else {
+        _listaReportes =
+            Future.value(allReportes); // Mostrar todos si no hay rango
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: docenteNavBar(name ?? '...', storage, context),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'REPORTE DE ESTUDIANTES POR FECHAS',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF8E244D),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // DropdownButton para seleccionar opciones
+                DropdownButton<String>(
+                  hint: const Text('Seleccione un Reporte'),
+                  value: opcionSeleccionada,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      opcionSeleccionada = newValue;
+                    });
+                    _navegar(); // Navegar al seleccionar una opción
+                  },
+                  items: opciones.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Selectores de fecha
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    const Text(
-                      'REPORTE DE ESTUDIANTES POR PUNTOS',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF8E244D),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: startDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setState(() {
+                            startDate = date;
+                          });
+                        }
+                      },
+                      child: Text(startDate == null
+                          ? 'Seleccionar Fecha Inicio'
+                          : 'Inicio: ${startDate!.toLocal()}'.split(' ')[0]),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: const Color(
+                            0xFF8E244D), // Color blanco para el texto
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    _buildExportButtons(constraints.maxWidth), // Ajusta según el ancho
-                    const SizedBox(height: 20),
-                    Expanded(child: _buildReportTable(constraints.maxWidth)), // Tabla responsive
+                    ElevatedButton(
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: endDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setState(() {
+                            endDate = date;
+                          });
+                        }
+                      },
+                      child: Text(endDate == null
+                          ? 'Seleccionar Fecha Fin'
+                          : 'Fin: ${endDate!.toLocal()}'.split(' ')[0]),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: const Color(
+                            0xFF8E244D), // Color blanco para el texto
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            );
-          },
+
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _filterByDate,
+                  child: const Text('Filtrar por Fecha'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        const Color(0xFF8E244D), // Color blanco para el texto
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildExportButtons(),
+                const SizedBox(height: 20),
+                Expanded(child: _buildReportTable()),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildExportButtons(double maxWidth) {
-    // Si el ancho es menor a 600px, cambiar a una columna
-    return maxWidth < 600
-        ? Column(
-            children: _exportButtons(),
-          )
-        : Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _exportButtons(),
-          );
+  Widget _buildExportButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton.icon(
+          onPressed: () =>
+              _listaReportes.then((reportes) => _exportToExcel(reportes)),
+          icon: const Icon(Icons.download, color: Colors.white),
+          label: const Text('Exportar a Excel'),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.green,
+          ),
+        ),
+        const SizedBox(width: 20),
+        ElevatedButton.icon(
+          onPressed: () =>
+              _listaReportes.then((reportes) => _exportToPdf(reportes)),
+          icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
+          label: const Text('Exportar a PDF'),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.red,
+          ),
+        ),
+      ],
+    );
   }
 
-  List<Widget> _exportButtons() {
-    return [
-      ElevatedButton.icon(
-        onPressed: () => _listaReportes.then((reportes) => _exportToExcel(reportes)),
-        icon: const Icon(Icons.download, color: Colors.white),
-        label: const Text('Exportar a Excel'),
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.green,
-        ),
-      ),
-      const SizedBox(width: 20),
-      ElevatedButton.icon(
-        onPressed: () => _listaReportes.then((reportes) => _exportToPdf(reportes)),
-        icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
-        label: const Text('Exportar a PDF'),
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.red,
-        ),
-      ),
-    ];
-  }
-
-  Widget _buildReportTable(double maxWidth) {
+  Widget _buildReportTable() {
     return FutureBuilder<List<ReporteEstudianteFecha>>(
       future: _listaReportes,
-      builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudianteFecha>> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<List<ReporteEstudianteFecha>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
@@ -187,7 +325,6 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
         } else {
           List<ReporteEstudianteFecha> reportes = snapshot.data!;
           return Container(
-            width: maxWidth < 600 ? double.infinity : null,
             decoration: BoxDecoration(
               color: const Color(0xFFE0BFC7),
               borderRadius: BorderRadius.circular(8),
@@ -207,7 +344,9 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
                       DataCell(Text(reporte.nombre)),
                       DataCell(Text(reporte.correo)),
                       DataCell(Text(reporte.puntos.toString())),
-                      DataCell(Text(reporte.fechaInicioCompetencia.toString().split(' ')[0])),
+                      DataCell(Text(reporte.fechaInicioCompetencia
+                          .toString()
+                          .split(' ')[0])), // Formatear la fecha
                     ],
                   );
                 }).toList(),

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/VerCompetencias.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/vistaDoce_porFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/vistaDoce_porPuntos.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/NavbarMenus.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -55,7 +56,7 @@ class _MenuDoceState extends State<MenuDoce> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const VistaDoceReporteFecha(),
+                      builder: (context) => const VistaDoceReporte(),
                     ),
                   );
                 },

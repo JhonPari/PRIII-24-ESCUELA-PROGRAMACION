@@ -24,7 +24,8 @@ class VistaReporteFecha extends StatefulWidget {
 class _VistaReportState extends State<VistaReporteFecha> {
   final UsuariosService usuariosService = UsuariosService();
   late Future<List<ReporteEstudianteFecha>> _listaReportes;
-  List<ReporteEstudianteFecha> allReportes = []; // Para almacenar todos los reportes
+  List<ReporteEstudianteFecha> allReportes =
+      []; // Para almacenar todos los reportes
   final Session storage = Session();
   String? name;
 
@@ -55,7 +56,8 @@ class _VistaReportState extends State<VistaReporteFecha> {
   }
 
   Future<void> _fetchReportes() async {
-    _listaReportes = usuariosService.getReportEstudiantesFecha().then((reportes) {
+    _listaReportes =
+        usuariosService.getReportEstudiantesFecha().then((reportes) {
       allReportes = reportes; // Almacenar todos los reportes
       return reportes;
     });
@@ -72,13 +74,16 @@ class _VistaReportState extends State<VistaReporteFecha> {
         reporte.nombre,
         reporte.correo,
         reporte.puntos.toString(),
-        reporte.fechaInicioCompetencia.toString().split(' ')[0], // Formatear la fecha
+        reporte.fechaInicioCompetencia
+            .toString()
+            .split(' ')[0], // Formatear la fecha
       ]);
     }
 
     var excelBytes = excel.encode();
     final content = base64Encode(excelBytes!);
-    final anchor = html.AnchorElement(href: "data:application/octet-stream;base64,$content")
+    final anchor = html.AnchorElement(
+        href: "data:application/octet-stream;base64,$content")
       ..setAttribute("download", "ReporteEstudiantes.xlsx")
       ..click();
   }
@@ -92,17 +97,22 @@ class _VistaReportState extends State<VistaReporteFecha> {
           return pw.Center(
             child: pw.Column(
               children: [
-                pw.Text('Reporte de Estudiantes', style: const pw.TextStyle(fontSize: 24)),
+                pw.Text('Reporte de Estudiantes',
+                    style: const pw.TextStyle(fontSize: 24)),
                 pw.SizedBox(height: 20),
                 pw.Table.fromTextArray(
                   context: context,
                   headers: ['Nombres', 'Correo', 'Puntos', 'Fecha de Inicio'],
-                  data: reportes.map((e) => [
-                    e.nombre,
-                    e.correo,
-                    e.puntos.toString(),
-                    e.fechaInicioCompetencia.toString().split(' ')[0], // Formatear la fecha
-                  ]).toList(),
+                  data: reportes
+                      .map((e) => [
+                            e.nombre,
+                            e.correo,
+                            e.puntos.toString(),
+                            e.fechaInicioCompetencia
+                                .toString()
+                                .split(' ')[0], // Formatear la fecha
+                          ])
+                      .toList(),
                 ),
               ],
             ),
@@ -148,7 +158,8 @@ class _VistaReportState extends State<VistaReporteFecha> {
           return fecha.isAfter(startDate!) && fecha.isBefore(endDate!);
         }).toList());
       } else {
-        _listaReportes = Future.value(allReportes); // Mostrar todos si no hay rango
+        _listaReportes =
+            Future.value(allReportes); // Mostrar todos si no hay rango
       }
     });
   }
@@ -198,53 +209,63 @@ class _VistaReportState extends State<VistaReporteFecha> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-ElevatedButton(
-  onPressed: () async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: startDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (date != null) {
-      setState(() {
-        startDate = date;
-      });
-    }
-  },
-  child: Text(startDate == null ? 'Seleccionar Fecha Inicio' : 'Inicio: ${startDate!.toLocal()}'.split(' ')[0]),
-  style: ElevatedButton.styleFrom(
-    foregroundColor: Colors.white, backgroundColor: const Color(0xFF8E244D), // Color blanco para el texto
-  ),
-),
-ElevatedButton(
-  onPressed: () async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: endDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (date != null) {
-      setState(() {
-        endDate = date;
-      });
-    }
-  },
-  child: Text(endDate == null ? 'Seleccionar Fecha Fin' : 'Fin: ${endDate!.toLocal()}'.split(' ')[0]),
-  style: ElevatedButton.styleFrom(
-    foregroundColor: Colors.white, backgroundColor: const Color(0xFF8E244D), // Color blanco para el texto
-  ),
-),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: startDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setState(() {
+                            startDate = date;
+                          });
+                        }
+                      },
+                      child: Text(startDate == null
+                          ? 'Seleccionar Fecha Inicio'
+                          : 'Inicio: ${startDate!.toLocal()}'.split(' ')[0]),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: const Color(
+                            0xFF8E244D), // Color blanco para el texto
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: endDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setState(() {
+                            endDate = date;
+                          });
+                        }
+                      },
+                      child: Text(endDate == null
+                          ? 'Seleccionar Fecha Fin'
+                          : 'Fin: ${endDate!.toLocal()}'.split(' ')[0]),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: const Color(
+                            0xFF8E244D), // Color blanco para el texto
+                      ),
+                    ),
                   ],
                 ),
 
                 const SizedBox(height: 20),
                 ElevatedButton(
-                 onPressed: _filterByDate,
-                 child: const Text('Filtrar por Fecha'),
-                 style: ElevatedButton.styleFrom(
-                 foregroundColor: Colors.white, backgroundColor: const Color(0xFF8E244D), // Color blanco para el texto
+                  onPressed: _filterByDate,
+                  child: const Text('Filtrar por Fecha'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        const Color(0xFF8E244D), // Color blanco para el texto
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -264,7 +285,8 @@ ElevatedButton(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton.icon(
-          onPressed: () => _listaReportes.then((reportes) => _exportToExcel(reportes)),
+          onPressed: () =>
+              _listaReportes.then((reportes) => _exportToExcel(reportes)),
           icon: const Icon(Icons.download, color: Colors.white),
           label: const Text('Exportar a Excel'),
           style: ElevatedButton.styleFrom(
@@ -274,7 +296,8 @@ ElevatedButton(
         ),
         const SizedBox(width: 20),
         ElevatedButton.icon(
-          onPressed: () => _listaReportes.then((reportes) => _exportToPdf(reportes)),
+          onPressed: () =>
+              _listaReportes.then((reportes) => _exportToPdf(reportes)),
           icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
           label: const Text('Exportar a PDF'),
           style: ElevatedButton.styleFrom(
@@ -289,7 +312,8 @@ ElevatedButton(
   Widget _buildReportTable() {
     return FutureBuilder<List<ReporteEstudianteFecha>>(
       future: _listaReportes,
-      builder: (BuildContext context, AsyncSnapshot<List<ReporteEstudianteFecha>> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<List<ReporteEstudianteFecha>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
@@ -320,7 +344,9 @@ ElevatedButton(
                       DataCell(Text(reporte.nombre)),
                       DataCell(Text(reporte.correo)),
                       DataCell(Text(reporte.puntos.toString())),
-                      DataCell(Text(reporte.fechaInicioCompetencia.toString().split(' ')[0])), // Formatear la fecha
+                      DataCell(Text(reporte.fechaInicioCompetencia
+                          .toString()
+                          .split(' ')[0])), // Formatear la fecha
                     ],
                   );
                 }).toList(),

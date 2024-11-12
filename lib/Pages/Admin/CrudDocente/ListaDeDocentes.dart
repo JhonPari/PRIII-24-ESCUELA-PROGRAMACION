@@ -51,7 +51,7 @@ class _VistaDoceState extends State<VistaDoce> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 30),
             const Text(
@@ -61,6 +61,7 @@ class _VistaDoceState extends State<VistaDoce> {
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8E244D),
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             Align(
