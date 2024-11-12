@@ -3,8 +3,7 @@
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEscuela/ReportesEscuelaEstudiante.dart';
-import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_porFechas.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/vistaDoce_porFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -32,7 +31,6 @@ class _VistaReportState extends State<VistaDoceReporte> {
   List<String> opciones = [
     'Ver Reportes por Puntos',
     'Ver Reportes por Fechas',
-    'Ver Reporte de Escuelas', // Nueva opción añadida
   ];
 
   @override
@@ -114,14 +112,9 @@ class _VistaReportState extends State<VistaDoceReporte> {
     } else if (opcionSeleccionada == 'Ver Reportes por Fechas') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const VistaReporteFecha()),
+        MaterialPageRoute(builder: (context) => const VistaDoceReporteFecha()),
       );
-    } else if (opcionSeleccionada == 'Ver Reporte de Escuelas') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const VistaReporteEscuela()),
-      );
-    }
+    } 
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Models/ReporteFechas.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEscuela/ReportesEscuelaEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/ReportesEstudiante/vista_reporte.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/vistaDoce_reportes/vistaDoce_porPuntos.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
@@ -37,7 +38,7 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
   List<String> opciones = [
     'Ver Reportes por Puntos',
     'Ver Reportes por Fechas',
-    'Ver Reporte de Escuelas',
+    
   ];
   String? opcionSeleccionada;
 
@@ -134,17 +135,12 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
     if (opcionSeleccionada == 'Ver Reportes por Puntos') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const VistaReporte()),
+        MaterialPageRoute(builder: (context) => const VistaDoceReporte()),
       );
     } else if (opcionSeleccionada == 'Ver Reportes por Fechas') {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const VistaDoceReporteFecha()),
-      );
-    } else if (opcionSeleccionada == 'Ver Reporte de Escuelas') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const VistaReporteEscuela()),
       );
     }
   }
@@ -310,25 +306,27 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
   }
 
   Widget _buildReportTable() {
-    return FutureBuilder<List<ReporteEstudianteFecha>>(
-      future: _listaReportes,
-      builder: (BuildContext context,
-          AsyncSnapshot<List<ReporteEstudianteFecha>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(
-            child: Text('No hay estudiantes', style: TextStyle(fontSize: 18)),
-          );
-        } else {
-          List<ReporteEstudianteFecha> reportes = snapshot.data!;
-          return Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFE0BFC7),
-              borderRadius: BorderRadius.circular(8),
-            ),
+  return FutureBuilder<List<ReporteEstudianteFecha>>(
+    future: _listaReportes,
+    builder: (BuildContext context,
+        AsyncSnapshot<List<ReporteEstudianteFecha>> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        return const Center(
+          child: Text('No hay estudiantes', style: TextStyle(fontSize: 18)),
+        );
+      } else {
+        List<ReporteEstudianteFecha> reportes = snapshot.data!;
+        return Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFE0BFC7),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal, // Permite desplazamiento horizontal
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: DataTable(
@@ -352,9 +350,11 @@ class _VistaReportState extends State<VistaDoceReporteFecha> {
                 }).toList(),
               ),
             ),
-          );
-        }
-      },
-    );
-  }
+          ),
+        );
+      }
+    },
+  );
+}
+
 }
