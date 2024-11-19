@@ -11,6 +11,7 @@ AppBar NavBarMenus(String nombre, Session sesion, BuildContext context) {
       const TextStyle(fontSize: 16, color: Colors.black);
 
   return AppBar(
+    automaticallyImplyLeading: false,
     backgroundColor: const Color(0xFF8B2D56),
     title: Row(
       children: [

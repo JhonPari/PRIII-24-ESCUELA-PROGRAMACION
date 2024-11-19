@@ -9,7 +9,11 @@ import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
   // Definir un estilo de texto común
-  TextStyle commonTextStyle =
+  
+  TextStyle whiteTextStyle =
+      const TextStyle(fontSize: 16, color: Colors.white);
+
+  TextStyle blackTextStyle =
       const TextStyle(fontSize: 16, color: Colors.black);
 
   return AppBar(
@@ -22,6 +26,7 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
+                
                   builder: (context) => const MenuDoce()), // Navegar a la página MenuDoce
             );
           },
@@ -36,7 +41,7 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
           children: [
             Text(
               nombre,
-              style: commonTextStyle.copyWith(color: Colors.white38),
+              style: whiteTextStyle.copyWith(color: Colors.white38),
             ),
             const Text(
               'Docente Univalle',
@@ -59,13 +64,13 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
             return [
               PopupMenuItem<String>(
                 value: 'competencias',
-                child: Text('Competencias', style: commonTextStyle),
+                child: Text('Competencias', style: blackTextStyle),
               ),
             ];
           },
           child: Text(
             'Competencias',
-            style: commonTextStyle,
+            style: whiteTextStyle, // Texto blanco
           ),
         ),
         const SizedBox(width: 10),
@@ -93,17 +98,17 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
             return [
               PopupMenuItem<String>(
                 value: 'reporte_puntos',
-                child: Text('Reporte por Puntos', style: commonTextStyle),
+                child: Text('Reporte por Puntos', style: blackTextStyle),
               ),
               PopupMenuItem<String>(
                 value: 'reporte_fechas',
-                child: Text('Reporte por Fechas', style: commonTextStyle),
+                child: Text('Reporte por Fechas', style: blackTextStyle),
               ),
             ];
           },
           child: Text(
             'Reportes',
-            style: commonTextStyle,
+            style: whiteTextStyle, // Texto blanco
           ),
         ),
         const SizedBox(width: 25),
@@ -135,19 +140,24 @@ AppBar docenteNavBar(String nombre, Session sesion, BuildContext context) {
             child: const Text(
               'Cuenta',
               style: TextStyle(
-                  color: Colors.white, fontSize: 14
-                  ), // Texto en blanco
+                  color: Colors.white, fontSize: 14), // Texto blanco
             ),
           ),
           itemBuilder: (BuildContext context) {
             return [
               const PopupMenuItem<String>(
                 value: 'Cerrar Sesión',
-                child: Text('Cerrar Sesión'),
+                child: Text(
+                  'Cerrar Sesión',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
               const PopupMenuItem<String>(
                 value: 'Cambiar Contraseña',
-                child: Text('Cambiar Contraseña'),
+                child: Text(
+                  'Cambiar Contraseña',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ];
           },

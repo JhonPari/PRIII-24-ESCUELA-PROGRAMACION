@@ -17,7 +17,7 @@ import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
   TextStyle commonTextStyle =
-      const TextStyle(fontSize: 16, color: Colors.black);
+      const TextStyle(fontSize: 16, color: Colors.white);
 
   return AppBar(
     automaticallyImplyLeading: false,
@@ -46,10 +46,10 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(nombre,
-                      style: commonTextStyle.copyWith(color: Colors.white38)),
+                      style: commonTextStyle.copyWith(color: Colors.white70)),
                   const Text(
                     'Admin Univalle',
-                    style: TextStyle(color: Colors.white54, fontSize: 16),
+                    style: TextStyle(color: Colors.white70, fontSize: 16),
                   ),
                 ],
               ),
@@ -76,10 +76,14 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                     itemBuilder: (context) => [
                       PopupMenuItem(
                           value: 'ver_puntos',
-                          child: Text('Ver Puntos', style: commonTextStyle)),
+                          child: Text('Ver Puntos',
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                       PopupMenuItem(
                           value: 'ver_fecha',
-                          child: Text('Ver Fecha', style: commonTextStyle)),
+                          child: Text('Ver Fecha',
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                     ],
                     child: Text('Reportes', style: commonTextStyle),
                   ),
@@ -104,12 +108,14 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                     itemBuilder: (context) => [
                       PopupMenuItem(
                           value: 'lista_escuelas',
-                          child:
-                              Text('Lista Escuelas', style: commonTextStyle)),
+                          child: Text('Lista Escuelas',
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                       PopupMenuItem(
                           value: 'agregar_escuela',
-                          child:
-                              Text('Agregar Escuelas', style: commonTextStyle)),
+                          child: Text('Agregar Escuelas',
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                     ],
                     child: Text('Escuelas', style: commonTextStyle),
                   ),
@@ -135,11 +141,13 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                       PopupMenuItem(
                           value: 'lista_estudiantes',
                           child: Text('Lista Estudiantes',
-                              style: commonTextStyle)),
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                       PopupMenuItem(
                           value: 'agregar_estudiante',
                           child: Text('Agregar Estudiante',
-                              style: commonTextStyle)),
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                     ],
                     child: Text('Estudiantes', style: commonTextStyle),
                   ),
@@ -164,12 +172,14 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                     itemBuilder: (context) => [
                       PopupMenuItem(
                           value: 'lista_docentes',
-                          child:
-                              Text('Lista Docentes', style: commonTextStyle)),
+                          child: Text('Lista Docentes',
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                       PopupMenuItem(
                           value: 'agregar_docente',
-                          child:
-                              Text('Agregar Docente', style: commonTextStyle)),
+                          child: Text('Agregar Docente',
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                     ],
                     child: Text('Docentes', style: commonTextStyle),
                   ),
@@ -194,11 +204,13 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                       PopupMenuItem(
                           value: 'lista_pendiente_docente',
                           child: Text('Lista Pendiente Docente',
-                              style: commonTextStyle)),
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                       PopupMenuItem(
                           value: 'lista_pendiente_estudiante',
                           child: Text('Lista Pendiente Estudiante',
-                              style: commonTextStyle)),
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                     ],
                     child: Text('Listas Pendientes', style: commonTextStyle),
                   ),
@@ -217,7 +229,9 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                     itemBuilder: (context) => [
                       PopupMenuItem(
                           value: 'Calificar',
-                          child: Text('Calificar', style: commonTextStyle)),
+                          child: Text('Calificar',
+                              style: commonTextStyle.copyWith(
+                                  color: Colors.black))),
                     ],
                     child: Text('Calificar', style: commonTextStyle),
                   ),
@@ -265,58 +279,79 @@ AppBar adminNavBar(String nombre, Session sesion, BuildContext context) {
                   }
                 },
                 itemBuilder: (context) => [
-                  const PopupMenuItem(
-                      value: 'reportes', child: Text('Reportes')),
-                  const PopupMenuItem(
-                      value: 'escuelas', child: Text('Escuelas')),
-                  const PopupMenuItem(
-                      value: 'estudiantes', child: Text('Estudiantes')),
-                  const PopupMenuItem(
-                      value: 'docentes', child: Text('Docentes')),
-                  const PopupMenuItem(
-                      value: 'pendientes', child: Text('Listas Pendientes')),
-                  const PopupMenuItem(
-                      value: 'calificar', child: Text('Calificar')),
+                  PopupMenuItem(
+                      value: 'reportes',
+                      child: Text('Reportes',
+                          style: commonTextStyle.copyWith(color: Colors.black))),
+                  PopupMenuItem(
+                      value: 'escuelas',
+                      child: Text('Escuelas',
+                          style: commonTextStyle.copyWith(color: Colors.black))),
+                  PopupMenuItem(
+                      value: 'estudiantes',
+                      child: Text('Estudiantes',
+                          style: commonTextStyle.copyWith(color: Colors.black))),
+                  PopupMenuItem(
+                      value: 'docentes',
+                      child: Text('Docentes',
+                          style: commonTextStyle.copyWith(color: Colors.black))),
+                  PopupMenuItem(
+                      value: 'pendientes',
+                      child: Text('Pendientes',
+                          style: commonTextStyle.copyWith(color: Colors.black))),
+                  PopupMenuItem(
+                      value: 'calificar',
+                      child: Text('Calificar',
+                          style: commonTextStyle.copyWith(color: Colors.black))),
                 ],
-                child: const Icon(Icons.menu, color: Colors.white),
+                child: const Icon(Icons.menu),
               ),
-            const SizedBox(width: 10),
-
-            // Botón "Cuenta"
-            PopupMenuButton<String>(
-              onSelected: (value) async {
-                if (value == 'Cerrar Sesión') {
-                  await sesion.removeSession();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()));
-                } else if (value == 'Cambiar Contraseña') {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const CambiarContrasenia()));
-                }
-              },
-              child: ElevatedButton(
-                onPressed: null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Cuenta',
-                    style: TextStyle(fontSize: 16, color: Colors.black)),
+              const SizedBox(width: 25),
+        // Botón desplegable de "Cuenta"
+        PopupMenuButton<String>(
+          onSelected: (value) async {
+            if (value == 'Cerrar Sesión') {
+              await sesion.removeSession();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            } else if (value == 'Cambiar Contraseña') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CambiarContrasenia()),
+              );
+            }
+          },
+          child: ElevatedButton(
+            onPressed: null, // Hacemos el botón desplegable no clickeable directamente
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
               ),
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                    value: 'Cambiar Contraseña',
-                    child: Text('Cambiar Contraseña')),
-                const PopupMenuItem(
-                    value: 'Cerrar Sesión', child: Text('Cerrar Sesión')),
-              ],
             ),
+            child: const Text(
+              'Cuenta',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 14
+                  ), // Texto en blanco
+            ),
+          ),
+          itemBuilder: (BuildContext context) {
+            return [
+              const PopupMenuItem<String>(
+                value: 'Cerrar Sesión',
+                child: Text('Cerrar Sesión'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Cambiar Contraseña',
+                child: Text('Cambiar Contraseña'),
+              ),
+            ];
+          },
+        ),
           ],
         );
       },

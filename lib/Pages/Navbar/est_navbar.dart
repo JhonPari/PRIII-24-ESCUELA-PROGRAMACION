@@ -7,7 +7,7 @@ import 'package:prlll_24_escuela_programacion/Service/session.dart';
 import 'package:prlll_24_escuela_programacion/pages/Login/login.dart';
 
 AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
-  TextStyle commonTextStyle = const TextStyle(fontSize: 16, color: Colors.black);
+  TextStyle commonTextStyle = const TextStyle(fontSize: 16, color: Colors.white);
 
   return AppBar(
     automaticallyImplyLeading: false,
@@ -56,7 +56,7 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
                   },
                   child: const Text(
                     'Ver Logros',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white), // Texto blanco
                   ),
                 ),
                 TextButton(
@@ -68,7 +68,7 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
                   },
                   child: const Text(
                     'Competencias Inscritas',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white), // Texto blanco
                   ),
                 ),
                 PopupMenuButton<String>(
@@ -96,18 +96,18 @@ AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
                     ),
                     child: const Text(
                       'Cuenta',
-                      style: TextStyle(fontSize: 12, color: Colors.black),
+                      style: TextStyle(fontSize: 12, color: Color.fromARGB(255, 255, 255, 255)),
                     ),
                   ),
                   itemBuilder: (BuildContext context) {
                     return [
                       const PopupMenuItem<String>(
                         value: 'Cerrar Sesión',
-                        child: Text('Cerrar Sesión'),
+                        child: Text('Cerrar Sesión', style: TextStyle(color: Colors.black)),
                       ),
                       const PopupMenuItem<String>(
                         value: 'Cambiar Contraseña',
-                        child: Text('Cambiar Contraseña'),
+                        child: Text('Cambiar Contraseña', style: TextStyle(color: Colors.black)),
                       ),
                     ];
                   },
