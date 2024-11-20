@@ -326,7 +326,7 @@ class _VistaReportState extends State<VistaReporteFecha> {
         List<ReporteEstudianteFecha> reportes = snapshot.data!;
         return Container(
           decoration: BoxDecoration(
-            color: const Color(0xFFE0BFC7),
+            color: const Color.fromARGB(255, 250, 224, 231),
             borderRadius: BorderRadius.circular(8),
           ),
           child: SingleChildScrollView(
