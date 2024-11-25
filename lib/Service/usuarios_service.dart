@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'package:prlll_24_escuela_programacion/Models/ReporteEscuelaEstudiante.dart';
 import 'package:prlll_24_escuela_programacion/Models/ReporteFechas.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
+import 'package:prlll_24_escuela_programacion/Service/ServicioBase.dart';
 import 'package:prlll_24_escuela_programacion/models/usuario.dart';
 import 'package:http/http.dart' as http;
 
 class UsuariosService {
-  final String baseUri = "https://localhost:7096/Usuarios";
+  final String baseUri = "$basePage/Usuarios";
 
   Future<List<Usuario>> getEstudiantes() async {
     final url = Uri.parse("$baseUri/Estudiantes");
@@ -177,7 +178,7 @@ Future<List<ReporteEstudianteFecha>> getReportEstudiantesFecha() async {
   }
 }
 Future<List<ReporteEscuelaEstudiante>> getReportesEscuelaEstudiante() async {
-    final response = await http.get(Uri.parse('https://localhost:7096/Usuarios/EscuelasReporte'));
+    final response = await http.get(Uri.parse('$baseUri/EscuelasReporte'));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);

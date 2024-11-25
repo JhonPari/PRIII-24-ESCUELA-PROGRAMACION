@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:prlll_24_escuela_programacion/Service/ServicioBase.dart';
 import 'package:prlll_24_escuela_programacion/models/EstudianteCalificacion.dart'; 
 Future<List<Estudiante>> fetchEstudiantesSer(int competenciaId) async {
   final String apiUrl =
-      'https://localhost:7096/FiltrarEstudiante/$competenciaId';
+      '$basePage/FiltrarEstudiante/$competenciaId';
 
   try {
     final response = await http.get(Uri.parse(apiUrl));
@@ -34,7 +35,7 @@ Future<List<Estudiante>> fetchEstudiantesSer(int competenciaId) async {
 
 /*Future<List<Estudiante>> fetchEstudiantesSer() async {
   const String apiUrl =
-      'https://localhost:7096/api/Cslificacion/with-student-info';
+      '$basePage/api/Cslificacion/with-student-info';
 
   try {
     final response = await http.get(Uri.parse(apiUrl));
@@ -64,7 +65,7 @@ Future<List<Estudiante>> fetchEstudiantesSer(int competenciaId) async {
 }*/
 
 Future<Map<String, dynamic>> fetchCalificacionById(int id) async {
-  final String apiUrl = 'https://localhost:7096/$id';
+  final String apiUrl = '$basePage/$id';
 
   try {
     final response = await http.get(Uri.parse(apiUrl));
@@ -82,7 +83,7 @@ Future<Map<String, dynamic>> fetchCalificacionById(int id) async {
 
 Future<void> updateCalificacion(int id, int aprobado) async {
   final url =
-      Uri.parse('https://localhost:7096/$id/Calificar');
+      Uri.parse('$basePage/$id/Calificar');
 
   final response = await http.put(
     url,

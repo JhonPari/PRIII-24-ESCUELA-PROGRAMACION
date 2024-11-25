@@ -3,9 +3,10 @@ import 'package:http/http.dart' as http;
 
 import 'package:prlll_24_escuela_programacion/Models/CompetenciaEst.dart';
 import 'package:prlll_24_escuela_programacion/Models/LogroEst.dart';
+import 'package:prlll_24_escuela_programacion/Service/ServicioBase.dart';
 
 class CompetenciasService {
-  final String baseUri = "https://localhost:7096/Competencias";
+  final String baseUri = "$basePage/Competencias";
 
   Future<List<LogrosEst>> getLogrosEstudiante(int idEst) async {
     final url = Uri.parse("$baseUri/Logros?idEstudiante=$idEst");  // Formato de la URL con parámetro

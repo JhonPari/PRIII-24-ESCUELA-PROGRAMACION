@@ -1,0 +1,1 @@
+const String basePage = "https://localhost:7096";

@@ -2,9 +2,10 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:prlll_24_escuela_programacion/Models/SubirImagen.dart';
+import 'package:prlll_24_escuela_programacion/Service/ServicioBase.dart';
 
 class ImagenesService {
-  final String baseUri = "https://localhost:7096/Images";
+  final String baseUri = "$basePage/Images";
 
   Future<bool> subirImagen(SubirImagen imagenSubida) async {
     final url = Uri.parse("$baseUri/subirImagen");

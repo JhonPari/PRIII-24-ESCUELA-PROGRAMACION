@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:prlll_24_escuela_programacion/Service/ServicioBase.dart';
 import 'package:prlll_24_escuela_programacion/models/Competencia.dart';
 import 'package:http/http.dart' as http;
 
 class CompetenciaDoceService {
-  final String baseUri = "https://localhost:7096/Competencias";
+  final String baseUri = "$basePage/Competencias";
 
   Future<List<Competencia>> getAll() async {
     final url = Uri.parse(baseUri);
