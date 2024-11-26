@@ -4,41 +4,59 @@
     // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        // Configuración para lanzar una aplicación web en Chrome
+    //     // Configuración para lanzar una aplicación web en Chrome
+    //     {
+    //         "name": "Launch Chrome",
+    //         "request": "launch",
+    //         "type": "chrome",
+    //         "url": "http://localhost:8080", // URL donde se sirve la aplicación web
+    //         "webRoot": "${workspaceFolder}"
+    //     },
+    //     // Configuración para adjuntar a un proceso de Chrome en ejecución para depurar
+    //     {
+    //         "name": "Attach to Chrome",
+    //         "port": 9222, // Puerto en el que Chrome está escuchando para depuración remota
+    //         "request": "attach",
+    //         "type": "chrome",
+    //         "webRoot": "${workspaceFolder}"
+    //     },
+    //     // Configuración para lanzar una aplicación Flutter en modo debug
+    //     {
+    //         "name": "PRIII-24-ESCUELA-PROGRAMACION",
+    //         "request": "launch",
+    //         "type": "dart"
+    //     },
+    //     // Configuración para lanzar una aplicación Flutter en modo profile
+    //     {
+    //         "name": "PRIII-24-ESCUELA-PROGRAMACION (profile mode)",
+    //         "request": "launch",
+    //         "type": "dart",
+    //         "flutterMode": "profile" // Modo profile para pruebas de rendimiento
+    //     },
+    //     // Configuración para lanzar una aplicación Flutter en modo release
+    //     {
+    //         "name": "PRIII-24-ESCUELA-PROGRAMACION (release mode)",
+    //         "request": "launch",
+    //         "type": "dart",
+    //         "flutterMode": "release" // Modo release para versiones de producción
+    //     },
+        
         {
-            "name": "Launch Chrome",
-            "request": "launch",
-            "type": "chrome",
-            "url": "http://localhost:8080", // URL donde se sirve la aplicación web
-            "webRoot": "${workspaceFolder}"
-        },
-        // Configuración para adjuntar a un proceso de Chrome en ejecución para depurar
-        {
-            "name": "Attach to Chrome",
-            "port": 9222, // Puerto en el que Chrome está escuchando para depuración remota
-            "request": "attach",
-            "type": "chrome",
-            "webRoot": "${workspaceFolder}"
-        },
-        // Configuración para lanzar una aplicación Flutter en modo debug
-        {
-            "name": "PRIII-24-ESCUELA-PROGRAMACION",
+            "name": "flutter_web_docker",
             "request": "launch",
             "type": "dart"
         },
-        // Configuración para lanzar una aplicación Flutter en modo profile
         {
-            "name": "PRIII-24-ESCUELA-PROGRAMACION (profile mode)",
+            "name": "flutter_web_docker (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile" // Modo profile para pruebas de rendimiento
+            "flutterMode": "profile" // Modo release para versiones de producción
         },
-        // Configuración para lanzar una aplicación Flutter en modo release
         {
-            "name": "PRIII-24-ESCUELA-PROGRAMACION (release mode)",
+            "name": "flutter_web_docker (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release" // Modo release para versiones de producción
-        }
+        },
     ]
 }
