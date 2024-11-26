@@ -4,7 +4,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Estudiante/menu_est.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Estudiante/verLogros.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/CambiarContrasenia.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
-import 'package:prlll_24_escuela_programacion/pages/Login/login.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 
 AppBar estNavBar(String nombre, Session sesion, BuildContext context, int id) {
   TextStyle commonTextStyle = const TextStyle(fontSize: 16, color: Colors.white);

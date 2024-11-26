@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:prlll_24_escuela_programacion/Service/ServicioBase.dart';
-import 'package:prlll_24_escuela_programacion/models/EstudianteCalificacion.dart'; 
+import 'package:prlll_24_escuela_programacion/Models/EstudianteCalificacion.dart'; 
 Future<List<Estudiante>> fetchEstudiantesSer(int competenciaId) async {
   final String apiUrl =
       '$basePage/FiltrarEstudiante/$competenciaId';

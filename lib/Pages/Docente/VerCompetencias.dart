@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/competenciaDoceService.dart';
-import 'package:prlll_24_escuela_programacion/models/Competencia.dart';
-import 'package:prlll_24_escuela_programacion/pages/docente/EstudianteCompetencia.dart';
+import 'package:prlll_24_escuela_programacion/Models/Competencia.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/EstudianteCompetencia.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class VerCompetenciaDocePage extends StatelessWidget {

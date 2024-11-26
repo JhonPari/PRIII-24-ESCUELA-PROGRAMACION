@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:prlll_24_escuela_programacion/Service/ServicioBase.dart';
-import 'package:prlll_24_escuela_programacion/models/Competencia.dart';
+import 'package:prlll_24_escuela_programacion/Models/Competencia.dart';
 import 'package:http/http.dart' as http;
 
 class CompetenciaDoceService {

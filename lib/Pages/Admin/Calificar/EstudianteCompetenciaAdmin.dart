@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/Calificar/calificar_pruebaAdmin.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/CalificarEstudianteService.dart';
-import 'package:prlll_24_escuela_programacion/models/EstudianteCalificacion.dart';
+import 'package:prlll_24_escuela_programacion/Models/EstudianteCalificacion.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class CompetenciaAdminPage extends StatefulWidget {

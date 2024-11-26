@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
-import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
+import 'package:prlll_24_escuela_programacion/Models/Escuela.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Admin/CrudEscuelas/vista_escuela.dart'; // Asegúrate de importar la vista
 

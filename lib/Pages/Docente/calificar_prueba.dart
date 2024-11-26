@@ -7,7 +7,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Navbar/DocenteNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/CalificarEstudianteService.dart';
 import 'package:prlll_24_escuela_programacion/Service/ImagenesService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
-import 'package:prlll_24_escuela_programacion/Pages/docente/EstudianteCompetencia.dart';
+import 'package:prlll_24_escuela_programacion/Pages/Docente/EstudianteCompetencia.dart';
 
 class CalificarPrueba extends StatefulWidget {
   final int id;

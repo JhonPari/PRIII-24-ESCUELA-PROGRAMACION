@@ -6,7 +6,7 @@ import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Login/login.dart';
 import 'package:prlll_24_escuela_programacion/Service/EscuelaService.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
-import 'package:prlll_24_escuela_programacion/models/Escuela.dart';
+import 'package:prlll_24_escuela_programacion/Models/Escuela.dart';
 
 void main() {
   runApp(const RegistrarEscuela());

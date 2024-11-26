@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prlll_24_escuela_programacion/Pages/Navbar/AdminNavBar.dart';
 import 'package:prlll_24_escuela_programacion/Service/usuarios_service.dart';
-import 'package:prlll_24_escuela_programacion/models/usuario.dart';
+import 'package:prlll_24_escuela_programacion/Models/usuario.dart';
 import 'package:prlll_24_escuela_programacion/Service/session.dart';
 
 class RegistrarEstPage extends StatefulWidget {

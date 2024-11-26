@@ -3,7 +3,7 @@ import 'package:prlll_24_escuela_programacion/Models/ReporteEscuelaEstudiante.da
 import 'package:prlll_24_escuela_programacion/Models/ReporteFechas.dart';
 import 'package:prlll_24_escuela_programacion/Models/Reportes.dart';
 import 'package:prlll_24_escuela_programacion/Service/ServicioBase.dart';
-import 'package:prlll_24_escuela_programacion/models/usuario.dart';
+import 'package:prlll_24_escuela_programacion/Models/usuario.dart';
 import 'package:http/http.dart' as http;
 
 class UsuariosService {
