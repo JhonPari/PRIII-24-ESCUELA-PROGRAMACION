@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  db:
+    build:
+      context: ./base # Ruta a la carpeta "base" donde está el Dockerfile de la base de datos
+    container_name: BD-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456789
+      MYSQL_DATABASE: escuela_programacion
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 123456789
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./base/data:/var/lib/mysql # Persistencia de datos
+      - ./base/initdb:/docker-entrypoint-initdb.d # Scripts de inicialización
+    networks:
+      - my_network
+  api:
+    build:
+      context: ./PRIII-24-ESCUELA-PROGRAMACION-API # Ruta a la carpeta "Api" donde está el Dockerfile de la API
+    container_name: API-container
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: escuela_programacion
+      DB_USER: admin
+      DB_PASSWORD: 123456789
+    ports:
+      - "8081:80" # Asumiendo que la API corre en este puerto
+    depends_on:
+      - db
+    networks:
+      - my_network
+
+  flutter_web:
+    build:
+      context: ./PRIII-24-ESCUELA-PROGRAMACION # Ruta a la carpeta "PRIII-24-ESCUELA-PROGRAMACION" donde está el Dockerfile del frontend
+    container_name: FlutterWeb-container
+    ports:
+    - "9000:9000" # El puerto 9000 externo mapea al interno
+    depends_on:
+       - api
+    networks:
+      - my_network
+
+networks:
+  my_network:
