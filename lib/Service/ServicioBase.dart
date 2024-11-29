@@ -1,0 +1,1 @@
+const String basePage = "http://localhost:8081";

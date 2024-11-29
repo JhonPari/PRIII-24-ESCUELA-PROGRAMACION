@@ -9,11 +9,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_secure_storage: ^9.2.2
+  http: ^1.2.2
+  image_picker: ^1.1.2
+  excel: ^2.0.6
+  path_provider: ^2.0.11
+  pdf: ^3.6.2
+  printing: ^5.9.0
+  http_parser: ^4.0.2
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  build_runner: ^2.4.13
+  build_web_compilers: ^4.0.11
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/

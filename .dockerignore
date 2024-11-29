@@ -1,0 +1,7 @@
+# Ignorar archivos temporales y cache
+build/
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+.BaseDatos/
